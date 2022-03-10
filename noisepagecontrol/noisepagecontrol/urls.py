@@ -1,21 +1,37 @@
-"""noisepagecontrol URL Configuration
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/4.0/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
 from django.contrib import admin
-from django.urls import path
+from django.urls import include, path
+from django.conf import settings
 
-urlpatterns = [
-    path('admin/', admin.site.urls),
-]
+from noisepagecontrol.constants import (
+    SERVER_MODE_CONTROL_PLANE,
+    SERVER_MODE_PRIMARY_WORKER,
+    SERVER_MODE_EXPLORATORY_WORKER,
+)
+
+urlpatterns = []
+
+SERVER_MODE = settings.SERVER_MODE
+
+"""
+    Setup admin URLs only on CONTROL_PLANE
+"""
+if SERVER_MODE == SERVER_MODE_CONTROL_PLANE:
+    urlpatterns += [
+        path("admin/", admin.site.urls),
+    ]
+
+"""
+    Include URLs based on the server mode
+"""
+if SERVER_MODE == SERVER_MODE_CONTROL_PLANE:
+    urlpatterns += [
+        path("", include("control_plane.urls")),
+    ]
+elif SERVER_MODE == SERVER_MODE_PRIMARY_WORKER:
+    urlpatterns += [
+        path("", include("primary_worker.urls")),
+    ]
+elif SERVER_MODE == SERVER_MODE_EXPLORATORY_WORKER:
+    urlpatterns += [
+        path("", include("exploratory_worker.urls")),
+    ]
