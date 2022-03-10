@@ -8,8 +8,6 @@ then
     exit
 fi
 
-pipenv shell
-
 case ${SERVER_MODE} in
     "CONTROL_PLANE" )
         echo "Starting Control Plane"
