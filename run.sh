@@ -4,7 +4,7 @@ SERVER_MODE=$1
 
 if [[ -z ${SERVER_MODE} ]]
 then
-    echo "Missing server mode. Command: ./run.sh CONTROL_PLANE|PRIMARY_WORKER|EXPLORATORY_WORKER"
+    echo "Missing server mode. Command: pipenv run run.sh CONTROL_PLANE|PRIMARY_WORKER|EXPLORATORY_WORKER"
     exit
 fi
 
