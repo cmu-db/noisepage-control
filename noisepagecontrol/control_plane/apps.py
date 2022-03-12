@@ -1,5 +1,5 @@
 from django.apps import AppConfig
-from control_plane.message_queue.consumer import init_message_consumer
+from control_plane.event_queue.consumer import init_message_consumer
 from threading import Thread
 
 

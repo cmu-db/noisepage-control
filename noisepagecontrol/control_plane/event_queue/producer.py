@@ -1,9 +1,10 @@
 from kombu import Connection, Exchange, Queue
-from control_plane.message_queue.config import (
-    message_exchange,
-    message_queue,
+from control_plane.event_queue.config import (
+    ampq_exchange,
+    ampq_queue,
     ampq_connection_string,
 )
+
 
 def publish_message():
     with Connection(ampq_connection_string) as connection:
@@ -12,7 +13,7 @@ def publish_message():
             print("Publishing message", i)
             producer.publish(
                 {"name": "message " + str(i)},
-                exchange=message_exchange,
+                exchange=ampq_exchange,
                 routing_key="message",
-                declare=[message_queue],
+                declare=[ampq_queue],
             )

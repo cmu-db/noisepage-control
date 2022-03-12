@@ -1,5 +1,5 @@
 from django.http import HttpResponse
-from control_plane.message_queue.producer import publish_message
+from control_plane.event_queue.producer import publish_message
 
 # Create your views here.
 def index(request):

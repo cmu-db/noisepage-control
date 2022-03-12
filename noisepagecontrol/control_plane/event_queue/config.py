@@ -2,8 +2,8 @@ from kombu import Exchange, Queue
 
 from django.conf import settings
 
-message_exchange = Exchange("message", "direct", durable=True)
-message_queue = Queue("message", exchange=message_exchange, routing_key="message")
+ampq_exchange = Exchange("message", "direct", durable=True)
+ampq_queue = Queue("message", exchange=ampq_exchange, routing_key="message")
 
 """ 
     These settings would be available only in CONTROL_PLANE mode
