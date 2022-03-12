@@ -6,6 +6,10 @@ from noisepagecontrol.constants import (
     SERVER_MODE_CONTROL_PLANE,
     SERVER_MODE_PRIMARY_WORKER,
     SERVER_MODE_EXPLORATORY_WORKER,
+    AMPQ_USER_ENV_VAR_KEY,
+    AMPQ_PASSWORD_ENV_VAR_KEY,
+    AMPQ_URL_ENV_VAR_KEY,
+    AMPQ_PORT_ENV_VAR_KEY,
 )
 
 SERVER_MODE = os.environ[SERVER_MODE_ENV_VAR_KEY]
@@ -13,6 +17,12 @@ SERVER_MODE = os.environ[SERVER_MODE_ENV_VAR_KEY]
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Load mode specific configurations
+if SERVER_MODE == SERVER_MODE_CONTROL_PLANE:
+    AMPQ_USER = os.environ[AMPQ_USER_ENV_VAR_KEY]
+    AMPQ_PASSWORD = os.environ[AMPQ_PASSWORD_ENV_VAR_KEY]
+    AMPQ_URL = os.environ[AMPQ_URL_ENV_VAR_KEY]
+    AMPQ_PORT = os.environ[AMPQ_PORT_ENV_VAR_KEY]
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
@@ -40,11 +50,11 @@ INSTALLED_APPS = [
     Include installed apps based on the server mode
 """
 if SERVER_MODE == SERVER_MODE_CONTROL_PLANE:
-    INSTALLED_APPS += ["control_plane"]
+    INSTALLED_APPS += ["control_plane.apps.ControlPlaneConfig"]
 elif SERVER_MODE == SERVER_MODE_PRIMARY_WORKER:
-    INSTALLED_APPS += ["primary_worker"]
+    INSTALLED_APPS += ["primary_worker.apps.PrimaryWorkerConfig"]
 elif SERVER_MODE == SERVER_MODE_EXPLORATORY_WORKER:
-    INSTALLED_APPS += ["exploratory_worker"]
+    INSTALLED_APPS += ["exploratory_worker.apps.ExploratoryWorkerConfig"]
 else:
     raise Exception("SERVER_MODE not recognised %s" % (SERVER_MODE))
 
