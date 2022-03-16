@@ -9,6 +9,7 @@ psycopg2 = "*"
 black = "*"
 kombu = "*"
 celery = "*"
+uuid = "*"
 
 [dev-packages]
 

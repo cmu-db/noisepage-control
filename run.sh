@@ -22,3 +22,7 @@ esac
 
 env $(cat config/control_plane.env | xargs) python noisepagecontrol/manage.py runserver
 
+
+
+# env $(cat config/control_plane.env | xargs) python noisepagecontrol/manage.py makemigrations
+# env $(cat config/control_plane.env | xargs) python noisepagecontrol/manage.py migrate
