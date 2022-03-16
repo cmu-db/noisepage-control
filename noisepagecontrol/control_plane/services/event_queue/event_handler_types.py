@@ -1,5 +1,6 @@
 from enum import Enum
 
+
 class EventHandlerType(str, Enum):
 
     PRIMARY_WORKER_HANDLER = "PRIMARY_WORKER_HANDLER"

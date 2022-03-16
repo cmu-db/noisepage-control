@@ -41,7 +41,6 @@ def tune_database(request):
         data={"tuning_uuid": new_tuning_request.uuid},
     )
 
-
     # 3. Publish events to launch exploratory worker
     publish_event(
         event_type=EventType.LAUNCH_EXPLORATORY_WORKER,
