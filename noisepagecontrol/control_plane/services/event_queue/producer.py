@@ -8,19 +8,16 @@ from .config import (
     ampq_connection_string,
 )
 
-def publish_message(event_type, event_target, data):
 
-    message = {
-        "event_type": event_type,
-        "event_target": event_target,
-        "data": data
-    }
+def publish_event(event_type, event_handler, data):
+
+    event = {"event_type": event_type, "event_handler": event_handler, "data": data}
 
     with Connection(ampq_connection_string) as connection:
         with connection.Producer(serializer="json") as producer:
             producer.publish(
-                json.dumps(message),
-                exchange = ampq_exchange,
-                routing_key = "message",
-                declare = [ ampq_queue ],
+                json.dumps(event),
+                exchange=ampq_exchange,
+                routing_key="event",
+                declare=[ampq_queue],
             )

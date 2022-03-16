@@ -8,19 +8,32 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='TuningInstance',
+            name="TuningInstance",
             fields=[
-                ('primary_url', models.CharField(max_length=30)),
-                ('primary_port', models.CharField(max_length=5)),
-                ('replica_url', models.CharField(max_length=30)),
-                ('replica_port', models.CharField(max_length=5)),
-                ('uuid', models.CharField(default=control_plane.models.autogenerate_uuid, max_length=36, primary_key=True, serialize=False)),
-                ('state', models.JSONField(default=control_plane.models.tuningInstance_state_default, verbose_name='state')),
+                ("primary_url", models.CharField(max_length=30)),
+                ("primary_port", models.CharField(max_length=5)),
+                ("replica_url", models.CharField(max_length=30)),
+                ("replica_port", models.CharField(max_length=5)),
+                (
+                    "uuid",
+                    models.CharField(
+                        default=control_plane.models.autogenerate_uuid,
+                        max_length=36,
+                        primary_key=True,
+                        serialize=False,
+                    ),
+                ),
+                (
+                    "state",
+                    models.JSONField(
+                        default=control_plane.models.tuningInstance_state_default,
+                        verbose_name="state",
+                    ),
+                ),
             ],
         ),
     ]

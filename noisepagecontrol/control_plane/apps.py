@@ -1,5 +1,5 @@
 from django.apps import AppConfig
-from control_plane.services.event_queue.consumer import init_message_consumer
+from control_plane.services.event_queue.consumer import init_event_consumer
 from threading import Thread
 
 
@@ -8,12 +8,12 @@ class ControlPlaneConfig(AppConfig):
     name = "control_plane"
 
     """
-        Init message consumer
+        Init event consumer
 
         TODO: Add robustness to the consumer thread. 
         What happens if it fails?
     """
 
     def ready(self):
-        thread = Thread(target=init_message_consumer)
+        thread = Thread(target=init_event_consumer)
         thread.start()
