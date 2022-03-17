@@ -8,11 +8,13 @@ from .config import (
 from .event_handler_types import EventHandlerType
 from .event_types import EventType
 
+import control_plane.services.tuning_manager.event_handler as tuning_manager_event_handler
 import control_plane.services.primary_worker_handler.event_handler as primary_worker_event_handler
 import control_plane.services.exploratory_worker_handler.event_handler as exploratory_worker_event_handler
 
 # This maps event_handler_type -> module that handles that event
 event_handler = {
+    EventHandlerType.TUNING_MANAGER: tuning_manager_event_handler,
     EventHandlerType.PRIMARY_WORKER_HANDLER: primary_worker_event_handler,
     EventHandlerType.EXPLORATORY_WORKER_HANDLER: exploratory_worker_event_handler,
 }

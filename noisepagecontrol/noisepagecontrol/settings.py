@@ -10,6 +10,9 @@ from noisepagecontrol.constants import (
     AMPQ_PASSWORD_ENV_VAR_KEY,
     AMPQ_URL_ENV_VAR_KEY,
     AMPQ_PORT_ENV_VAR_KEY,
+    CONTROL_PLANE_URL_ENV_KEY,
+    CONTROL_PLANE_PORT_ENV_KEY,
+    TUNING_ID_ENV_VAR_KEY,
 )
 
 SERVER_MODE = os.environ.get(SERVER_MODE_ENV_VAR_KEY, None)
@@ -19,10 +22,22 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Load mode specific configurations
 if SERVER_MODE == SERVER_MODE_CONTROL_PLANE:
+    """
+    Messaging infrastructure (Presently uses RabbitMQ)
+    """
     AMPQ_USER = os.environ[AMPQ_USER_ENV_VAR_KEY]
     AMPQ_PASSWORD = os.environ[AMPQ_PASSWORD_ENV_VAR_KEY]
     AMPQ_URL = os.environ[AMPQ_URL_ENV_VAR_KEY]
     AMPQ_PORT = os.environ[AMPQ_PORT_ENV_VAR_KEY]
+else:
+    """
+    Control plane discovery is an open problem. Currently
+    we pass a hardcoded URL/PORT via env vars; need to fix
+    this when we move from local to multiple machine setup
+    """
+    CONTROL_PLANE_URL = os.environ[CONTROL_PLANE_URL_ENV_KEY]
+    CONTROL_PLANE_PORT = os.environ[CONTROL_PLANE_PORT_ENV_KEY]
+    TUNING_ID = os.environ[TUNING_ID_ENV_VAR_KEY]
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/

@@ -11,9 +11,8 @@ from control_plane.services.event_queue.event_types import EventType
 from control_plane.services.event_queue.event_handler_types import EventHandlerType
 from control_plane.services.event_queue.producer import publish_event
 
-# Create your views here.
-def index(request):
 
+def index(request):
     return HttpResponse("Hello, world. This is the control_plane tuning manager")
 
 

@@ -8,16 +8,19 @@ then
     exit
 fi
 
+# Presently we run the servers on fixed ports (8000, 8001, 8002).
+# TODO: This needs to be fixed. Control plane discovery by worker nodes in an open problem
+
 case ${SERVER_MODE} in
     "CONTROL_PLANE" )
         echo "Starting Control Plane"
-        env $(cat config/control_plane.env | xargs) python noisepagecontrol/manage.py runserver 127.0.0.1:8000 ;;
+        env $(cat config/control_plane.env | xargs) python noisepagecontrol/manage.py runserver --noreload 127.0.0.1:8000 ;;
     "PRIMARY_WORKER" )
         echo "Starting Primary Worker"
-        env $(cat config/primary_worker.env | xargs) python noisepagecontrol/manage.py runserver 127.0.0.1:8001 ;;
+        env $(cat config/primary_worker.env | xargs) python noisepagecontrol/manage.py runserver --noreload 127.0.0.1:8001 ;;
     "EXPLORATORY_WORKER" )
         echo "Starting Exploratory Worker"
-        env $(cat config/exploratory_worker.env | xargs) python noisepagecontrol/manage.py runserver 127.0.0.1:8002 ;;
+        env $(cat config/exploratory_worker.env | xargs) python noisepagecontrol/manage.py runserver --noreload 127.0.0.1:8002 ;;
 esac
 
 env $(cat config/control_plane.env | xargs) python noisepagecontrol/manage.py runserver
