@@ -37,3 +37,8 @@ pipenv sync
 ```
 pipenv run run.sh CONTROL_PLANE|PRIMARY_WORKER|EXPLORATORY_WORKER
 ```
+
+
+## System Architecture
+
+![](./images/architecture.png "System Architecture")
