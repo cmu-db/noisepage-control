@@ -35,7 +35,7 @@ pipenv sync
 
 4. Run the server
 ```
-pipenv run run.sh CONTROL_PLANE|PRIMARY_WORKER|EXPLORATORY_WORKER
+pipenv run ./run.sh CONTROL_PLANE|PRIMARY_WORKER|EXPLORATORY_WORKER
 ```
 
 
