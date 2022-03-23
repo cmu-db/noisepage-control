@@ -23,7 +23,7 @@ case ${SERVER_MODE} in
         env $(cat config/exploratory_worker.env | xargs) python noisepagecontrol/manage.py runserver --noreload 127.0.0.1:8002 ;;
 esac
 
-env $(cat config/control_plane.env | xargs) python noisepagecontrol/manage.py runserver
+# env $(cat config/control_plane.env | xargs) python noisepagecontrol/manage.py runserver
 
 
 
