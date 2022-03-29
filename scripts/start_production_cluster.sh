@@ -14,16 +14,16 @@ REPLICATION_USERNAME="repl"
 # Common paths:
 #       Ubuntu: /usr/lib/postgresql/14/bin/
 #       OSX:    /usr/local/bin/
-POSTGRES_BIN_DIR="/usr/local/bin"
+POSTGRES_BIN_DIR="/usr/lib/postgresql/14/bin/"
 
 # This specifies where the postgres cluster should reside
 #   Ubuntu: /var/lib/postgresql/14
-PRODUCTION_CLUSTER_DIR="/var/lib/postgresql/14/production_cluster"
-
+POSTGRES_ROOT="/var/lib/postgresql/14"
 
 ###############################################################################
 
 PROJECT_DIR=`pwd`
+PRODUCTION_CLUSTER_DIR="${POSTGRES_ROOT}/production_cluster"
 
 # Run as postgres user
 sudo -u postgres
