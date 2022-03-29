@@ -1,7 +1,10 @@
 #!/bin/bash
 
-# This script spawns a primary and replica postgres instance
-# It should be executed from project root
+##################################  NOTE  ##################################
+#   This script spawns a primary and replica postgres instance
+#   Script should be run as postgres user;
+#       $ sudo -u postgres scripts/start_production_cluster.sh
+###############################################################################
 
 ##############################  Configurations  ##############################
 
@@ -9,12 +12,11 @@ PRIMARY_PORT="10000"
 REPLICA_PORT="10001"
 REPLICATION_USERNAME="repl"
 
-
 # This specifies where the postgres binaries are (initdb, pg_ctl, etc.)
 # Common paths:
-#       Ubuntu: /usr/lib/postgresql/14/bin/
-#       OSX:    /usr/local/bin/
-POSTGRES_BIN_DIR="/usr/lib/postgresql/14/bin/"
+#       Ubuntu: /usr/lib/postgresql/14/bin
+#       OSX:    /usr/local/bin
+POSTGRES_BIN_DIR="/usr/lib/postgresql/14/bin"
 
 # This specifies where the postgres cluster should reside
 #   Ubuntu: /var/lib/postgresql/14
@@ -22,11 +24,13 @@ POSTGRES_ROOT="/var/lib/postgresql/14"
 
 ###############################################################################
 
+
+
+
+
+
 PROJECT_DIR=`pwd`
 PRODUCTION_CLUSTER_DIR="${POSTGRES_ROOT}/production_cluster"
-
-# Run as postgres user
-sudo -u postgres
 
 # Stop running instances if up
 "${PROJECT_DIR}/scripts/stop_production_cluster.sh"
