@@ -30,7 +30,7 @@ def healthcheck(request):
         event_type=EventType.LAUNCH_EXPLORATORY_WORKER,
         event_handler=EventHandlerMapping[EventType.LAUNCH_PRIMARY_WORKER],
         data={"tuning_id": tuning_id, "event_name": event_name},
-        completed=True
+        completed=True,
     )
 
     return HttpResponse("OK")
@@ -52,6 +52,6 @@ def launch_exploratory_worker(tuning_id, event_name):
             "TUNING_ID": tuning_id,
             "CONTROL_PLANE_URL": "127.0.0.1",
             "CONTROL_PLANE_PORT": "8000",
-            "LAUNCH_EVENT_NAME": event_name
+            "LAUNCH_EVENT_NAME": event_name,
         },
     )

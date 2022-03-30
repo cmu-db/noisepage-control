@@ -23,8 +23,10 @@ class TuningInstance(models.Model):
     state = models.JSONField("state", default=tuningInstance_state_default)
 
     # Unique identifier for this tuning request
-    tuning_id = models.CharField(max_length=36, primary_key=True, default=autogenerate_uuid)
-    
+    tuning_id = models.CharField(
+        max_length=36, primary_key=True, default=autogenerate_uuid
+    )
+
 
 class TuningEvent(models.Model):
 

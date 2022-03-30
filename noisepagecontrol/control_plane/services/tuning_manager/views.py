@@ -39,11 +39,11 @@ def tune_database(request):
     # Add constraints and validations here!!
     for config in tune_db_request_data["event_config"]:
         new_event = TuningEvent(
-            event_type = config["event_type"],
-            event_name = config["event_name"],
-            parent_event_names = config["parent_event_names"],
-            tuning_id = new_tuning_request.tuning_id,
-            completed = False
+            event_type=config["event_type"],
+            event_name=config["event_name"],
+            parent_event_names=config["parent_event_names"],
+            tuning_id=new_tuning_request.tuning_id,
+            completed=False,
         )
         new_event.save()
         if len(new_event.parent_event_names) == 0:
@@ -52,10 +52,13 @@ def tune_database(request):
     # Publish initial events
     for initial_event in initial_events:
         publish_event(
-            event_type = initial_event.event_type,
+            event_type=initial_event.event_type,
             event_handler=EventHandlerMapping[initial_event.event_type],
-            data={"tuning_id": new_tuning_request.tuning_id, "event_name": initial_event.event_name},
-            completed=False
+            data={
+                "tuning_id": new_tuning_request.tuning_id,
+                "event_name": initial_event.event_name,
+            },
+            completed=False,
         )
 
     return HttpResponse(

@@ -20,6 +20,7 @@ event_handler = {
     EventHandlerType.EXPLORATORY_WORKER_HANDLER: exploratory_worker_event_handler,
 }
 
+
 def init_event_consumer():
     with Connection(ampq_connection_string) as connection:
         consumer = connection.Consumer(ampq_queue, callbacks=[process_event])
