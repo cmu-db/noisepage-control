@@ -13,6 +13,7 @@ from noisepagecontrol.constants import (
     CONTROL_PLANE_URL_ENV_KEY,
     CONTROL_PLANE_PORT_ENV_KEY,
     TUNING_ID_ENV_VAR_KEY,
+    LAUNCH_EVENT_NAME_ENV_VAR_KEY,
 )
 
 SERVER_MODE = os.environ.get(SERVER_MODE_ENV_VAR_KEY, None)
@@ -38,6 +39,7 @@ else:
     CONTROL_PLANE_URL = os.environ[CONTROL_PLANE_URL_ENV_KEY]
     CONTROL_PLANE_PORT = os.environ[CONTROL_PLANE_PORT_ENV_KEY]
     TUNING_ID = os.environ[TUNING_ID_ENV_VAR_KEY]
+    LAUNCH_EVENT_NAME = os.environ[LAUNCH_EVENT_NAME_ENV_VAR_KEY]
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
@@ -65,11 +67,11 @@ INSTALLED_APPS = [
     Include installed apps based on the server mode
 """
 if SERVER_MODE == SERVER_MODE_CONTROL_PLANE:
-    INSTALLED_APPS += ["control_plane.apps.ControlPlaneConfig"]
+    INSTALLED_APPS += ["control_plane"]
 elif SERVER_MODE == SERVER_MODE_PRIMARY_WORKER:
-    INSTALLED_APPS += ["primary_worker.apps.PrimaryWorkerConfig"]
+    INSTALLED_APPS += ["primary_worker"]
 elif SERVER_MODE == SERVER_MODE_EXPLORATORY_WORKER:
-    INSTALLED_APPS += ["exploratory_worker.apps.ExploratoryWorkerConfig"]
+    INSTALLED_APPS += ["exploratory_worker"]
 else:
     raise Exception("SERVER_MODE not recognised %s" % (SERVER_MODE))
 

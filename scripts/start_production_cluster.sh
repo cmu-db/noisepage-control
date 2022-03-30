@@ -59,7 +59,7 @@ ${POSTGRES_BIN_DIR}/createuser -p ${PRIMARY_PORT} --replication "${REPLICATION_U
 
 # Create replication slot
 echo "select * from pg_create_physical_replication_slot('db02_repl_slot');" \
-    | psql -p 10000 template1
+    | psql -p ${PRIMARY_PORT} template1
 
 # Create replica
 mkdir "${REPLICA_DIR}"

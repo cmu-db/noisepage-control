@@ -9,9 +9,9 @@ from .config import (
 )
 
 
-def publish_event(event_type, event_handler, data):
+def publish_event(event_type, event_handler, data, completed = False):
 
-    event = {"event_type": event_type, "event_handler": event_handler, "data": data}
+    event = {"event_type": event_type, "event_handler": event_handler, "data": data, "completed": completed}
 
     with Connection(ampq_connection_string) as connection:
         with connection.Producer(serializer="json") as producer:

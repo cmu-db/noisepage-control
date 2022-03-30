@@ -1,6 +1,7 @@
 import uuid
 
 from django.db import models
+from django.contrib.postgres.fields import ArrayField
 
 
 def tuningInstance_state_default():
@@ -19,6 +20,16 @@ class TuningInstance(models.Model):
     replica_url = models.CharField(max_length=30)
     replica_port = models.CharField(max_length=5)
 
-    # Unique identifier for this tuning request
-    uuid = models.CharField(max_length=36, primary_key=True, default=autogenerate_uuid)
     state = models.JSONField("state", default=tuningInstance_state_default)
+
+    # Unique identifier for this tuning request
+    tuning_id = models.CharField(max_length=36, primary_key=True, default=autogenerate_uuid)
+    
+
+class TuningEvent(models.Model):
+
+    event_name = models.CharField(max_length=120)
+    event_type = models.CharField(max_length=120)
+    parent_event_names = ArrayField(models.CharField(max_length=120), blank=True)
+    tuning_id = models.CharField(max_length=36)
+    completed = models.BooleanField(default=False)

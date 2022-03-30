@@ -13,5 +13,6 @@ def handle_event(event):
 
 def handle_launch_primary_worker_event(event):
 
-    tuning_uuid = event["data"]["tuning_uuid"]
-    launch_primary_worker(tuning_uuid)
+    tuning_id = event["data"]["tuning_id"]
+    event_name = event["data"]["event_name"]
+    launch_primary_worker(tuning_id, event_name)

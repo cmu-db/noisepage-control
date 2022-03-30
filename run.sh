@@ -21,11 +21,10 @@ case ${SERVER_MODE} in
     "EXPLORATORY_WORKER" )
         echo "Starting Exploratory Worker"
         env $(cat config/exploratory_worker.env | xargs) python noisepagecontrol/manage.py runserver --noreload 127.0.0.1:8002 ;;
+    "MAKE_MIGRATIONS" )
+        echo "Running makemigrations for control plane"
+        env $(cat config/control_plane.env | xargs) python noisepagecontrol/manage.py makemigrations ;;
+    "MIGRATE" )
+        echo "Running migrate for control plane"
+        env $(cat config/control_plane.env | xargs) python noisepagecontrol/manage.py migrate ;;
 esac
-
-# env $(cat config/control_plane.env | xargs) python noisepagecontrol/manage.py runserver
-
-
-
-# env $(cat config/control_plane.env | xargs) python noisepagecontrol/manage.py makemigrations
-# env $(cat config/control_plane.env | xargs) python noisepagecontrol/manage.py migrate
