@@ -6,3 +6,4 @@ production_cluster
 noisepagecontrol/primary_worker/workload_captures/*
 noisepagecontrol/control_plane/resources/*
 noisepagecontrol/logs/*
+__pycache__
