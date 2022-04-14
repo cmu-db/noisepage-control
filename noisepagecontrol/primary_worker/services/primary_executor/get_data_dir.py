@@ -6,6 +6,7 @@ from django.conf import settings
 
 logger = logging.getLogger("exploratory_worker")
 
+
 def get_data_dir():
     """
     Get data dir from database settings

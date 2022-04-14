@@ -8,6 +8,7 @@ from .get_data_dir import get_data_dir
 
 logger = logging.getLogger("exploratory_worker")
 
+
 def enable_logging():
     """
     Enable logging on the primary instance.

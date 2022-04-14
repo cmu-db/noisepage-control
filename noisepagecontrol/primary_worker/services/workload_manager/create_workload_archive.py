@@ -11,6 +11,7 @@ from primary_worker.services.primary_executor.get_logging_dir import get_logging
 
 logger = logging.getLogger("exploratory_worker")
 
+
 def create_workload_archive(capture_start_time, capture_end_time):
 
     # Get logging dir

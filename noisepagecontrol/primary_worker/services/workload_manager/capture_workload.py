@@ -16,6 +16,7 @@ logger = logging.getLogger("exploratory_worker")
 """
 WORKLOAD_CAPTURE_MUTEX = Lock()
 
+
 def capture_workload(time_period, event_name, resource_id):
     """
     This method captures the workload on a primary instance.

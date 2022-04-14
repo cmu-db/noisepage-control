@@ -7,6 +7,7 @@ from .get_data_dir import get_data_dir
 
 logger = logging.getLogger("exploratory_worker")
 
+
 def get_logging_dir():
     """
     Get logging dir from database settings
