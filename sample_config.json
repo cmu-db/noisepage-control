@@ -1,4 +1,4 @@
-[{
+[{   
 	"event_type": "LAUNCH_PRIMARY_WORKER",
 	"event_name": "LAUNCH_PRIMARY_WORKER_abc",
 	"parent_event_names" : []
@@ -10,26 +10,29 @@
 	"event_type": "LAUNCH_EXPLORATORY_POSTGRES",
 	"event_name": "LAUNCH_EXPLORATORY_POSTGRES_1",
 	"parent_event_names" : [
-        "LAUNCH_EXPLORATORY_WORKER_abc"
-    ]
+		"LAUNCH_EXPLORATORY_WORKER_abc"
+	]
 }, {
 	"event_type": "LAUNCH_EXPLORATORY_POSTGRES",
 	"event_name": "LAUNCH_EXPLORATORY_POSTGRES_2",
 	"parent_event_names" : [
-        "LAUNCH_EXPLORATORY_WORKER_abc"
-    ]
+		"LAUNCH_EXPLORATORY_WORKER_abc"
+	]
 }, {
 	"event_type": "CAPTURE_PRIMARY_WORKLOAD",
 	"event_name": "CAPTURE_PRIMARY_WORKLOAD_abc",
+	"config": {
+		"time_period": 10
+	},
 	"parent_event_names" : [
-        "LAUNCH_PRIMARY_WORKER_abc"
-    ]
+		"LAUNCH_PRIMARY_WORKER_abc"
+	]
 }, {
 	"event_type": "START_TUNING",
 	"event_name": "START_TUNING_abc",
 	"parent_event_names" : [
-        "LAUNCH_EXPLORATORY_POSTGRES_1",
-        "LAUNCH_EXPLORATORY_POSTGRES_2",
-        "CAPTURE_PRIMARY_WORKLOAD_abc"
-    ]
+		"LAUNCH_EXPLORATORY_POSTGRES_1",
+		"LAUNCH_EXPLORATORY_POSTGRES_2",
+		"CAPTURE_PRIMARY_WORKLOAD_abc"
+	]
 }]

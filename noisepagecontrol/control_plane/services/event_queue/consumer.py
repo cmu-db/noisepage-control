@@ -5,9 +5,10 @@ from .config import (
     ampq_queue,
     ampq_connection_string,
 )
-from .event_handler_types import EventHandlerType
 from .event_types import EventType
+from .event_handler_types import EventHandlerType
 from .child_event_publisher import publish_child_events
+from .event_handler_mapping import EventHandlerMapping
 
 import control_plane.services.tuning_manager.event_handler as tuning_manager_event_handler
 import control_plane.services.primary_worker_handler.event_handler as primary_worker_event_handler
@@ -32,7 +33,9 @@ def init_event_consumer():
 def process_event(event, message_obj):
 
     event = json.loads(event)
-    event_handler_type = event["event_handler"]
+
+    event_type = event["event_type"]
+    event_handler_type = EventHandlerMapping[event_type]
     completed = event["completed"]
 
     if completed == True:

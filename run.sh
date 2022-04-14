@@ -27,4 +27,8 @@ case ${SERVER_MODE} in
     "MIGRATE" )
         echo "Running migrate for control plane"
         env $(cat config/control_plane.env | xargs) python noisepagecontrol/manage.py migrate ;;
+#########################################################################################################################################
+    "FORMAT" )
+        echo "Running Black"
+        black .
 esac

@@ -1,7 +1,8 @@
 import os
 from pathlib import Path
+import subprocess
 
-from noisepagecontrol.constants import (
+from constants import (
     SERVER_MODE_ENV_VAR_KEY,
     SERVER_MODE_CONTROL_PLANE,
     SERVER_MODE_PRIMARY_WORKER,
@@ -14,15 +15,31 @@ from noisepagecontrol.constants import (
     CONTROL_PLANE_PORT_ENV_KEY,
     TUNING_ID_ENV_VAR_KEY,
     LAUNCH_EVENT_NAME_ENV_VAR_KEY,
+    PRIMARY_DB_PORT_ENV_VAR_KEY,
+    REPLICA_DB_PORT_ENV_VAR_KEY,
+    PRIMARY_DB_USERNAME_ENV_VAR_KEY,
+    REPLICA_DB_USERNAME_ENV_VAR_KEY,
 )
 
 SERVER_MODE = os.environ.get(SERVER_MODE_ENV_VAR_KEY, None)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+SCRIPTS_DIR = BASE_DIR.parent / "scripts"
 
-# Load mode specific configurations
+# Scripts executed through different views
+START_DATABASE_LOGGING_SCRIPT = SCRIPTS_DIR / "start_database_logging.sh"
+STOP_DATABASE_LOGGING_SCRIPT = SCRIPTS_DIR / "stop_database_logging.sh"
+GET_DATABASE_LOGGING_DIR_SCRIPT = SCRIPTS_DIR / "get_database_logging_directory.sh"
+GET_DATABASE_DATA_DIR_SCRIPT = SCRIPTS_DIR / "get_database_data_directory.sh"
+
+# Control plane specific configurations
 if SERVER_MODE == SERVER_MODE_CONTROL_PLANE:
+
+    # TODO: Make this config?
+    PRIMARY_WORKER_PORT = "8001"
+    EXPLORATORY_WORKER_PORT = "8002"
+
     """
     Messaging infrastructure (Presently uses RabbitMQ)
     """
@@ -30,9 +47,12 @@ if SERVER_MODE == SERVER_MODE_CONTROL_PLANE:
     AMPQ_PASSWORD = os.environ[AMPQ_PASSWORD_ENV_VAR_KEY]
     AMPQ_URL = os.environ[AMPQ_URL_ENV_VAR_KEY]
     AMPQ_PORT = os.environ[AMPQ_PORT_ENV_VAR_KEY]
-else:
+    RESOURCE_DIR = BASE_DIR / "control_plane" / "resources"
+
+else:  # Configurations for all workers
+
     """
-    Control plane discovery is an open problem. Currently
+    TODO: Control plane discovery is an open problem. Currently
     we pass a hardcoded URL/PORT via env vars; need to fix
     this when we move from local to multiple machine setup
     """
@@ -41,8 +61,16 @@ else:
     TUNING_ID = os.environ[TUNING_ID_ENV_VAR_KEY]
     LAUNCH_EVENT_NAME = os.environ[LAUNCH_EVENT_NAME_ENV_VAR_KEY]
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
+# Primary worker specific configurations
+if SERVER_MODE == SERVER_MODE_PRIMARY_WORKER:
+    PRIMARY_DB_PORT = os.environ[PRIMARY_DB_PORT_ENV_VAR_KEY]
+    PRIMARY_DB_USERNAME = os.environ[PRIMARY_DB_USERNAME_ENV_VAR_KEY]
+    WORKLOAD_CAPTURE_DIR = BASE_DIR / "primary_worker" / "workload_captures"
+
+# Exploratory worker specific configurations
+if SERVER_MODE == SERVER_MODE_EXPLORATORY_WORKER:
+    REPLICA_DB_PORT = os.environ[REPLICA_DB_PORT_ENV_VAR_KEY]
+    REPLICA_DB_USERNAME = os.environ[REPLICA_DB_USERNAME_ENV_VAR_KEY]
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = "django-insecure-)^1mg$booh%m$8(8c629(b(v82$is9r=k%09448kra$r8((v9("
@@ -166,3 +194,83 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+LOGGING_DIR = BASE_DIR / "logs"
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "verbose": {
+            "format": "{levelname} {asctime} {module} {process:d} {thread:d} {message}",
+            "style": "{",
+        },
+        "simple": {
+            "format": "{levelname} {message}",
+            "style": "{",
+        },
+    },
+    "filters": {
+        "require_debug_true": {
+            "()": "django.utils.log.RequireDebugTrue",
+        },
+    },
+    "handlers": {
+        "control_plane_info": {
+            "level": "INFO",
+            "class": "logging.FileHandler",
+            "filename": LOGGING_DIR / "control_plane_info.log",
+            "formatter": "verbose",
+        },
+        "control_plane_debug": {
+            "level": "DEBUG",
+            "class": "logging.FileHandler",
+            "filename": LOGGING_DIR / "control_plane_debug.log",
+            "formatter": "verbose",
+        },
+        "primary_worker_info": {
+            "level": "INFO",
+            "class": "logging.FileHandler",
+            "filename": LOGGING_DIR / "primary_worker_info.log",
+            "formatter": "verbose",
+        },
+        "primary_worker_debug": {
+            "level": "DEBUG",
+            "class": "logging.FileHandler",
+            "filename": LOGGING_DIR / "primary_worker_debug.log",
+            "formatter": "verbose",
+        },
+        "exploratory_worker_info": {
+            "level": "INFO",
+            "class": "logging.FileHandler",
+            "filename": LOGGING_DIR / "exploratory_worker_info.log",
+            "formatter": "verbose",
+        },
+        "exploratory_worker_debug": {
+            "level": "DEBUG",
+            "class": "logging.FileHandler",
+            "filename": LOGGING_DIR / "exploratory_worker_debug.log",
+            "formatter": "verbose",
+        },
+        "console": {
+            "class": "logging.StreamHandler",
+        },
+    },
+    "loggers": {
+        "control_plane": {
+            "handlers": ["control_plane_info", "control_plane_debug"],
+            "level": "DEBUG",
+            "propagate": True,
+        },
+        "primary_worker": {
+            "handlers": ["primary_worker_info", "primary_worker_debug"],
+            "level": "DEBUG",
+            "propagate": True,
+        },
+        "exploratory_worker": {
+            "handlers": ["exploratory_worker_info", "exploratory_worker_debug"],
+            "level": "DEBUG",
+            "propagate": True,
+        },
+    },
+}

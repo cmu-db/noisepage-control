@@ -1,5 +1,6 @@
-import os
 import json
+import logging
+from threading import Thread
 
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -7,8 +8,10 @@ from django.views.decorators.http import require_http_methods
 
 from control_plane.services.event_queue.producer import publish_event
 from control_plane.services.event_queue.event_types import EventType
-from control_plane.services.event_queue.event_handler_types import EventHandlerType
-from control_plane.services.event_queue.event_handler_mapping import EventHandlerMapping
+
+from .save_captured_workload import save_captured_workload
+
+logger = logging.getLogger("control_plane")
 
 
 def index(request):
@@ -23,12 +26,14 @@ def healthcheck(request):
     data = json.loads(request.body)
     tuning_id = data["tuning_id"]
     event_name = data["event_name"]
-    print("Received HC from primary worker", tuning_id, event_name)
+    logger.info(
+        "Received HC from primary worker. Tuning id: %s Event name: %s"
+        % (tuning_id, event_name)
+    )
 
     # Publish LAUNCH_PRIMARY_WORKER event as completed
     publish_event(
         event_type=EventType.LAUNCH_PRIMARY_WORKER,
-        event_handler=EventHandlerMapping[EventType.LAUNCH_PRIMARY_WORKER],
         data={"tuning_id": tuning_id, "event_name": event_name},
         completed=True,
     )
@@ -36,22 +41,35 @@ def healthcheck(request):
     return HttpResponse("OK")
 
 
-# TODO: Need to do checks here to prevent double spawning
-# TODO: Mark this as a celery task when spawning across machines
-def launch_primary_worker(tuning_id, event_name):
-    print("Launching primary for", tuning_id, event_name)
+@csrf_exempt
+@require_http_methods(["POST"])
+def workload_capture_callback(request):
 
-    # Very hacky way of passing env vars and launching
-    # Needs to be reworked when we move workers away from local
-    os.spawnvpe(
-        os.P_NOWAIT,
-        "pipenv",
-        ["pipenv", "run", "./run.sh", "PRIMARY_WORKER"],
-        env={
-            **os.environ,
-            "TUNING_ID": tuning_id,
-            "CONTROL_PLANE_URL": "127.0.0.1",
-            "CONTROL_PLANE_PORT": "8000",
-            "LAUNCH_EVENT_NAME": event_name,
-        },
+    data = json.loads(request.FILES["data"].read().decode("utf-8"))
+
+    tuning_id = data["tuning_id"]
+    resource_id = data["resource_id"]
+    event_name = data["event_name"]
+
+    logger.info(
+        "Received captured workload. Tuning id: %s Event name: %s"
+        % (tuning_id, event_name)
     )
+
+    captured_workload_tar = request.FILES["workload"].read()
+    captured_workload_filename = request.FILES["workload"].name
+
+    # Start workload save on a new thread; allow request to return
+    thread = Thread(
+        target=save_captured_workload,
+        args=(
+            tuning_id,
+            resource_id,
+            captured_workload_tar,
+            captured_workload_filename,
+            event_name,
+        ),
+    )
+    thread.start()
+
+    return HttpResponse("OK")

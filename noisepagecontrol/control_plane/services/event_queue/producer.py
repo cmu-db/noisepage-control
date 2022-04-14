@@ -9,11 +9,10 @@ from .config import (
 )
 
 
-def publish_event(event_type, event_handler, data, completed=False):
+def publish_event(event_type, data, completed=False):
 
     event = {
         "event_type": event_type,
-        "event_handler": event_handler,
         "data": data,
         "completed": completed,
     }

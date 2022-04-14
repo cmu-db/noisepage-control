@@ -1,37 +1,10 @@
-import uuid
+from django.contrib import admin
 
-from django.db import models
-from django.contrib.postgres.fields import ArrayField
+# Import models from various services
+from control_plane.services.tuning_manager.models import TuningInstance, TuningEvent
+from control_plane.services.resource_manager.models import Resource
 
-
-def tuningInstance_state_default():
-    return {}
-
-
-def autogenerate_uuid():
-    return str(uuid.uuid4())
-
-
-# Create your models here.
-class TuningInstance(models.Model):
-
-    primary_url = models.CharField(max_length=30)
-    primary_port = models.CharField(max_length=5)
-    replica_url = models.CharField(max_length=30)
-    replica_port = models.CharField(max_length=5)
-
-    state = models.JSONField("state", default=tuningInstance_state_default)
-
-    # Unique identifier for this tuning request
-    tuning_id = models.CharField(
-        max_length=36, primary_key=True, default=autogenerate_uuid
-    )
-
-
-class TuningEvent(models.Model):
-
-    event_name = models.CharField(max_length=120)
-    event_type = models.CharField(max_length=120)
-    parent_event_names = ArrayField(models.CharField(max_length=120), blank=True)
-    tuning_id = models.CharField(max_length=36)
-    completed = models.BooleanField(default=False)
+# Register for visibility in admin 
+admin.site.register(TuningInstance)
+admin.site.register(TuningEvent)
+admin.site.register(Resource)
