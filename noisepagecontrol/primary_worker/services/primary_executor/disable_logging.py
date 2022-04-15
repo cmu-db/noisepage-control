@@ -13,13 +13,15 @@ def disable_logging():
     """
     Disable logging on the primary instance.
     WARNING: Results in a restart
+    Script needs to be execited by postgres user
     """
 
     data_dir = get_data_dir()
     port = settings.PRIMARY_DB_PORT
     pg_username = settings.PRIMARY_DB_USERNAME
 
-    command = '"%s" "%s" "%s" "%s"' % (
+    command = 'sudo -u "%s" "%s" "%s" "%s" "%s"' % (
+        settings.POSTGRES_USER,
         settings.STOP_DATABASE_LOGGING_SCRIPT,
         data_dir,
         port,

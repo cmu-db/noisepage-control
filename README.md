@@ -33,9 +33,9 @@ pip3 install pipenv
 pipenv sync
 ```
 
-4. Run the server
+4. Run the server (with sudo)
 ```
-pipenv run ./run.sh CONTROL_PLANE|PRIMARY_WORKER|EXPLORATORY_WORKER
+sudo pipenv run ./run.sh CONTROL_PLANE|PRIMARY_WORKER|EXPLORATORY_WORKER
 ```
 
 

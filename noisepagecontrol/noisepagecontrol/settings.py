@@ -33,6 +33,8 @@ STOP_DATABASE_LOGGING_SCRIPT = SCRIPTS_DIR / "stop_database_logging.sh"
 GET_DATABASE_LOGGING_DIR_SCRIPT = SCRIPTS_DIR / "get_database_logging_directory.sh"
 GET_DATABASE_DATA_DIR_SCRIPT = SCRIPTS_DIR / "get_database_data_directory.sh"
 
+POSTGRES_USER = "postgres"
+
 # Control plane specific configurations
 if SERVER_MODE == SERVER_MODE_CONTROL_PLANE:
 
