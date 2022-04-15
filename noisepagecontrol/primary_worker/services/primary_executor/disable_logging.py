@@ -13,7 +13,7 @@ def disable_logging():
     """
     Disable logging on the primary instance.
     WARNING: Results in a restart
-    Script needs to be execited by postgres user
+    Script needs to be executed by postgres user
     """
 
     data_dir = get_data_dir()
