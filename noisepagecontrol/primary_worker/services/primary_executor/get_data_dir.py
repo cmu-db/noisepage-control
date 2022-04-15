@@ -4,7 +4,7 @@ from pathlib import Path
 
 from django.conf import settings
 
-logger = logging.getLogger("exploratory_worker")
+logger = logging.getLogger("primary_worker")
 
 
 def get_data_dir():

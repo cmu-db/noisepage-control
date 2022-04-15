@@ -9,7 +9,7 @@ from primary_worker.services.primary_executor.disable_logging import disable_log
 from .create_workload_archive import create_workload_archive
 from .transfer_workload import transfer_workload
 
-logger = logging.getLogger("exploratory_worker")
+logger = logging.getLogger("primary_worker")
 
 """ 
     Lock to prevent multiple concurrent workload captures 
