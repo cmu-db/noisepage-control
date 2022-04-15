@@ -11,7 +11,7 @@ from django.views.decorators.http import require_http_methods
 
 from .capture_workload import capture_workload
 
-logger = logging.getLogger("exploratory_worker")
+logger = logging.getLogger("primary_worker")
 
 
 @csrf_exempt

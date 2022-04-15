@@ -6,7 +6,7 @@ from django.conf import settings
 
 from .get_data_dir import get_data_dir
 
-logger = logging.getLogger("exploratory_worker")
+logger = logging.getLogger("primary_worker")
 
 
 def enable_logging():

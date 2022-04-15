@@ -6,7 +6,7 @@ from io import StringIO
 
 from django.conf import settings
 
-logger = logging.getLogger("exploratory_worker")
+logger = logging.getLogger("primary_worker")
 
 
 def transfer_workload(archive_path, event_name, resource_id):
