@@ -31,7 +31,7 @@ POSTGRES_ROOT="/var/lib/postgresql/14"
 
 ###############################################################################
 
-EXP_CLUSTER_DIR="$POSTGRES_ROOT/exploratory"  # TODO: parameterize
+EXP_CLUSTER_DIR="$POSTGRES_ROOT/exploratory_$PORT"  # TODO: parameterize
 
 # Create fresh dir
 rm -rf "$EXP_CLUSTER_DIR"
