@@ -31,8 +31,8 @@ START_DATABASE_LOGGING_SCRIPT = SCRIPTS_DIR / "start_database_logging.sh"
 STOP_DATABASE_LOGGING_SCRIPT = SCRIPTS_DIR / "stop_database_logging.sh"
 GET_DATABASE_LOGGING_DIR_SCRIPT = SCRIPTS_DIR / "get_database_logging_directory.sh"
 GET_DATABASE_DATA_DIR_SCRIPT = SCRIPTS_DIR / "get_database_data_directory.sh"
-START_EXPLORATORY_CLUSTER_SCRIPT = SCRIPTS_DIR / "start_exploratory_cluster.sh"
-STOP_EXPLORATORY_CLUSTER_SCRIPT = SCRIPTS_DIR / "stop_exploratory_cluster.sh"
+START_EXPLORATORY_POSTGRES_SCRIPT = SCRIPTS_DIR / "start_exploratory_postgres.sh"
+STOP_EXPLORATORY_POSTGRES_SCRIPT = SCRIPTS_DIR / "stop_exploratory_postgres.sh"
 
 POSTGRES_USER = "postgres"
 

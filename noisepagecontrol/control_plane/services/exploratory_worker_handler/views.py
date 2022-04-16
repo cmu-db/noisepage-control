@@ -43,7 +43,7 @@ def healthcheck(request):
 
 @csrf_exempt
 @require_http_methods(["POST"])
-def launch_exploratory_cluster_callback(request):
+def launch_exploratory_postgres_callback(request):
     data = json.loads(request.body)
     tuning_id = data["tuning_id"]
     event_name = data["event_name"]

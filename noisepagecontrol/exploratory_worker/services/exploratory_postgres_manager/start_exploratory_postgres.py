@@ -10,20 +10,20 @@ from .get_data_directory import get_data_directory
 logger = logging.getLogger("exploratory_worker")
 
 
-def start_exploratory_cluster(event_name, snapshot):
+def start_exploratory_postgres(event_name, snapshot):
     # TODO Tim: probe an available port from 20000 instead of hard-coding
-    exploratory_cluster_port = 20000
+    exploratory_postgres_port = 20000
 
     logger.info(
-        f"starting exploratory Postgres cluster on port {exploratory_cluster_port}..."
+        f"starting exploratory Postgres cluster on port {exploratory_postgres_port}..."
     )
 
     args = [
         "sudo",
         "-u",
         "postgres",
-        settings.START_EXPLORATORY_CLUSTER_SCRIPT,
-        str(exploratory_cluster_port),
+        settings.START_EXPLORATORY_POSTGRES_SCRIPT,
+        str(exploratory_postgres_port),
     ]
     if snapshot:
         logger.info("taking snapshot from replica cluster...")
@@ -34,11 +34,11 @@ def start_exploratory_cluster(event_name, snapshot):
     # TODO Tim: should send fail message back to control plane instead of sending nothing?
     except OSError:
         logger.error(
-            f"Error while executing {settings.START_EXPLORATORY_CLUSTER_SCRIPT}"
+            f"Error while executing {settings.START_EXPLORATORY_POSTGRES_SCRIPT}"
         )
         return
     if res.returncode != 0:
-        logger.error(f"{settings.START_EXPLORATORY_CLUSTER_SCRIPT} returncode != 0")
+        logger.error(f"{settings.START_EXPLORATORY_POSTGRES_SCRIPT} returncode != 0")
         logger.error(res.stdout.decode("utf-8"))
         logger.error(res.stderr.decode("utf-8"))
         return
@@ -51,7 +51,7 @@ def start_exploratory_cluster(event_name, snapshot):
     tuning_id = settings.TUNING_ID
 
     url = (
-        "http://%s:%s/exploratory_worker_handler/launch_exploratory_cluster_callback/"
+        "http://%s:%s/exploratory_worker_handler/launch_exploratory_postgres_callback/"
         % (
             control_plane_url,
             control_plane_port,
@@ -61,7 +61,7 @@ def start_exploratory_cluster(event_name, snapshot):
     data = {
         "tuning_id": tuning_id,
         "event_name": event_name,
-        "exploratory_cluster_port": exploratory_cluster_port,
+        "exploratory_postgres_port": exploratory_postgres_port,
     }
     logger.info(f"Sending {json.dumps(data)} back to control plane")
 

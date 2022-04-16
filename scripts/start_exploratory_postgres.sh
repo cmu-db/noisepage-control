@@ -6,17 +6,17 @@ set -e
 #   from the production replica cluster.
 #
 #   Script should be run as postgres user;
-#       $ sudo -u postgres scripts/start_exploratory_cluster.sh PORT [-s]
+#       $ sudo -u postgres scripts/start_exploratory_postgres.sh PORT [-s]
 ###############################################################################
 
 PORT=$1
 
 if [[ -z $PORT ]]; then
-    echo "Missing PORT. Command: sudo -u postgres scripts/start_exploratory_cluster.sh PORT [-r REPLICA_CLUSTER_DIR]"
+    echo "Missing PORT. Command: sudo -u postgres scripts/start_exploratory_postgres.sh PORT [-r REPLICA_CLUSTER_DIR]"
     exit
 fi
 if [[ $2 == "-r" && -z $3 ]]; then
-    echo "Missing REPLICA_CLUSTER_DIR. Command: sudo -u postgres scripts/start_exploratory_cluster.sh PORT [-r REPLICA_CLUSTER_DIR]"
+    echo "Missing REPLICA_CLUSTER_DIR. Command: sudo -u postgres scripts/start_exploratory_postgres.sh PORT [-r REPLICA_CLUSTER_DIR]"
     exit
 fi
 

@@ -3,7 +3,7 @@
 ##################################  NOTE  ##################################
 #   This script spawns a primary and replica postgres instance
 #   Script should be run as postgres user;
-#       $ sudo -u postgres scripts/start_production_cluster.sh
+#       $ sudo -u postgres scripts/start_production_postgres.sh
 ###############################################################################
 
 ##############################  Configurations  ##############################

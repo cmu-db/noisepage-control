@@ -22,7 +22,7 @@ def launch_exploratory_postgres(tuning_id, event_name):
         % (tuning_id, event_name)
     )
 
-    url = "http://%s:%s/launch_exploratory_cluster/" % (
+    url = "http://%s:%s/launch_exploratory_postgres/" % (
         tuning_instance.replica_url,
         settings.EXPLORATORY_WORKER_PORT,
     )

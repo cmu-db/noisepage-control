@@ -20,8 +20,6 @@ def handle_event(event):
         handle_launch_exploratory_worker_event(event)
     elif event_type == EventType.LAUNCH_EXPLORATORY_POSTGRES:
         handle_launch_exploratory_postgres_event(event)
-    elif event_type == EventType.COLLECT_BEHAVIOR_TRAINING_DATA:
-        handle_collect_behavior_training_data_event(event)
     elif event_type == EventType.STOP_EXPLORATORY_POSTGRES:
         handle_stop_exploratory_postgres_event(event)
 
@@ -52,10 +50,6 @@ def handle_launch_exploratory_postgres_event(event):
     event_name = event["data"]["event_name"]
 
     launch_exploratory_postgres(tuning_id, event_name)
-
-
-def handle_collect_behavior_training_data_event(event):
-    pass
 
 
 def handle_stop_exploratory_postgres_event(event):
