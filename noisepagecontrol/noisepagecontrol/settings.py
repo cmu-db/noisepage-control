@@ -1,6 +1,5 @@
 import os
 from pathlib import Path
-import subprocess
 
 from constants import (
     SERVER_MODE_ENV_VAR_KEY,

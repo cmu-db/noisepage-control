@@ -26,7 +26,7 @@ def healthcheck(request):
     tuning_id = data["tuning_id"]
     event_name = data["event_name"]
 
-    logging.info(
+    logger.info(
         "Received HC from exporatory worker. Tuning id: %s Event name: %s"
         % (tuning_id, event_name)
     )
@@ -39,3 +39,24 @@ def healthcheck(request):
     )
 
     return HttpResponse("OK")
+
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def launch_exploratory_cluster_callback(request):
+    data = json.loads(request.body)
+    tuning_id = data["tuning_id"]
+    event_name = data["event_name"]
+
+    logger.info(
+        "Received ack from launching exploratory cluster. Tuning id: %s Event name: %s"
+        % (tuning_id, event_name)
+    )
+
+    publish_event(
+        event_type=EventType.LAUNCH_EXPLORATORY_POSTGRES,
+        data={"tuning_id": tuning_id, "event_name": event_name},
+        completed=True,
+    )
+
+    return HttpResponse()

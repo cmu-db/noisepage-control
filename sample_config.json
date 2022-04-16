@@ -9,12 +9,18 @@
 }, {
 	"event_type": "LAUNCH_EXPLORATORY_POSTGRES",
 	"event_name": "LAUNCH_EXPLORATORY_POSTGRES_1",
+	"config": {
+		"snapshot": true
+	},
 	"parent_event_names" : [
 		"LAUNCH_EXPLORATORY_WORKER_abc"
 	]
 }, {
 	"event_type": "LAUNCH_EXPLORATORY_POSTGRES",
 	"event_name": "LAUNCH_EXPLORATORY_POSTGRES_2",
+	"config": {
+		"snapshot": false
+	},
 	"parent_event_names" : [
 		"LAUNCH_EXPLORATORY_WORKER_abc"
 	]
@@ -28,11 +34,20 @@
 		"LAUNCH_PRIMARY_WORKER_abc"
 	]
 }, {
+	"event_type": "COLLECT_BEHAVIOR_TRAINING_DATA",
+	"event_name": "COLLECT_BEHAVIOR_TRAINING_DATA_abc",
+	"config": {
+		"dummy": 0
+	},
+	"parent_event_names": [
+		"LAUNCH_EXPLORATORY_POSTGRES_2"
+	]
+}, {
 	"event_type": "START_TUNING",
 	"event_name": "START_TUNING_abc",
 	"parent_event_names" : [
 		"LAUNCH_EXPLORATORY_POSTGRES_1",
-		"LAUNCH_EXPLORATORY_POSTGRES_2",
+		"COLLECT_BEHAVIOR_TRAINING_DATA_abc",
 		"CAPTURE_PRIMARY_WORKLOAD_abc"
 	]
 }]

@@ -17,9 +17,14 @@ logger = logging.getLogger("exploratory_worker")
 @csrf_exempt
 @require_http_methods(["POST"])
 def launch_exploratory_cluster(request):
-    snapshot = json.loads(request.body)["snapshot"]
+    data = json.loads(request.body)
+    event_name = data["event_name"]
+    snapshot = data["snapshot"]
+
+    logger.info(f"Receive launch_exploratory_cluster request: {json.dumps(data)}")
+
     # asynchronously spins up a pg instance
-    thread = Thread(target=start_exploratory_cluster, args=(snapshot,))
+    thread = Thread(target=start_exploratory_cluster, args=(event_name, snapshot))
     thread.start()
 
     return HttpResponse()
@@ -28,8 +33,8 @@ def launch_exploratory_cluster(request):
 @csrf_exempt
 @require_http_methods(["DELETE"])
 def stop_exploratory_cluster(request):
-    body = json.loads(request.body)
-    port = body["port"]
+    data = json.loads(request.body)
+    port = data["port"]
 
     logger.info(f"Stopping exploratory Postgres cluster on port {port}...")
     data_dir = get_data_directory(port)
