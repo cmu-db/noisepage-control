@@ -16,7 +16,7 @@ PG_USERNAME=$3
 # Common paths:
 #       Ubuntu: /usr/lib/postgresql/14/bin
 #       OSX:    /usr/local/bin
-POSTGRES_BIN_DIR="/usr/local/bin"
+POSTGRES_BIN_DIR="/usr/lib/postgresql/14/bin"
 
 ###############################################################################
 
