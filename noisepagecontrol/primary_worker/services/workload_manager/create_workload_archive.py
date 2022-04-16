@@ -9,7 +9,7 @@ from django.conf import settings
 
 from primary_worker.services.primary_executor.get_logging_dir import get_logging_dir
 
-logger = logging.getLogger("exploratory_worker")
+logger = logging.getLogger("primary_worker")
 
 
 def create_workload_archive(capture_start_time, capture_end_time):

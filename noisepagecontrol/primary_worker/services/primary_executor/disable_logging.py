@@ -6,14 +6,14 @@ from django.conf import settings
 
 from .get_data_dir import get_data_dir
 
-logger = logging.getLogger("exploratory_worker")
+logger = logging.getLogger("primary_worker")
 
 
 def disable_logging():
     """
     Disable logging on the primary instance.
     WARNING: Results in a restart
-    Script needs to be execited by postgres user
+    Script needs to be executed by postgres user
     """
 
     data_dir = get_data_dir()
