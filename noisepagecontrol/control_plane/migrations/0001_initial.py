@@ -12,54 +12,154 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='ExploratoryPGInfo',
+            name="ExploratoryPGInfo",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('tuning_id', models.CharField(max_length=36)),
-                ('launch_event_name', models.CharField(max_length=120)),
-                ('exploratory_pg_port', models.IntegerField(null=True)),
-                ('status', models.CharField(choices=[(control_plane.services.exploratory_worker_handler.exploratory_pg_status_types.ExploratoryPGStatusType['PENDING'], 'PENDING'), (control_plane.services.exploratory_worker_handler.exploratory_pg_status_types.ExploratoryPGStatusType['READY'], 'READY'), (control_plane.services.exploratory_worker_handler.exploratory_pg_status_types.ExploratoryPGStatusType['STOPPED'], 'STOPPED')], max_length=32)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("tuning_id", models.CharField(max_length=36)),
+                ("launch_event_name", models.CharField(max_length=120)),
+                ("exploratory_pg_port", models.IntegerField(null=True)),
+                (
+                    "status",
+                    models.CharField(
+                        choices=[
+                            (
+                                control_plane.services.exploratory_worker_handler.exploratory_pg_status_types.ExploratoryPGStatusType[
+                                    "PENDING"
+                                ],
+                                "PENDING",
+                            ),
+                            (
+                                control_plane.services.exploratory_worker_handler.exploratory_pg_status_types.ExploratoryPGStatusType[
+                                    "READY"
+                                ],
+                                "READY",
+                            ),
+                            (
+                                control_plane.services.exploratory_worker_handler.exploratory_pg_status_types.ExploratoryPGStatusType[
+                                    "STOPPED"
+                                ],
+                                "STOPPED",
+                            ),
+                        ],
+                        max_length=32,
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Resource',
+            name="Resource",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('resource_id', models.CharField(default=control_plane.services.resource_manager.models.autogenerate_uuid, max_length=36)),
-                ('tuning_id', models.CharField(max_length=36)),
-                ('resource_type', models.CharField(choices=[(control_plane.services.resource_manager.resource_type.ResourceType['WORKLOAD'], 'Workload'), (control_plane.services.resource_manager.resource_type.ResourceType['TRAINING_DATA'], 'Training Data')], max_length=32)),
-                ('available', models.BooleanField(default=False)),
-                ('resource_name', models.CharField(blank=True, max_length=120)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "resource_id",
+                    models.CharField(
+                        default=control_plane.services.resource_manager.models.autogenerate_uuid,
+                        max_length=36,
+                    ),
+                ),
+                ("tuning_id", models.CharField(max_length=36)),
+                (
+                    "resource_type",
+                    models.CharField(
+                        choices=[
+                            (
+                                control_plane.services.resource_manager.resource_type.ResourceType[
+                                    "WORKLOAD"
+                                ],
+                                "Workload",
+                            ),
+                            (
+                                control_plane.services.resource_manager.resource_type.ResourceType[
+                                    "TRAINING_DATA"
+                                ],
+                                "Training Data",
+                            ),
+                        ],
+                        max_length=32,
+                    ),
+                ),
+                ("available", models.BooleanField(default=False)),
+                ("resource_name", models.CharField(blank=True, max_length=120)),
             ],
         ),
         migrations.CreateModel(
-            name='TuningEvent',
+            name="TuningEvent",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('event_name', models.CharField(max_length=120)),
-                ('event_type', models.CharField(max_length=120)),
-                ('parent_event_names', django.contrib.postgres.fields.ArrayField(base_field=models.CharField(max_length=120), blank=True, size=None)),
-                ('tuning_id', models.CharField(max_length=36)),
-                ('completed', models.BooleanField(default=False)),
-                ('config', models.JSONField(default=control_plane.services.tuning_manager.models.get_empty_object, verbose_name='config')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("event_name", models.CharField(max_length=120)),
+                ("event_type", models.CharField(max_length=120)),
+                (
+                    "parent_event_names",
+                    django.contrib.postgres.fields.ArrayField(
+                        base_field=models.CharField(max_length=120),
+                        blank=True,
+                        size=None,
+                    ),
+                ),
+                ("tuning_id", models.CharField(max_length=36)),
+                ("completed", models.BooleanField(default=False)),
+                (
+                    "config",
+                    models.JSONField(
+                        default=control_plane.services.tuning_manager.models.get_empty_object,
+                        verbose_name="config",
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='TuningInstance',
+            name="TuningInstance",
             fields=[
-                ('primary_url', models.CharField(max_length=120)),
-                ('primary_port', models.CharField(max_length=5)),
-                ('primary_username', models.CharField(max_length=120)),
-                ('replica_url', models.CharField(max_length=120)),
-                ('replica_port', models.CharField(max_length=5)),
-                ('replica_username', models.CharField(max_length=120)),
-                ('state', models.JSONField(default=control_plane.services.tuning_manager.models.get_empty_object, verbose_name='state')),
-                ('tuning_id', models.CharField(default=control_plane.services.tuning_manager.models.autogenerate_uuid, max_length=36, primary_key=True, serialize=False)),
+                ("primary_url", models.CharField(max_length=120)),
+                ("primary_port", models.CharField(max_length=5)),
+                ("primary_username", models.CharField(max_length=120)),
+                ("replica_url", models.CharField(max_length=120)),
+                ("replica_port", models.CharField(max_length=5)),
+                ("replica_username", models.CharField(max_length=120)),
+                (
+                    "state",
+                    models.JSONField(
+                        default=control_plane.services.tuning_manager.models.get_empty_object,
+                        verbose_name="state",
+                    ),
+                ),
+                (
+                    "tuning_id",
+                    models.CharField(
+                        default=control_plane.services.tuning_manager.models.autogenerate_uuid,
+                        max_length=36,
+                        primary_key=True,
+                        serialize=False,
+                    ),
+                ),
             ],
         ),
     ]
