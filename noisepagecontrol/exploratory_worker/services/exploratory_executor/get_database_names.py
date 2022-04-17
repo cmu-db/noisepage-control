@@ -38,9 +38,8 @@ def get_database_names(postgres_port):
         We need to extract the value
     """
 
-    database_names = list(map(
-        lambda db_name: db_name.strip(), 
-        out.decode("utf-8").split("\n")[2:-3]
-    ))
+    database_names = list(
+        map(lambda db_name: db_name.strip(), out.decode("utf-8").split("\n")[2:-3])
+    )
 
     return database_names

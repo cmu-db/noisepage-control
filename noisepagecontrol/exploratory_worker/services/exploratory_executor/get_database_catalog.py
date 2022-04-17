@@ -19,7 +19,7 @@ def get_database_catalog(postgres_port, database_name):
         settings.GET_DATABASE_CATALOG_SCRIPT,
         port,
         pg_username,
-        database_name
+        database_name,
     )
 
     process = subprocess.Popen(
