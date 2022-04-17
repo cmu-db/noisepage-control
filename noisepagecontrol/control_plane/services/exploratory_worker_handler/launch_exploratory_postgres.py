@@ -7,23 +7,13 @@ from django.conf import settings
 logger = logging.getLogger("control_plane")
 
 
-def launch_exploratory_postgres(tuning_id, event_name):
-    from control_plane.services.tuning_manager.models import TuningInstance, TuningEvent
-
-    tuning_instance = TuningInstance.objects.get(tuning_id=tuning_id)
-    tuning_event = TuningEvent.objects.get(tuning_id=tuning_id, event_name=event_name)
-
-    # Get config.snapshot to decide if exploratory postgres cluster should be
-    # launched by taking a snapshot of replica cluster. Default to false.
-    snapshot = tuning_event.config.get("snapshot", False)
-
+def launch_exploratory_postgres(event_name, replica_url, snapshot):
     logger.info(
-        "Sending request to launch exploratory postgres cluster. Tuning id: %s Event name: %s"
-        % (tuning_id, event_name)
+        f"Sending request to launch exploratory postgres cluster. Event name: {event_name}"
     )
 
     url = "http://%s:%s/launch_exploratory_postgres/" % (
-        tuning_instance.replica_url,
+        replica_url,
         settings.EXPLORATORY_WORKER_PORT,
     )
 
