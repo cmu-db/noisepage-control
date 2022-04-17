@@ -14,7 +14,7 @@ def handle_event(event):
     Input format:
     event = {
         "event_type": EventType,
-        "data": {"tuning_id": str, "event_name": str},
+        "data": {"tuning_id": str, "event_name": str, "config": dict},
         "completed": bool,
     }
     """
@@ -54,18 +54,18 @@ def handle_launch_exploratory_worker_event(event):
 def handle_launch_exploratory_postgres_event(event):
     tuning_id = event["data"]["tuning_id"]
     event_name = event["data"]["event_name"]
+    config = event["data"]["config"]
 
     from .models import ExploratoryPGInfo
     from .exploratory_pg_status_types import ExploratoryPGStatusType
-    from control_plane.services.tuning_manager.models import TuningInstance, TuningEvent
+    from control_plane.services.tuning_manager.models import TuningInstance
 
     tuning_instance = TuningInstance.objects.get(tuning_id=tuning_id)
-    tuning_event = TuningEvent.objects.get(tuning_id=tuning_id, event_name=event_name)
-
     replica_url = tuning_instance.replica_url
+
     # Get config.snapshot to decide if exploratory postgres cluster should be
     # launched by taking a snapshot of replica cluster. Default to false.
-    snapshot = tuning_event.config.get("snapshot", False)
+    snapshot = config["snapshot"] if "snapshot" in config else False
 
     # Track status for exploratory pg instances
     exploratory_pg_info = ExploratoryPGInfo(
@@ -80,25 +80,23 @@ def handle_launch_exploratory_postgres_event(event):
 
 def handle_stop_exploratory_postgres_event(event):
     tuning_id = event["data"]["tuning_id"]
-    event_name = event["data"]["event_name"]
+    config = event["data"]["config"]
 
-    from control_plane.services.tuning_manager.models import TuningInstance, TuningEvent
+    from control_plane.services.tuning_manager.models import TuningInstance
     from .models import ExploratoryPGInfo
     from .exploratory_pg_status_types import ExploratoryPGStatusType
 
     tuning_instance = TuningInstance.objects.get(tuning_id=tuning_id)
     replica_url = tuning_instance.replica_url
 
-    stop_event = TuningEvent.objects.get(tuning_id=tuning_id, event_name=event_name)
-
     # We need to get the event name that launches the exploratory PG cluster
     # to know which exploratory port to stop
-    launch_event = stop_event.config.get("launch_event", None)
-    if launch_event is None:
+    if "launch_event" not in config:
         logger.error(
             f"Not specifying launch_event config in {EventType.STOP_EXPLORATORY_POSTGRES} event"
         )
         return
+    launch_event = config["launch_event"]
 
     info = ExploratoryPGInfo.objects.get(
         tuning_id=tuning_id, launch_event_name=launch_event
