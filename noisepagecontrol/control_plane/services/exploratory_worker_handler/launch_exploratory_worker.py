@@ -17,7 +17,7 @@ logger = logging.getLogger("control_plane")
 def launch_exploratory_worker(
     tuning_id, replica_db_port, replica_db_username, event_name
 ):
-    logging.info(
+    logger.info(
         "Launching exploratory worker. Tuning id: %s Event name: %s"
         % (tuning_id, event_name)
     )

@@ -9,12 +9,18 @@
 }, {
 	"event_type": "LAUNCH_EXPLORATORY_POSTGRES",
 	"event_name": "LAUNCH_EXPLORATORY_POSTGRES_1",
+	"config": {
+		"snapshot": true
+	},
 	"parent_event_names" : [
 		"LAUNCH_EXPLORATORY_WORKER_abc"
 	]
 }, {
 	"event_type": "LAUNCH_EXPLORATORY_POSTGRES",
 	"event_name": "LAUNCH_EXPLORATORY_POSTGRES_2",
+	"config": {
+		"snapshot": false
+	},
 	"parent_event_names" : [
 		"LAUNCH_EXPLORATORY_WORKER_abc"
 	]

@@ -35,7 +35,7 @@ pipenv sync
 
 4. Run the server (with sudo)
 ```
-sudo pipenv run ./run.sh CONTROL_PLANE|PRIMARY_WORKER|EXPLORATORY_WORKER
+sudo pipenv run ./run.sh CONTROL_PLANE|PRIMARY_WORKER|EXPLORATORY_WORKER|MAKE_MIGRATIONS|MIGRATE|FORMAT
 ```
 
 

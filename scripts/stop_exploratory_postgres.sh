@@ -3,14 +3,14 @@
 ##################################  NOTE  ##################################
 #   This script tears down the exploratory postgres cluster
 #   Script should be run as postgres user;
-#       $ sudo -u postgres scripts/stop_exploratory_cluster.sh CLUSTER_DIR
+#       $ sudo -u postgres scripts/stop_exploratory_postgres.sh CLUSTER_DIR
 ###############################################################################
 
 CLUSTER_DIR=$1
 
 if [[ -z $CLUSTER_DIR ]]
 then
-    echo "Missing CLUSTER_DIR. Command: sudo -u postgres scripts/stop_exploratory_cluster.sh CLUSTER_DIR"
+    echo "Missing CLUSTER_DIR. Command: sudo -u postgres scripts/stop_exploratory_postgres.sh CLUSTER_DIR"
     exit
 fi
 
