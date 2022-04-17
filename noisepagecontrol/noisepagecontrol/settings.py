@@ -32,6 +32,8 @@ START_DATABASE_LOGGING_SCRIPT = SCRIPTS_DIR / "start_database_logging.sh"
 STOP_DATABASE_LOGGING_SCRIPT = SCRIPTS_DIR / "stop_database_logging.sh"
 GET_DATABASE_LOGGING_DIR_SCRIPT = SCRIPTS_DIR / "get_database_logging_directory.sh"
 GET_DATABASE_DATA_DIR_SCRIPT = SCRIPTS_DIR / "get_database_data_directory.sh"
+GET_DATABASE_NAMES_SCRIPT = SCRIPTS_DIR / "get_database_names.sh"
+GET_DATABASE_CATALOG_SCRIPT = SCRIPTS_DIR / "get_database_catalog.sh"
 START_EXPLORATORY_CLUSTER_SCRIPT = SCRIPTS_DIR / "start_exploratory_cluster.sh"
 STOP_EXPLORATORY_CLUSTER_SCRIPT = SCRIPTS_DIR / "stop_exploratory_cluster.sh"
 
@@ -75,6 +77,7 @@ if SERVER_MODE == SERVER_MODE_PRIMARY_WORKER:
 if SERVER_MODE == SERVER_MODE_EXPLORATORY_WORKER:
     REPLICA_DB_PORT = os.environ[REPLICA_DB_PORT_ENV_VAR_KEY]
     REPLICA_DB_USERNAME = os.environ[REPLICA_DB_USERNAME_ENV_VAR_KEY]
+    DATA_COLLECTION_DIR = BASE_DIR / "exploratory_worker" / "data"
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = "django-insecure-)^1mg$booh%m$8(8c629(b(v82$is9r=k%09448kra$r8((v9("
