@@ -39,7 +39,9 @@ def stop_exploratory_postgres(request):
     logger.info(f"Stopping exploratory Postgres cluster on port {port}...")
     data_dir = get_data_directory(port)
     if data_dir is None:
-        return HttpResponseNotFound(f"No exploratory cluster running on port {port}")
+        msg = f"No exploratory cluster running on port {port}"
+        logger.error(msg)
+        return HttpResponseNotFound(msg)
 
     args = [
         "sudo",

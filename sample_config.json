@@ -41,4 +41,10 @@
 		"LAUNCH_EXPLORATORY_POSTGRES_2",
 		"CAPTURE_PRIMARY_WORKLOAD_abc"
 	]
+}, {
+	"event_type": "STOP_EXPLORAOTRY_POSTGRES",
+	"event_name": "STOP_EXPLORAOTRY_POSTGRES_2",
+	"config": {
+		"launch_event": "LAUNCH_EXPLORATORY_POSTGRES_2"
+	}
 }]

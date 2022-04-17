@@ -26,9 +26,14 @@ def start_exploratory_postgres(event_name, snapshot):
         str(exploratory_postgres_port),
     ]
     if snapshot:
-        logger.info("taking snapshot from replica cluster...")
+        logger.info("Taking snapshot from replica cluster...")
         replica_dir = get_data_directory(settings.REPLICA_DB_PORT)
-        args += ["-r", replica_dir]
+        if replica_dir is None:
+            logger.error(
+                f"Replica PG cluster is down on port {settings.REPLICA_DB_PORT}. Falling back into launching empty exploratory PG"
+            )
+        else:
+            args += ["-r", replica_dir]
     try:
         res = subprocess.run(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     # TODO Tim: should send fail message back to control plane instead of sending nothing?
