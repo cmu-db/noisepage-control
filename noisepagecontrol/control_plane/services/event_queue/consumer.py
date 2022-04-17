@@ -1,11 +1,10 @@
 import json
-from kombu import Connection, Exchange, Queue
+from kombu import Connection
 
 from .config import (
     ampq_queue,
     ampq_connection_string,
 )
-from .event_types import EventType
 from .event_handler_types import EventHandlerType
 from .child_event_publisher import publish_child_events
 from .event_handler_mapping import EventHandlerMapping

@@ -1,14 +1,27 @@
 from control_plane.services.event_queue.event_types import EventType
 
 from .launch_exploratory_worker import launch_exploratory_worker
+from .launch_exploratory_postgres import launch_exploratory_postgres
 
 
 def handle_event(event):
+    """
+    Input format:
+    event = {
+        "event_type": EventType,
+        "data": {"tuning_id": str, "event_name": str},
+        "completed": bool,
+    }
+    """
 
     event_type = event["event_type"]
 
     if event_type == EventType.LAUNCH_EXPLORATORY_WORKER:
         handle_launch_exploratory_worker_event(event)
+    elif event_type == EventType.LAUNCH_EXPLORATORY_POSTGRES:
+        handle_launch_exploratory_postgres_event(event)
+    elif event_type == EventType.STOP_EXPLORATORY_POSTGRES:
+        handle_stop_exploratory_postgres_event(event)
 
 
 def handle_launch_exploratory_worker_event(event):
@@ -30,3 +43,14 @@ def handle_launch_exploratory_worker_event(event):
         tuning_instance.replica_username,
         event_name,
     )
+
+
+def handle_launch_exploratory_postgres_event(event):
+    tuning_id = event["data"]["tuning_id"]
+    event_name = event["data"]["event_name"]
+
+    launch_exploratory_postgres(tuning_id, event_name)
+
+
+def handle_stop_exploratory_postgres_event(event):
+    pass

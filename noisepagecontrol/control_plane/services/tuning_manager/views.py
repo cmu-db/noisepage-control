@@ -5,9 +5,6 @@ from django.core import serializers
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 
-from control_plane.services.event_queue.event_types import EventType
-from control_plane.services.event_queue.event_handler_types import EventHandlerType
-from control_plane.services.event_queue.event_handler_mapping import EventHandlerMapping
 from control_plane.services.event_queue.producer import publish_event
 
 from .models import TuningInstance, TuningEvent

@@ -6,14 +6,17 @@ set -e
 #   from the production replica cluster.
 #
 #   Script should be run as postgres user;
-#       $ sudo -u postgres scripts/start_exploratory_cluster.sh PORT [-s]
+#       $ sudo -u postgres scripts/start_exploratory_postgres.sh PORT [-s]
 ###############################################################################
 
 PORT=$1
 
-if [[ -z $PORT ]]
-then
-    echo "Missing PORT. Command: sudo -u postgres scripts/start_exploratory_cluster.sh PORT [-s]"
+if [[ -z $PORT ]]; then
+    echo "Missing PORT. Command: sudo -u postgres scripts/start_exploratory_postgres.sh PORT [-r REPLICA_CLUSTER_DIR]"
+    exit
+fi
+if [[ $2 == "-r" && -z $3 ]]; then
+    echo "Missing REPLICA_CLUSTER_DIR. Command: sudo -u postgres scripts/start_exploratory_postgres.sh PORT [-r REPLICA_CLUSTER_DIR]"
     exit
 fi
 
@@ -41,9 +44,10 @@ mkdir -p "$EXP_CLUSTER_DIR"
 $POSTGRES_BIN_DIR/initdb "$EXP_CLUSTER_DIR"
 echo "port = $PORT" >> "$EXP_CLUSTER_DIR/postgresql.conf"
 
-if [[ $2 == "-s" ]]; then
+if [[ $2 == "-r" ]]; then
+    REPLICA_CLUSTER_DIR=$3
+    echo "Copy subdirectories in $REPLICA_CLUSTER_DIR to $EXP_CLUSTER_DIR"
     # Copy subdirectories in replica's PG_DATA to exploratory's PG_DATA
-    REPLICA_CLUSTER_DIR="$POSTGRES_ROOT/main"  # TODO: parameterize
     find $REPLICA_CLUSTER_DIR -mindepth 1 -maxdepth 1 -type d -exec cp -r {} $EXP_CLUSTER_DIR \;
 fi
 
