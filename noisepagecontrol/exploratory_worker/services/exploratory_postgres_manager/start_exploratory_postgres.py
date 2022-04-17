@@ -21,7 +21,7 @@ def start_exploratory_postgres(event_name, snapshot):
     args = [
         "sudo",
         "-u",
-        "postgres",
+        settings.POSTGRES_USER,
         settings.START_EXPLORATORY_POSTGRES_SCRIPT,
         str(exploratory_postgres_port),
     ]

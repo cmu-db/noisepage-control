@@ -44,7 +44,7 @@ def stop_exploratory_postgres(request):
     args = [
         "sudo",
         "-u",
-        "postgres",
+        settings.POSTGRES_USER,
         settings.STOP_EXPLORATORY_POSTGRES_SCRIPT,
         data_dir,
     ]

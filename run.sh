@@ -14,7 +14,7 @@ fi
 case ${SERVER_MODE} in
     "CONTROL_PLANE" )
         echo "Starting Control Plane"
-        env $(cat config/control_plane.env | xargs) python noisepagecontrol/manage.py runserver --noreload 0:8000 ;;
+        env $(cat config/control_plane.env | xargs) python noisepagecontrol/manage.py runserver --noreload 127.0.0.1:8000 ;;
     "PRIMARY_WORKER" )
         echo "Starting Primary Worker"
         env $(cat config/primary_worker.env | xargs) python noisepagecontrol/manage.py runserver --noreload 127.0.0.1:8001 ;;
