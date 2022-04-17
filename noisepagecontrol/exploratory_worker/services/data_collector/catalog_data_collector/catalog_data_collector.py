@@ -14,14 +14,14 @@ logger = logging.getLogger("exploratory_worker")
 
 
 class CatalogDataCollector(BaseDataCollector):
-    def __init__(self, exp_postgres_port, data_dir, config):
-        super().__init__(exp_postgres_port, data_dir, config)
+    def __init__(self, postgres_port, data_dir, config):
+        super().__init__(postgres_port, data_dir, config)
 
     def setup(self):
         logger.info("Running setup for CatalogDataCollector")
 
         # Get list of databases
-        self.database_names = get_database_names(self.exp_postgres_port)
+        self.database_names = get_database_names(self.postgres_port)
         logger.info("Database names: %s" % (str(self.database_names)))
 
     def collect(self):
@@ -29,9 +29,7 @@ class CatalogDataCollector(BaseDataCollector):
 
         # Get catalog for each database and write to file
         for database_name in self.database_names:
-            database_catalog = get_database_catalog(
-                self.exp_postgres_port, database_name
-            )
+            database_catalog = get_database_catalog(self.postgres_port, database_name)
 
             catalog_file_name = database_name + ".catalog"
 

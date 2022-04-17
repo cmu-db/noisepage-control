@@ -48,7 +48,11 @@ def publish_child_events(completed_event):
             logger.info("Can execute child event %s" % (child_event.event_name))
             publish_event(
                 event_type=child_event.event_type,
-                data={"tuning_id": tuning_id, "event_name": child_event.event_name, "config": child_event.config},
+                data={
+                    "tuning_id": tuning_id,
+                    "event_name": child_event.event_name,
+                    "config": child_event.config,
+                },
                 completed=False,
             )
         else:

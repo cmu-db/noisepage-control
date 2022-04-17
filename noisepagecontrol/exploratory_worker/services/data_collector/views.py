@@ -17,10 +17,23 @@ def collect_data(request):
 
     data = json.loads(request.body)
 
+    event_name = data["event_name"]
+    resource_id = data["resource_id"]
+
     config = data["config"]
-    exp_postgres_port = data["exp_postgres_port"]
+    postgres_port = data["postgres_port"]
     data_collector_type = data["data_collector_type"]
 
-    execute_data_collector(data_collector_type, exp_postgres_port, config)
+    thread = Thread(
+        target=execute_data_collector,
+        args=(
+            event_name,
+            resource_id,
+            data_collector_type,
+            postgres_port,
+            config,
+        ),
+    )
+    thread.start()
 
     return HttpResponse("OK")

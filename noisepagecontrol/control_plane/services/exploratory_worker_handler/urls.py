@@ -10,4 +10,9 @@ urlpatterns = [
         views.launch_exploratory_postgres_callback,
         name="launch_exploratory_postgres_callback",
     ),
+    path(
+        "data_collector_callback/",
+        views.data_collector_callback,
+        name="data_collector_callback",
+    ),
 ]

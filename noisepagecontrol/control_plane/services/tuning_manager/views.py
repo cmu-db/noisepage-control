@@ -57,7 +57,7 @@ def tune_database(request):
             data={
                 "tuning_id": new_tuning_request.tuning_id,
                 "event_name": initial_event.event_name,
-                "config": initial_event.config
+                "config": initial_event.config,
             },
             completed=False,
         )

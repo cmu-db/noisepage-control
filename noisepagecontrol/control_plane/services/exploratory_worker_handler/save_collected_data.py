@@ -7,15 +7,13 @@ from control_plane.services.resource_manager.save_resource import (
 )
 
 
-def save_captured_workload(
-    tuning_id, resource_id, workload_tar, workload_filename, event_name
-):
+def save_collected_data(tuning_id, resource_id, data_tar, data_filename, event_name):
 
-    save_resource(tuning_id, resource_id, workload_tar, workload_filename)
+    save_resource(tuning_id, resource_id, data_tar, data_filename)
 
-    # Publish LAUNCH_PRIMARY_WORKER event as completed
+    # Publish COLLECT_DATA_FROM_EXPLORATORY event as completed
     publish_event(
-        event_type=EventType.CAPTURE_PRIMARY_WORKLOAD,
+        event_type=EventType.COLLECT_DATA_FROM_EXPLORATORY,
         data={"tuning_id": tuning_id, "event_name": event_name},
         completed=True,
     )

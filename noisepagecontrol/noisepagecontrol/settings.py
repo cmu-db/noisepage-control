@@ -36,7 +36,7 @@ GET_DATABASE_CATALOG_SCRIPT = SCRIPTS_DIR / "get_database_catalog.sh"
 START_EXPLORATORY_POSTGRES_SCRIPT = SCRIPTS_DIR / "start_exploratory_postgres.sh"
 STOP_EXPLORATORY_POSTGRES_SCRIPT = SCRIPTS_DIR / "stop_exploratory_postgres.sh"
 
-POSTGRES_USER = "postgres"
+POSTGRES_USER = "kushagrasingh"
 
 # Control plane specific configurations
 if SERVER_MODE == SERVER_MODE_CONTROL_PLANE:

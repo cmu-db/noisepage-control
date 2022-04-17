@@ -11,14 +11,11 @@ def get_database_catalog(postgres_port, database_name):
     Get database names from postgres cluster
     """
 
-    port = postgres_port
-    pg_username = "kushagrasingh"
-
     command = 'sudo -u "%s" "%s" "%s" "%s" "%s"' % (
-        pg_username,
+        settings.POSTGRES_USER,
         settings.GET_DATABASE_CATALOG_SCRIPT,
-        port,
-        pg_username,
+        postgres_port,
+        settings.REPLICA_DB_USERNAME,
         database_name,
     )
 
