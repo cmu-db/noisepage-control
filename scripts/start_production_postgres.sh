@@ -16,7 +16,7 @@ REPLICATION_USERNAME="repl"
 # Common paths:
 #       Ubuntu: /usr/lib/postgresql/14/bin
 #       OSX:    /usr/local/bin
-POSTGRES_BIN_DIR="/usr/lib/postgresql/14/bin"
+POSTGRES_BIN_DIR="/usr/local/bin"
 
 # This specifies where the postgres cluster should reside
 #   Ubuntu: /var/lib/postgresql/14
@@ -30,7 +30,7 @@ POSTGRES_ROOT="/var/lib/postgresql/14"
 
 
 PROJECT_DIR=`pwd`
-PRODUCTION_CLUSTER_DIR="${POSTGRES_ROOT}/production_cluster"
+PRODUCTION_CLUSTER_DIR="${PROJECT_DIR}/production_cluster"
 
 # Stop running instances if up
 "${PROJECT_DIR}/scripts/stop_production_cluster.sh"
@@ -76,3 +76,9 @@ chmod -R 750 "${REPLICA_DIR}"
 
 # Start replica server
 ${POSTGRES_BIN_DIR}/pg_ctl -D "${REPLICA_DIR}" -l "${REPLICA_DIR}/logfile" start
+
+
+
+# Create some dummy data
+echo "CREATE DATABASE dummy;" | ${POSTGRES_BIN_DIR}/psql -p ${PRIMARY_PORT} postgres
+${POSTGRES_BIN_DIR}/psql -p ${PRIMARY_PORT} -d dummy -f "${PROJECT_DIR}/scripts/generate_dummy_data.sql"
