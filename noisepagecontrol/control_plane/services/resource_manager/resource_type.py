@@ -4,5 +4,5 @@ from enum import Enum
 class ResourceType(str, Enum):
 
     WORKLOAD = "WORKLOAD"
-    CATALOG = "CATALOG"
+    EXPLORATORY_DATA = "EXPLORATORY_DATA"
     TRAINING_DATA = "TRAINING_DATA"

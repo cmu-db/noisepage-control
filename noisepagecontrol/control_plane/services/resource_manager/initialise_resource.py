@@ -1,7 +1,4 @@
-import os
 import logging
-
-from django.conf import settings
 
 logger = logging.getLogger("control_plane")
 
@@ -25,8 +22,8 @@ def initialise_resource(tuning_id, resource_type):
     )
     resource.save()
 
-    # Make new dir for resource
-    resource_dir = settings.RESOURCE_DIR / resource.resource_id
-    os.mkdir(resource_dir)
-
+    logging.info(
+        "Initialised new resource %s for tuning id %s"
+        % (resource.resource_id, tuning_id)
+    )
     return resource.resource_id

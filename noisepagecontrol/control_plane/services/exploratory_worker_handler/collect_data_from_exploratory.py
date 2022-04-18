@@ -23,7 +23,7 @@ def collect_data_from_exploratory(
     logger.info(f"Sending request to collect data. Event name: {event_name}")
 
     # Initialise a new resource for this workload
-    resource_id = initialise_resource(tuning_id, ResourceType.CATALOG)
+    resource_id = initialise_resource(tuning_id, ResourceType.EXPLORATORY_DATA)
 
     url = "http://%s:%s/collect_data/" % (
         replica_url,

@@ -18,6 +18,9 @@ def save_resource(tuning_id, resource_id, resource_tar, resource_filename):
 
     resource_dir = settings.RESOURCE_DIR / resource.resource_id
 
+    # Make new dir for resource
+    os.mkdir(resource_dir)
+
     # Write file to resource dir
     with open(resource_dir / resource_filename, "wb") as fp:
         fp.write(resource_tar)

@@ -120,6 +120,8 @@ def handle_collect_data_from_exploratory_event(event):
     event_name = event["data"]["event_name"]
 
     config = event["data"]["config"]
+
+    target = config["target"]
     data_collector_type = config["data_collector_type"]
     data_collector_config = config["data_collector_config"]
 
@@ -127,8 +129,16 @@ def handle_collect_data_from_exploratory_event(event):
 
     tuning_instance = TuningInstance.objects.get(tuning_id=tuning_id)
 
-    # TODO: This should change based on the data collector type;
-    postgres_port = tuning_instance.replica_port
+    """
+        If target is replica, execute data collector on production replica
+        Else query the exploratory postgres corresponding
+            to the provided launch event name
+    """
+    if target == "replica":
+        postgres_port = tuning_instance.replica_port
+    else:
+        # TODO: query db for exploratory pg port
+        postgres_port = "20000"
 
     collect_data_from_exploratory(
         tuning_id,
