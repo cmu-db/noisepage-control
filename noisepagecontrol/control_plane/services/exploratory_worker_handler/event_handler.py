@@ -1,6 +1,8 @@
 import json
 import logging
 
+from django.conf import settings
+
 from control_plane.services.event_queue.event_types import EventType
 from .launch_exploratory_worker import launch_exploratory_worker
 from .launch_exploratory_postgres import launch_exploratory_postgres
@@ -49,7 +51,6 @@ def handle_launch_exploratory_worker_event(event):
     launch_exploratory_worker(
         tuning_id,
         tuning_instance.replica_port,
-        tuning_instance.replica_username,
         event_name,
     )
 

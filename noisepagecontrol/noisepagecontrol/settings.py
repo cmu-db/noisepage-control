@@ -16,8 +16,6 @@ from constants import (
     LAUNCH_EVENT_NAME_ENV_VAR_KEY,
     PRIMARY_DB_PORT_ENV_VAR_KEY,
     REPLICA_DB_PORT_ENV_VAR_KEY,
-    PRIMARY_DB_USERNAME_ENV_VAR_KEY,
-    REPLICA_DB_USERNAME_ENV_VAR_KEY,
 )
 
 SERVER_MODE = os.environ.get(SERVER_MODE_ENV_VAR_KEY, None)
@@ -36,7 +34,7 @@ GET_DATABASE_CATALOG_SCRIPT = SCRIPTS_DIR / "get_database_catalog.sh"
 START_EXPLORATORY_POSTGRES_SCRIPT = SCRIPTS_DIR / "start_exploratory_postgres.sh"
 STOP_EXPLORATORY_POSTGRES_SCRIPT = SCRIPTS_DIR / "stop_exploratory_postgres.sh"
 
-POSTGRES_USER = "kushagrasingh"
+POSTGRES_USER = "postgres"
 
 # Control plane specific configurations
 if SERVER_MODE == SERVER_MODE_CONTROL_PLANE:
@@ -69,13 +67,11 @@ else:  # Configurations for all workers
 # Primary worker specific configurations
 if SERVER_MODE == SERVER_MODE_PRIMARY_WORKER:
     PRIMARY_DB_PORT = os.environ[PRIMARY_DB_PORT_ENV_VAR_KEY]
-    PRIMARY_DB_USERNAME = os.environ[PRIMARY_DB_USERNAME_ENV_VAR_KEY]
     WORKLOAD_CAPTURE_DIR = BASE_DIR / "primary_worker" / "workload_captures"
 
 # Exploratory worker specific configurations
 if SERVER_MODE == SERVER_MODE_EXPLORATORY_WORKER:
     REPLICA_DB_PORT = os.environ[REPLICA_DB_PORT_ENV_VAR_KEY]
-    REPLICA_DB_USERNAME = os.environ[REPLICA_DB_USERNAME_ENV_VAR_KEY]
     DATA_COLLECTION_DIR = BASE_DIR / "exploratory_worker" / "data"
 
 # SECURITY WARNING: keep the secret key used in production secret!

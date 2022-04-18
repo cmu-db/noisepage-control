@@ -15,7 +15,7 @@ def get_database_catalog(postgres_port, database_name):
         settings.POSTGRES_USER,
         settings.GET_DATABASE_CATALOG_SCRIPT,
         postgres_port,
-        settings.REPLICA_DB_USERNAME,
+        settings.POSTGRES_USER,
         database_name,
     )
 

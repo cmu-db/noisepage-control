@@ -25,10 +25,8 @@ def tune_database(request):
     new_tuning_request = TuningInstance(
         primary_url=tune_db_request_data["primary_url"],
         primary_port=str(tune_db_request_data["primary_port"]),
-        primary_username=str(tune_db_request_data["primary_username"]),
         replica_url=tune_db_request_data["replica_url"],
         replica_port=str(tune_db_request_data["replica_port"]),
-        replica_username=str(tune_db_request_data["replica_username"]),
         state={"primary_worker_ready": False, "exploratory_worker_ready": False},
     )
     new_tuning_request.save()

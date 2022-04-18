@@ -16,10 +16,8 @@ class TuningInstance(models.Model):
 
     primary_url = models.CharField(max_length=120)
     primary_port = models.CharField(max_length=5)
-    primary_username = models.CharField(max_length=120)
     replica_url = models.CharField(max_length=120)
     replica_port = models.CharField(max_length=5)
-    replica_username = models.CharField(max_length=120)
 
     state = models.JSONField("state", default=get_empty_object)
 

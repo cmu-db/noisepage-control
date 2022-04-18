@@ -18,14 +18,13 @@ def enable_logging():
 
     data_dir = get_data_dir()
     port = settings.PRIMARY_DB_PORT
-    pg_username = settings.PRIMARY_DB_USERNAME
 
     command = 'sudo -u "%s" "%s" "%s" "%s" "%s"' % (
         settings.POSTGRES_USER,
         settings.START_DATABASE_LOGGING_SCRIPT,
         data_dir,
         port,
-        pg_username,
+        settings.POSTGRES_USER,
     )
     subprocess.call(command, shell=True)
     time.sleep(10)
