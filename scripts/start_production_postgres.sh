@@ -76,3 +76,9 @@ chmod -R 750 "${REPLICA_DIR}"
 
 # Start replica server
 ${POSTGRES_BIN_DIR}/pg_ctl -D "${REPLICA_DIR}" -l "${REPLICA_DIR}/logfile" start
+
+
+
+# Create some dummy data
+echo "CREATE DATABASE dummy;" | ${POSTGRES_BIN_DIR}/psql -p ${PRIMARY_PORT} postgres
+${POSTGRES_BIN_DIR}/psql -p ${PRIMARY_PORT} -d dummy -f "${PROJECT_DIR}/scripts/generate_dummy_data.sql"

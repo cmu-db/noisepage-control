@@ -14,12 +14,11 @@ def get_logging_dir():
     """
 
     port = settings.PRIMARY_DB_PORT
-    pg_username = settings.PRIMARY_DB_USERNAME
 
     command = '"%s" "%s" "%s"' % (
         settings.GET_DATABASE_LOGGING_DIR_SCRIPT,
         port,
-        pg_username,
+        settings.POSTGRES_USER,
     )
 
     process = subprocess.Popen(

@@ -4,9 +4,10 @@ import requests
 
 from django.conf import settings
 
-from control_plane.services.resource_manager.workload_resource_handler import (
-    initialise_workload_resource,
+from control_plane.services.resource_manager.initialise_resource import (
+    initialise_resource,
 )
+from control_plane.services.resource_manager.resource_type import ResourceType
 
 logger = logging.getLogger("control_plane")
 
@@ -23,7 +24,7 @@ def capture_primary_workload(tuning_id, event_name):
     time_period = tuning_event.config.get("time_period", 5)
 
     # Initialise a new resource for this workload
-    resource_id = initialise_workload_resource(tuning_id)
+    resource_id = initialise_resource(tuning_id, ResourceType.WORKLOAD)
 
     logger.info(
         "Sending request to capture workload. Tuning id: %s Event name: %s"

@@ -10,15 +10,6 @@
 	"event_type": "LAUNCH_EXPLORATORY_POSTGRES",
 	"event_name": "LAUNCH_EXPLORATORY_POSTGRES_1",
 	"config": {
-		"snapshot": true
-	},
-	"parent_event_names" : [
-		"LAUNCH_EXPLORATORY_WORKER_abc"
-	]
-}, {
-	"event_type": "LAUNCH_EXPLORATORY_POSTGRES",
-	"event_name": "LAUNCH_EXPLORATORY_POSTGRES_2",
-	"config": {
 		"snapshot": false
 	},
 	"parent_event_names" : [
@@ -34,17 +25,25 @@
 		"LAUNCH_PRIMARY_WORKER_abc"
 	]
 }, {
-	"event_type": "START_TUNING",
-	"event_name": "START_TUNING_abc",
+	"event_type": "COLLECT_DATA_FROM_EXPLORATORY",
+	"event_name": "COLLECT_DATA_FROM_EXPLORATORY_abc",
 	"parent_event_names" : [
-		"LAUNCH_EXPLORATORY_POSTGRES_1",
-		"LAUNCH_EXPLORATORY_POSTGRES_2",
-		"CAPTURE_PRIMARY_WORKLOAD_abc"
-	]
+		"LAUNCH_EXPLORATORY_POSTGRES_1"
+	],
+	"config": {
+		"target": "replica",
+		"data_collector_type": "CATALOG",
+		"data_collector_config": {
+			"dummy": true
+		}
+	}
 }, {
 	"event_type": "STOP_EXPLORAOTRY_POSTGRES",
 	"event_name": "STOP_EXPLORAOTRY_POSTGRES_2",
 	"config": {
-		"launch_event": "LAUNCH_EXPLORATORY_POSTGRES_2"
-	}
+		"launch_event": "LAUNCH_EXPLORATORY_POSTGRES_1"
+	},
+	"parent_event_names" : [
+		"COLLECT_DATA_FROM_EXPLORATORY_abc"
+	]	
 }]

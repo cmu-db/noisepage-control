@@ -1,14 +1,19 @@
 import json
 import logging
 
+from threading import Thread
+
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 
 from control_plane.services.event_queue.producer import publish_event
 from control_plane.services.event_queue.event_types import EventType
+
 from .models import ExploratoryPGInfo
 from .exploratory_pg_status_types import ExploratoryPGStatusType
+from .save_collected_data import save_collected_data
+
 
 logger = logging.getLogger("control_plane")
 
@@ -66,3 +71,37 @@ def launch_exploratory_postgres_callback(request):
     )
 
     return HttpResponse()
+
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def data_collector_callback(request):
+
+    data = json.loads(request.FILES["data"].read().decode("utf-8"))
+
+    tuning_id = data["tuning_id"]
+    resource_id = data["resource_id"]
+    event_name = data["event_name"]
+
+    logger.info(
+        "Received collected data. Tuning id: %s Event name: %s"
+        % (tuning_id, event_name)
+    )
+
+    collected_data_tar = request.FILES["data_archive"].read()
+    collected_data_filename = request.FILES["data_archive"].name
+
+    # Start workload save on a new thread; allow request to return
+    thread = Thread(
+        target=save_collected_data,
+        args=(
+            tuning_id,
+            resource_id,
+            collected_data_tar,
+            collected_data_filename,
+            event_name,
+        ),
+    )
+    thread.start()
+
+    return HttpResponse("OK")

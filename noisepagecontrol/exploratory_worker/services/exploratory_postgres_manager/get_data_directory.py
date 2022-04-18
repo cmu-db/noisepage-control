@@ -5,7 +5,7 @@ def get_data_directory(port):
     args = [
         "sudo",
         "-u",
-        "postgres",
+        setting.POSTGRES_USER,
         "psql",
         "-c",
         "show data_directory;",

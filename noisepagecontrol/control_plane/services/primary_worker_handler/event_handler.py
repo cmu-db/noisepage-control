@@ -30,7 +30,6 @@ def handle_launch_primary_worker_event(event):
     launch_primary_worker(
         tuning_id,
         tuning_instance.primary_port,
-        tuning_instance.primary_username,
         event_name,
     )
 

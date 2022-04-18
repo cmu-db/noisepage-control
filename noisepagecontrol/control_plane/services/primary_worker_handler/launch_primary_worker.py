@@ -7,14 +7,13 @@ from constants import (
     CONTROL_PLANE_PORT_ENV_KEY,
     LAUNCH_EVENT_NAME_ENV_VAR_KEY,
     PRIMARY_DB_PORT_ENV_VAR_KEY,
-    PRIMARY_DB_USERNAME_ENV_VAR_KEY,
 )
 
 logger = logging.getLogger("control_plane")
 
 # TODO: Need to do checks here to prevent double spawning
 # TODO: Mark this as a celery task when spawning across machines
-def launch_primary_worker(tuning_id, primary_db_port, primary_db_username, event_name):
+def launch_primary_worker(tuning_id, primary_db_port, event_name):
     logger.info(
         "Launching primary worker. Tuning id: %s Event name: %s"
         % (tuning_id, event_name)
@@ -33,6 +32,5 @@ def launch_primary_worker(tuning_id, primary_db_port, primary_db_username, event
             CONTROL_PLANE_PORT_ENV_KEY: "8000",
             LAUNCH_EVENT_NAME_ENV_VAR_KEY: event_name,
             PRIMARY_DB_PORT_ENV_VAR_KEY: primary_db_port,
-            PRIMARY_DB_USERNAME_ENV_VAR_KEY: primary_db_username,
         },
     )

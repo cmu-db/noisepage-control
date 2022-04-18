@@ -1,10 +1,13 @@
 import json
 import logging
 
+from django.conf import settings
+
 from control_plane.services.event_queue.event_types import EventType
 from .launch_exploratory_worker import launch_exploratory_worker
 from .launch_exploratory_postgres import launch_exploratory_postgres
 from .stop_exploratory_postgres import stop_exploratory_postgres
+from .collect_data_from_exploratory import collect_data_from_exploratory
 
 logger = logging.getLogger("control_plane")
 
@@ -28,6 +31,8 @@ def handle_event(event):
         handle_launch_exploratory_postgres_event(event)
     elif event_type == EventType.STOP_EXPLORATORY_POSTGRES:
         handle_stop_exploratory_postgres_event(event)
+    elif event_type == EventType.COLLECT_DATA_FROM_EXPLORATORY:
+        handle_collect_data_from_exploratory_event(event)
 
 
 def handle_launch_exploratory_worker_event(event):
@@ -46,7 +51,6 @@ def handle_launch_exploratory_worker_event(event):
     launch_exploratory_worker(
         tuning_id,
         tuning_instance.replica_port,
-        tuning_instance.replica_username,
         event_name,
     )
 
@@ -107,3 +111,40 @@ def handle_stop_exploratory_postgres_event(event):
 
     info.status = ExploratoryPGStatusType.STOPPED
     info.save()
+
+
+def handle_collect_data_from_exploratory_event(event):
+    print("Collecting data from exploratory", event)
+
+    tuning_id = event["data"]["tuning_id"]
+    event_name = event["data"]["event_name"]
+
+    config = event["data"]["config"]
+
+    target = config["target"]
+    data_collector_type = config["data_collector_type"]
+    data_collector_config = config["data_collector_config"]
+
+    from control_plane.services.tuning_manager.models import TuningInstance
+
+    tuning_instance = TuningInstance.objects.get(tuning_id=tuning_id)
+
+    """
+        If target is replica, execute data collector on production replica
+        Else query the exploratory postgres corresponding
+            to the provided launch event name
+    """
+    if target == "replica":
+        postgres_port = tuning_instance.replica_port
+    else:
+        # TODO: query db for exploratory pg port
+        postgres_port = "20000"
+
+    collect_data_from_exploratory(
+        tuning_id,
+        event_name,
+        tuning_instance.replica_url,
+        postgres_port,
+        data_collector_type,
+        data_collector_config,
+    )
