@@ -1,15 +1,15 @@
+import json
 import logging
 import subprocess
-import json
 from threading import Thread
 
+from django.conf import settings
+from django.http import HttpResponse, HttpResponseNotFound
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
-from django.http import HttpResponse, HttpResponseNotFound
-from django.conf import settings
 
-from .start_exploratory_postgres import start_exploratory_postgres
 from .get_data_directory import get_data_directory
+from .start_exploratory_postgres import start_exploratory_postgres
 
 logger = logging.getLogger("exploratory_worker")
 

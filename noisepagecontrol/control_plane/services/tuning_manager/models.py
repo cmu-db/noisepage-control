@@ -1,7 +1,7 @@
 import uuid
 
-from django.db import models
 from django.contrib.postgres.fields import ArrayField
+from django.db import models
 
 
 def get_empty_object():

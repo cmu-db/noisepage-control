@@ -1,9 +1,6 @@
-import os
 import json
 import logging
-from io import StringIO
-from datetime import datetime
-from threading import Thread, Lock
+from threading import Thread
 
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt

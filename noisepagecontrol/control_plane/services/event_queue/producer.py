@@ -1,12 +1,8 @@
 import json
 
-from kombu import Connection, Exchange, Queue
+from kombu import Connection
 
-from .config import (
-    ampq_exchange,
-    ampq_queue,
-    ampq_connection_string,
-)
+from .config import ampq_connection_string, ampq_exchange, ampq_queue
 
 
 def publish_event(event_type, data, completed=False):

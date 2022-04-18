@@ -1,12 +1,11 @@
 import json
 import logging
-import requests
 import time
-
 from threading import Thread
 
-from django.conf import settings
+import requests
 from django.apps import AppConfig
+from django.conf import settings
 
 logger = logging.getLogger("exploratory_worker")
 

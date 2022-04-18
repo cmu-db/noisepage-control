@@ -3,11 +3,11 @@ import logging
 from exploratory_worker.services.data_collector.base_data_collector import (
     BaseDataCollector,
 )
-from exploratory_worker.services.exploratory_executor.get_database_names import (
-    get_database_names,
-)
 from exploratory_worker.services.exploratory_executor.get_database_catalog import (
     get_database_catalog,
+)
+from exploratory_worker.services.exploratory_executor.get_database_names import (
+    get_database_names,
 )
 
 logger = logging.getLogger("exploratory_worker")

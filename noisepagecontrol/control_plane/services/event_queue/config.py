@@ -1,11 +1,10 @@
-from kombu import Exchange, Queue
-
 from django.conf import settings
+from kombu import Exchange, Queue
 
 ampq_exchange = Exchange("event", "direct", durable=True)
 ampq_queue = Queue("event", exchange=ampq_exchange, routing_key="event")
 
-""" 
+"""
     These settings would be available only in CONTROL_PLANE mode
     But that's alright, since this file would be loaded only by CONTROL_PLANE
 """

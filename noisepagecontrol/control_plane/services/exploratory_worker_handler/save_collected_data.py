@@ -1,10 +1,6 @@
-from control_plane.services.event_queue.producer import publish_event
 from control_plane.services.event_queue.event_types import EventType
-
-
-from control_plane.services.resource_manager.save_resource import (
-    save_resource,
-)
+from control_plane.services.event_queue.producer import publish_event
+from control_plane.services.resource_manager.save_resource import save_resource
 
 
 def save_collected_data(tuning_id, resource_id, data_tar, data_filename, event_name):

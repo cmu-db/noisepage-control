@@ -1,9 +1,5 @@
-import time
 import logging
 
-from control_plane.services.event_queue.event_types import EventType
-from control_plane.services.event_queue.event_handler_types import EventHandlerType
-from control_plane.services.event_queue.event_handler_mapping import EventHandlerMapping
 from control_plane.services.event_queue.producer import publish_event
 
 logger = logging.getLogger("control_plane")
@@ -32,7 +28,7 @@ def publish_child_events(completed_event):
     tuning_event = TuningEvent.objects.get(tuning_id=tuning_id, event_name=event_name)
 
     # Duplicate ack for event; ignore
-    if tuning_event.completed == True:
+    if tuning_event.completed:
         return
 
     # Mark current event as True

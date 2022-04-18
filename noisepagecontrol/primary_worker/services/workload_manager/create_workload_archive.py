@@ -1,13 +1,13 @@
-import os
-import uuid
-import shutil
 import logging
-from io import StringIO
+import os
+import shutil
+import uuid
 from datetime import datetime
 
 from django.conf import settings
-
-from primary_worker.services.primary_executor.get_logging_dir import get_logging_dir
+from primary_worker.services.primary_executor.get_logging_dir import (
+    get_logging_dir,
+)
 
 logger = logging.getLogger("primary_worker")
 

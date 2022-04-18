@@ -1,13 +1,12 @@
 import json
 import logging
 
-from django.conf import settings
-
 from control_plane.services.event_queue.event_types import EventType
-from .launch_exploratory_worker import launch_exploratory_worker
-from .launch_exploratory_postgres import launch_exploratory_postgres
-from .stop_exploratory_postgres import stop_exploratory_postgres
+
 from .collect_data_from_exploratory import collect_data_from_exploratory
+from .launch_exploratory_postgres import launch_exploratory_postgres
+from .launch_exploratory_worker import launch_exploratory_worker
+from .stop_exploratory_postgres import stop_exploratory_postgres
 
 logger = logging.getLogger("control_plane")
 
@@ -41,7 +40,7 @@ def handle_launch_exploratory_worker_event(event):
     event_name = event["data"]["event_name"]
 
     """
-        Fetch associated tuning instance. 
+        Fetch associated tuning instance.
         We need to pass replica port to the launched worker
     """
     from control_plane.services.tuning_manager.models import TuningInstance
@@ -60,9 +59,10 @@ def handle_launch_exploratory_postgres_event(event):
     event_name = event["data"]["event_name"]
     config = event["data"]["config"]
 
-    from .models import ExploratoryPGInfo
-    from .exploratory_pg_status_types import ExploratoryPGStatusType
     from control_plane.services.tuning_manager.models import TuningInstance
+
+    from .exploratory_pg_status_types import ExploratoryPGStatusType
+    from .models import ExploratoryPGInfo
 
     tuning_instance = TuningInstance.objects.get(tuning_id=tuning_id)
     replica_url = tuning_instance.replica_url
@@ -87,8 +87,9 @@ def handle_stop_exploratory_postgres_event(event):
     config = event["data"]["config"]
 
     from control_plane.services.tuning_manager.models import TuningInstance
-    from .models import ExploratoryPGInfo
+
     from .exploratory_pg_status_types import ExploratoryPGStatusType
+    from .models import ExploratoryPGInfo
 
     tuning_instance = TuningInstance.objects.get(tuning_id=tuning_id)
     replica_url = tuning_instance.replica_url

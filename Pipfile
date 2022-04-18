@@ -4,15 +4,18 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-django = "*"
+Django = "*"
 psycopg2 = "*"
-black = "*"
 kombu = "*"
 celery = "*"
 uuid = "*"
 requests = "*"
 
 [dev-packages]
+black = "*"
+flake8 = "*"
+isort = "*"
+pre-commit = "*"
 
 [requires]
 python_version = "3.8"

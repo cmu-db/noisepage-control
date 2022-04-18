@@ -1,12 +1,11 @@
-from django.contrib import admin
-from django.urls import include, path
-from django.conf import settings
-
 from constants import (
     SERVER_MODE_CONTROL_PLANE,
-    SERVER_MODE_PRIMARY_WORKER,
     SERVER_MODE_EXPLORATORY_WORKER,
+    SERVER_MODE_PRIMARY_WORKER,
 )
+from django.conf import settings
+from django.contrib import admin
+from django.urls import include, path
 
 urlpatterns = []
 
