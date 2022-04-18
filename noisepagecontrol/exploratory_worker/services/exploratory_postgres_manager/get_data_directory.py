@@ -1,11 +1,13 @@
 import subprocess
 
+from django.conf import settings
+
 
 def get_data_directory(port):
     args = [
         "sudo",
         "-u",
-        setting.POSTGRES_USER,
+        settings.POSTGRES_USER,
         "psql",
         "-c",
         "show data_directory;",

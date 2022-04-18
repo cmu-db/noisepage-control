@@ -20,7 +20,7 @@ def handle_launch_primary_worker_event(event):
     event_name = event["data"]["event_name"]
 
     """
-        Fetch associated tuning instance. 
+        Fetch associated tuning instance.
         We need to pass primary port to the launched worker
     """
     from control_plane.services.tuning_manager.models import TuningInstance
