@@ -6,9 +6,9 @@ import control_plane.services.tuning_manager.command_handler as tuning_manager_c
 from kombu import Connection
 
 from .child_command_publisher import publish_child_commands
-from .config import ampq_connection_string, ampq_queue
 from .command_handler_mapping import CommandHandlerMapping
 from .command_handler_types import CommandHandlerType
+from .config import ampq_connection_string, ampq_queue
 
 # This maps command_handler_type -> module that handles that command
 command_handler = {
