@@ -1,7 +1,7 @@
 import json
 import logging
 
-from control_plane.services.event_queue.event_types import EventType
+from control_plane.services.command_queue.command_types import CommandType
 
 from .collect_data_from_exploratory import collect_data_from_exploratory
 from .launch_exploratory_postgres import launch_exploratory_postgres
@@ -11,33 +11,33 @@ from .stop_exploratory_postgres import stop_exploratory_postgres
 logger = logging.getLogger("control_plane")
 
 
-def handle_event(event):
+def handle_command(command):
     """
     Input format:
-    event = {
-        "event_type": EventType,
-        "data": {"tuning_id": str, "event_name": str, "config": dict},
+    command = {
+        "command_type": CommandType,
+        "data": {"tuning_id": str, "command_name": str, "config": dict},
         "completed": bool,
     }
     """
-    logger.info(f"Handling event: {json.dumps(event)}")
+    logger.info(f"Handling command: {json.dumps(command)}")
 
-    event_type = event["event_type"]
+    command_type = command["command_type"]
 
-    if event_type == EventType.LAUNCH_EXPLORATORY_WORKER:
-        handle_launch_exploratory_worker_event(event)
-    elif event_type == EventType.LAUNCH_EXPLORATORY_POSTGRES:
-        handle_launch_exploratory_postgres_event(event)
-    elif event_type == EventType.STOP_EXPLORATORY_POSTGRES:
-        handle_stop_exploratory_postgres_event(event)
-    elif event_type == EventType.COLLECT_DATA_FROM_EXPLORATORY:
-        handle_collect_data_from_exploratory_event(event)
+    if command_type == CommandType.LAUNCH_EXPLORATORY_WORKER:
+        handle_launch_exploratory_worker_command(command)
+    elif command_type == CommandType.LAUNCH_EXPLORATORY_POSTGRES:
+        handle_launch_exploratory_postgres_command(command)
+    elif command_type == CommandType.STOP_EXPLORATORY_POSTGRES:
+        handle_stop_exploratory_postgres_command(command)
+    elif command_type == CommandType.COLLECT_DATA_FROM_EXPLORATORY:
+        handle_collect_data_from_exploratory_command(command)
 
 
-def handle_launch_exploratory_worker_event(event):
+def handle_launch_exploratory_worker_command(command):
 
-    tuning_id = event["data"]["tuning_id"]
-    event_name = event["data"]["event_name"]
+    tuning_id = command["data"]["tuning_id"]
+    command_name = command["data"]["command_name"]
 
     """
         Fetch associated tuning instance.
@@ -50,14 +50,14 @@ def handle_launch_exploratory_worker_event(event):
     launch_exploratory_worker(
         tuning_id,
         tuning_instance.replica_port,
-        event_name,
+        command_name,
     )
 
 
-def handle_launch_exploratory_postgres_event(event):
-    tuning_id = event["data"]["tuning_id"]
-    event_name = event["data"]["event_name"]
-    config = event["data"]["config"]
+def handle_launch_exploratory_postgres_command(command):
+    tuning_id = command["data"]["tuning_id"]
+    command_name = command["data"]["command_name"]
+    config = command["data"]["config"]
 
     from control_plane.services.tuning_manager.models import TuningInstance
 
@@ -74,17 +74,17 @@ def handle_launch_exploratory_postgres_event(event):
     # Track status for exploratory pg instances
     exploratory_pg_info = ExploratoryPGInfo(
         tuning_id=tuning_id,
-        launch_event_name=event_name,
+        launch_command_name=command_name,
         status=ExploratoryPGStatusType.PENDING,
     )
     exploratory_pg_info.save()
 
-    launch_exploratory_postgres(event_name, replica_url, snapshot)
+    launch_exploratory_postgres(command_name, replica_url, snapshot)
 
 
-def handle_stop_exploratory_postgres_event(event):
-    tuning_id = event["data"]["tuning_id"]
-    config = event["data"]["config"]
+def handle_stop_exploratory_postgres_command(command):
+    tuning_id = command["data"]["tuning_id"]
+    config = command["data"]["config"]
 
     from control_plane.services.tuning_manager.models import TuningInstance
 
@@ -94,17 +94,17 @@ def handle_stop_exploratory_postgres_event(event):
     tuning_instance = TuningInstance.objects.get(tuning_id=tuning_id)
     replica_url = tuning_instance.replica_url
 
-    # We need to get the event name that launches the exploratory PG cluster
+    # We need to get the command name that launches the exploratory PG cluster
     # to know which exploratory port to stop
-    if "launch_event" not in config:
+    if "launch_command" not in config:
         logger.error(
-            f"Not specifying launch_event config in {EventType.STOP_EXPLORATORY_POSTGRES} event"
+            f"Not specifying launch_command config in {CommandType.STOP_EXPLORATORY_POSTGRES} command"
         )
         return
-    launch_event = config["launch_event"]
+    launch_command = config["launch_command"]
 
     info = ExploratoryPGInfo.objects.get(
-        tuning_id=tuning_id, launch_event_name=launch_event
+        tuning_id=tuning_id, launch_command_name=launch_command
     )
     port = info.exploratory_pg_port
 
@@ -114,13 +114,13 @@ def handle_stop_exploratory_postgres_event(event):
     info.save()
 
 
-def handle_collect_data_from_exploratory_event(event):
-    print("Collecting data from exploratory", event)
+def handle_collect_data_from_exploratory_command(command):
+    print("Collecting data from exploratory", command)
 
-    tuning_id = event["data"]["tuning_id"]
-    event_name = event["data"]["event_name"]
+    tuning_id = command["data"]["tuning_id"]
+    command_name = command["data"]["command_name"]
 
-    config = event["data"]["config"]
+    config = command["data"]["config"]
 
     target = config["target"]
     data_collector_type = config["data_collector_type"]
@@ -133,7 +133,7 @@ def handle_collect_data_from_exploratory_event(event):
     """
         If target is replica, execute data collector on production replica
         Else query the exploratory postgres corresponding
-            to the provided launch event name
+            to the provided launch command name
     """
     if target == "replica":
         postgres_port = tuning_instance.replica_port
@@ -143,7 +143,7 @@ def handle_collect_data_from_exploratory_event(event):
 
     collect_data_from_exploratory(
         tuning_id,
-        event_name,
+        command_name,
         tuning_instance.replica_url,
         postgres_port,
         data_collector_type,

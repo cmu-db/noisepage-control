@@ -1,7 +1,7 @@
 from enum import Enum
 
 
-class EventType(str, Enum):
+class CommandType(str, Enum):
 
     LAUNCH_PRIMARY_WORKER = "LAUNCH_PRIMARY_WORKER"
     CAPTURE_PRIMARY_WORKLOAD = "CAPTURE_PRIMARY_WORKLOAD"

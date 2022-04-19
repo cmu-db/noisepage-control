@@ -1,7 +1,7 @@
 from enum import Enum
 
 
-class EventHandlerType(str, Enum):
+class CommandHandlerType(str, Enum):
 
     PRIMARY_WORKER_HANDLER = "PRIMARY_WORKER_HANDLER"
     EXPLORATORY_WORKER_HANDLER = "EXPLORATORY_WORKER_HANDLER"

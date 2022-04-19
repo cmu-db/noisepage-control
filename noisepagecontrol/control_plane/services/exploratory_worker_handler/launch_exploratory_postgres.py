@@ -7,9 +7,9 @@ from django.conf import settings
 logger = logging.getLogger("control_plane")
 
 
-def launch_exploratory_postgres(event_name, replica_url, snapshot):
+def launch_exploratory_postgres(command_name, replica_url, snapshot):
     logger.info(
-        f"Sending request to launch exploratory postgres cluster. Event name: {event_name}"
+        f"Sending request to launch exploratory postgres cluster. Command name: {command_name}"
     )
 
     url = "http://%s:%s/launch_exploratory_postgres/" % (
@@ -17,7 +17,7 @@ def launch_exploratory_postgres(event_name, replica_url, snapshot):
         settings.EXPLORATORY_WORKER_PORT,
     )
 
-    data = {"event_name": event_name, "snapshot": snapshot}
+    data = {"command_name": command_name, "snapshot": snapshot}
 
     headers = {"Content-type": "application/json"}
     requests.post(url, data=json.dumps(data), headers=headers)

@@ -17,13 +17,13 @@ def start_workload_capture(request):
 
     data = json.loads(request.body)
 
-    event_name = data["event_name"]
+    command_name = data["command_name"]
     resource_id = data["resource_id"]
     time_period = data["time_period"]
 
     # Start capture on a new thread
     thread = Thread(
-        target=capture_workload, args=(time_period, event_name, resource_id)
+        target=capture_workload, args=(time_period, command_name, resource_id)
     )
     thread.start()
 

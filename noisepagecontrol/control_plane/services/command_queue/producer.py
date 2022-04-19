@@ -5,10 +5,10 @@ from kombu import Connection
 from .config import ampq_connection_string, ampq_exchange, ampq_queue
 
 
-def publish_event(event_type, data, completed=False):
+def publish_command(command_type, data, completed=False):
 
-    event = {
-        "event_type": event_type,
+    command = {
+        "command_type": command_type,
         "data": data,
         "completed": completed,
     }
@@ -16,8 +16,8 @@ def publish_event(event_type, data, completed=False):
     with Connection(ampq_connection_string) as connection:
         with connection.Producer(serializer="json") as producer:
             producer.publish(
-                json.dumps(event),
+                json.dumps(command),
                 exchange=ampq_exchange,
-                routing_key="event",
+                routing_key="command",
                 declare=[ampq_queue],
             )

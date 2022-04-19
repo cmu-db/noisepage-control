@@ -10,7 +10,7 @@ from .get_data_directory import get_data_directory
 logger = logging.getLogger("exploratory_worker")
 
 
-def start_exploratory_postgres(event_name, snapshot):
+def start_exploratory_postgres(command_name, snapshot):
     # TODO Tim: probe an available port from 20000 instead of hard-coding
     exploratory_postgres_port = 20000
 
@@ -65,7 +65,7 @@ def start_exploratory_postgres(event_name, snapshot):
 
     data = {
         "tuning_id": tuning_id,
-        "event_name": event_name,
+        "command_name": command_name,
         "exploratory_postgres_port": exploratory_postgres_port,
     }
     logger.info(f"Sending {json.dumps(data)} back to control plane")

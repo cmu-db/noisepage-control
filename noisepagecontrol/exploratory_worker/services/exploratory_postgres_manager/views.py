@@ -18,13 +18,13 @@ logger = logging.getLogger("exploratory_worker")
 @require_http_methods(["POST"])
 def launch_exploratory_postgres(request):
     data = json.loads(request.body)
-    event_name = data["event_name"]
+    command_name = data["command_name"]
     snapshot = data["snapshot"]
 
     logger.info(f"Receive launch_exploratory_postgres request: {json.dumps(data)}")
 
     # asynchronously spins up a pg instance
-    thread = Thread(target=start_exploratory_postgres, args=(event_name, snapshot))
+    thread = Thread(target=start_exploratory_postgres, args=(command_name, snapshot))
     thread.start()
 
     return HttpResponse()

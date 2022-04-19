@@ -2,8 +2,8 @@ import json
 import logging
 from threading import Thread
 
-from control_plane.services.event_queue.event_types import EventType
-from control_plane.services.event_queue.producer import publish_event
+from control_plane.services.command_queue.command_types import CommandType
+from control_plane.services.command_queue.producer import publish_command
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
@@ -24,16 +24,16 @@ def healthcheck(request):
 
     data = json.loads(request.body)
     tuning_id = data["tuning_id"]
-    event_name = data["event_name"]
+    command_name = data["command_name"]
     logger.info(
-        "Received HC from primary worker. Tuning id: %s Event name: %s"
-        % (tuning_id, event_name)
+        "Received HC from primary worker. Tuning id: %s Command name: %s"
+        % (tuning_id, command_name)
     )
 
-    # Publish LAUNCH_PRIMARY_WORKER event as completed
-    publish_event(
-        event_type=EventType.LAUNCH_PRIMARY_WORKER,
-        data={"tuning_id": tuning_id, "event_name": event_name},
+    # Publish LAUNCH_PRIMARY_WORKER command as completed
+    publish_command(
+        command_type=CommandType.LAUNCH_PRIMARY_WORKER,
+        data={"tuning_id": tuning_id, "command_name": command_name},
         completed=True,
     )
 
@@ -48,11 +48,11 @@ def workload_capture_callback(request):
 
     tuning_id = data["tuning_id"]
     resource_id = data["resource_id"]
-    event_name = data["event_name"]
+    command_name = data["command_name"]
 
     logger.info(
-        "Received captured workload. Tuning id: %s Event name: %s"
-        % (tuning_id, event_name)
+        "Received captured workload. Tuning id: %s Command name: %s"
+        % (tuning_id, command_name)
     )
 
     captured_workload_tar = request.FILES["workload"].read()
@@ -66,7 +66,7 @@ def workload_capture_callback(request):
             resource_id,
             captured_workload_tar,
             captured_workload_filename,
-            event_name,
+            command_name,
         ),
     )
     thread.start()

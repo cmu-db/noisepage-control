@@ -13,13 +13,13 @@ logger = logging.getLogger("control_plane")
 
 def collect_data_from_exploratory(
     tuning_id,
-    event_name,
+    command_name,
     replica_url,
     postgres_port,
     data_collector_type,
     data_collector_config,
 ):
-    logger.info(f"Sending request to collect data. Event name: {event_name}")
+    logger.info(f"Sending request to collect data. command name: {command_name}")
 
     # Initialise a new resource for this workload
     resource_id = initialise_resource(tuning_id, ResourceType.EXPLORATORY_DATA)
@@ -31,7 +31,7 @@ def collect_data_from_exploratory(
 
     data = {
         "resource_id": resource_id,
-        "event_name": event_name,
+        "command_name": command_name,
         "postgres_port": postgres_port,
         "data_collector_type": data_collector_type,
         "config": data_collector_config,

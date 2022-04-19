@@ -27,11 +27,11 @@ class TuningInstance(models.Model):
     )
 
 
-class TuningEvent(models.Model):
+class TuningCommand(models.Model):
 
-    event_name = models.CharField(max_length=120)
-    event_type = models.CharField(max_length=120)
-    parent_event_names = ArrayField(models.CharField(max_length=120), blank=True)
+    command_name = models.CharField(max_length=120)
+    command_type = models.CharField(max_length=120)
+    parent_command_names = ArrayField(models.CharField(max_length=120), blank=True)
     tuning_id = models.CharField(max_length=36)
     completed = models.BooleanField(default=False)
     config = models.JSONField("config", default=get_empty_object)

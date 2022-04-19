@@ -8,7 +8,7 @@ from django.conf import settings
 logger = logging.getLogger("primary_worker")
 
 
-def transfer_workload(archive_path, event_name, resource_id):
+def transfer_workload(archive_path, command_name, resource_id):
     # Transfer archive to control plane
 
     control_plane_url = settings.CONTROL_PLANE_URL
@@ -22,7 +22,7 @@ def transfer_workload(archive_path, event_name, resource_id):
 
     data = {
         "tuning_id": tuning_id,
-        "event_name": event_name,
+        "command_name": command_name,
         "resource_id": resource_id,
     }
 
@@ -33,5 +33,4 @@ def transfer_workload(archive_path, event_name, resource_id):
             ("data", ("data.json", data_file, "application/json")),
         ]
 
-        headers = {"Content-type": "multipart/form-data"}
-        requests.post(url, files=files, headers=headers)
+        requests.post(url, files=files)

@@ -3,5 +3,5 @@ import logging
 logger = logging.getLogger("control_plane")
 
 
-def handle_event(event):
+def handle_command(command):
     pass

@@ -1,12 +1,12 @@
 import json
 
-from control_plane.services.event_queue.producer import publish_event
+from control_plane.services.command_queue.producer import publish_command
 from django.core import serializers
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 
-from .models import TuningEvent, TuningInstance
+from .models import TuningCommand, TuningInstance
 
 
 def index(request):
@@ -30,31 +30,31 @@ def tune_database(request):
     )
     new_tuning_request.save()
 
-    # This tracks events which do not have any parent events
+    # This tracks commands which do not have any parent commands
     # They will be executed immediately
-    initial_events = []
+    initial_commands = []
     # Add constraints and validations here!!
-    for event in tune_db_request_data["event_config"]:
-        new_event = TuningEvent(
-            event_type=event["event_type"],
-            event_name=event["event_name"],
-            parent_event_names=event["parent_event_names"],
+    for command in tune_db_request_data["command_config"]:
+        new_command = TuningCommand(
+            command_type=command["command_type"],
+            command_name=command["command_name"],
+            parent_command_names=command["parent_command_names"],
             tuning_id=new_tuning_request.tuning_id,
-            config=event.get("config", {}),
+            config=command.get("config", {}),
             completed=False,
         )
-        new_event.save()
-        if len(new_event.parent_event_names) == 0:
-            initial_events.append(new_event)
+        new_command.save()
+        if len(new_command.parent_command_names) == 0:
+            initial_commands.append(new_command)
 
-    # Publish initial events
-    for initial_event in initial_events:
-        publish_event(
-            event_type=initial_event.event_type,
+    # Publish initial commands
+    for initial_command in initial_commands:
+        publish_command(
+            command_type=initial_command.command_type,
             data={
                 "tuning_id": new_tuning_request.tuning_id,
-                "event_name": initial_event.event_name,
-                "config": initial_event.config,
+                "command_name": initial_command.command_name,
+                "config": initial_command.config,
             },
             completed=False,
         )

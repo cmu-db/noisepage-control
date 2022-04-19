@@ -8,7 +8,7 @@ from django.conf import settings
 logger = logging.getLogger("exploratory_worker")
 
 
-def transfer_data(event_name, resource_id, archive_path):
+def transfer_data(command_name, resource_id, archive_path):
     # Transfer archive to control plane
 
     control_plane_url = settings.CONTROL_PLANE_URL
@@ -22,16 +22,15 @@ def transfer_data(event_name, resource_id, archive_path):
 
     data = {
         "tuning_id": tuning_id,
-        "event_name": event_name,
+        "command_name": command_name,
         "resource_id": resource_id,
     }
 
     with StringIO(json.dumps(data)) as data_file, open(archive_path, "rb") as fp:
 
         files = [
-            ("data_archive", ("data.tar.gz", fp, "application/x-gtar")),
             ("data", ("data.json", data_file, "application/json")),
+            ("data_archive", ("data.tar.gz", fp, "application/x-gtar")),
         ]
 
-        headers = {"Content-type": "multipart/form-data"}
-        requests.post(url, files=files, headers=headers)
+        requests.post(url, files=files)

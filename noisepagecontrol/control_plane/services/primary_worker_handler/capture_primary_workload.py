@@ -11,26 +11,28 @@ from django.conf import settings
 logger = logging.getLogger("control_plane")
 
 
-def capture_primary_workload(tuning_id, event_name):
+def capture_primary_workload(tuning_id, command_name):
 
-    # Fetch associated tuning instance and tuning event
+    # Fetch associated tuning instance and tuning command
     from control_plane.services.tuning_manager.models import (
-        TuningEvent,
+        TuningCommand,
         TuningInstance,
     )
 
     tuning_instance = TuningInstance.objects.get(tuning_id=tuning_id)
-    tuning_event = TuningEvent.objects.get(tuning_id=tuning_id, event_name=event_name)
+    tuning_command = TuningCommand.objects.get(
+        tuning_id=tuning_id, command_name=command_name
+    )
 
     # Get time period for capturing workload; default to 5 seconds
-    time_period = tuning_event.config.get("time_period", 5)
+    time_period = tuning_command.config.get("time_period", 5)
 
     # Initialise a new resource for this workload
     resource_id = initialise_resource(tuning_id, ResourceType.WORKLOAD)
 
     logger.info(
-        "Sending request to capture workload. Tuning id: %s Event name: %s"
-        % (tuning_id, event_name)
+        "Sending request to capture workload. Tuning id: %s Command name: %s"
+        % (tuning_id, command_name)
     )
 
     url = "http://%s:%s/capture_workload/" % (
@@ -41,7 +43,7 @@ def capture_primary_workload(tuning_id, event_name):
     data = {
         "tuning_id": tuning_id,
         "resource_id": resource_id,
-        "event_name": event_name,
+        "command_name": command_name,
         "time_period": time_period,
     }
 

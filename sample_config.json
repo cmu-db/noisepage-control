@@ -1,33 +1,33 @@
 [{
-	"event_type": "LAUNCH_PRIMARY_WORKER",
-	"event_name": "LAUNCH_PRIMARY_WORKER_abc",
-	"parent_event_names" : []
+	"command_type": "LAUNCH_PRIMARY_WORKER",
+	"command_name": "LAUNCH_PRIMARY_WORKER_abc",
+	"parent_command_names" : []
 }, {
-	"event_type": "LAUNCH_EXPLORATORY_WORKER",
-	"event_name": "LAUNCH_EXPLORATORY_WORKER_abc",
-	"parent_event_names" : []
+	"command_type": "LAUNCH_EXPLORATORY_WORKER",
+	"command_name": "LAUNCH_EXPLORATORY_WORKER_abc",
+	"parent_command_names" : []
 }, {
-	"event_type": "LAUNCH_EXPLORATORY_POSTGRES",
-	"event_name": "LAUNCH_EXPLORATORY_POSTGRES_1",
+	"command_type": "LAUNCH_EXPLORATORY_POSTGRES",
+	"command_name": "LAUNCH_EXPLORATORY_POSTGRES_1",
 	"config": {
 		"snapshot": false
 	},
-	"parent_event_names" : [
+	"parent_command_names" : [
 		"LAUNCH_EXPLORATORY_WORKER_abc"
 	]
 }, {
-	"event_type": "CAPTURE_PRIMARY_WORKLOAD",
-	"event_name": "CAPTURE_PRIMARY_WORKLOAD_abc",
+	"command_type": "CAPTURE_PRIMARY_WORKLOAD",
+	"command_name": "CAPTURE_PRIMARY_WORKLOAD_abc",
 	"config": {
 		"time_period": 10
 	},
-	"parent_event_names" : [
+	"parent_command_names" : [
 		"LAUNCH_PRIMARY_WORKER_abc"
 	]
 }, {
-	"event_type": "COLLECT_DATA_FROM_EXPLORATORY",
-	"event_name": "COLLECT_DATA_FROM_EXPLORATORY_abc",
-	"parent_event_names" : [
+	"command_type": "COLLECT_DATA_FROM_EXPLORATORY",
+	"command_name": "COLLECT_DATA_FROM_EXPLORATORY_abc",
+	"parent_command_names" : [
 		"LAUNCH_EXPLORATORY_POSTGRES_1"
 	],
 	"config": {
@@ -38,12 +38,12 @@
 		}
 	}
 }, {
-	"event_type": "STOP_EXPLORAOTRY_POSTGRES",
-	"event_name": "STOP_EXPLORAOTRY_POSTGRES_2",
+	"command_type": "STOP_EXPLORAOTRY_POSTGRES",
+	"command_name": "STOP_EXPLORAOTRY_POSTGRES_2",
 	"config": {
-		"launch_event": "LAUNCH_EXPLORATORY_POSTGRES_1"
+		"launch_command": "LAUNCH_EXPLORATORY_POSTGRES_1"
 	},
-	"parent_event_names" : [
+	"parent_command_names" : [
 		"COLLECT_DATA_FROM_EXPLORATORY_abc"
 	]
 }]

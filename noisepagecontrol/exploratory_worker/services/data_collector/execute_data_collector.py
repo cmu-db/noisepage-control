@@ -25,7 +25,7 @@ def create_data_dir():
 
 
 def execute_data_collector(
-    event_name, resource_id, data_collector_type, postgres_port, config
+    command_name, resource_id, data_collector_type, postgres_port, config
 ):
 
     # create data dir
@@ -45,4 +45,4 @@ def execute_data_collector(
     data_archive_path = create_data_archive(data_dir)
 
     # Transfer back data
-    transfer_data(event_name, resource_id, data_archive_path)
+    transfer_data(command_name, resource_id, data_archive_path)

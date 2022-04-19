@@ -2,8 +2,8 @@ import json
 import logging
 from threading import Thread
 
-from control_plane.services.event_queue.event_types import EventType
-from control_plane.services.event_queue.producer import publish_event
+from control_plane.services.command_queue.command_types import CommandType
+from control_plane.services.command_queue.producer import publish_command
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
@@ -26,17 +26,17 @@ def healthcheck(request):
 
     data = json.loads(request.body)
     tuning_id = data["tuning_id"]
-    event_name = data["event_name"]
+    command_name = data["command_name"]
 
     logger.info(
-        "Received HC from exporatory worker. Tuning id: %s Event name: %s"
-        % (tuning_id, event_name)
+        "Received HC from exporatory worker. Tuning id: %s Command name: %s"
+        % (tuning_id, command_name)
     )
 
-    # Publish LAUNCH_EXPLORATORY_WORKER event as completed
-    publish_event(
-        event_type=EventType.LAUNCH_EXPLORATORY_WORKER,
-        data={"tuning_id": tuning_id, "event_name": event_name},
+    # Publish LAUNCH_EXPLORATORY_WORKER command as completed
+    publish_command(
+        command_type=CommandType.LAUNCH_EXPLORATORY_WORKER,
+        data={"tuning_id": tuning_id, "command_name": command_name},
         completed=True,
     )
 
@@ -48,22 +48,22 @@ def healthcheck(request):
 def launch_exploratory_postgres_callback(request):
     data = json.loads(request.body)
     tuning_id = data["tuning_id"]
-    event_name = data["event_name"]
+    command_name = data["command_name"]
     exploratory_postgres_port = data["exploratory_postgres_port"]
 
     logger.info(f"Received ack from launching exploratory cluster: f{json.dumps(data)}")
 
     # Update exploratory PG status, store port number
     exploratoy_pg_info = ExploratoryPGInfo.objects.get(
-        tuning_id=tuning_id, launch_event_name=event_name
+        tuning_id=tuning_id, launch_command_name=command_name
     )
     exploratoy_pg_info.exploratory_pg_port = exploratory_postgres_port
     exploratoy_pg_info.status = ExploratoryPGStatusType.READY
     exploratoy_pg_info.save()
 
-    publish_event(
-        event_type=EventType.LAUNCH_EXPLORATORY_POSTGRES,
-        data={"tuning_id": tuning_id, "event_name": event_name},
+    publish_command(
+        command_type=CommandType.LAUNCH_EXPLORATORY_POSTGRES,
+        data={"tuning_id": tuning_id, "command_name": command_name},
         completed=True,
     )
 
@@ -78,11 +78,11 @@ def data_collector_callback(request):
 
     tuning_id = data["tuning_id"]
     resource_id = data["resource_id"]
-    event_name = data["event_name"]
+    command_name = data["command_name"]
 
     logger.info(
-        "Received collected data. Tuning id: %s Event name: %s"
-        % (tuning_id, event_name)
+        "Received collected data. Tuning id: %s Command name: %s"
+        % (tuning_id, command_name)
     )
 
     collected_data_tar = request.FILES["data_archive"].read()
@@ -96,7 +96,7 @@ def data_collector_callback(request):
             resource_id,
             collected_data_tar,
             collected_data_filename,
-            event_name,
+            command_name,
         ),
     )
     thread.start()

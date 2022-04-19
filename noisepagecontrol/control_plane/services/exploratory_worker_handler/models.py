@@ -6,8 +6,8 @@ from .exploratory_pg_status_types import ExploratoryPGStatusType
 class ExploratoryPGInfo(models.Model):
     tuning_id = models.CharField(max_length=36)
 
-    # The event name that launches the exploratory PG cluster
-    launch_event_name = models.CharField(max_length=120)
+    # The command name that launches the exploratory PG cluster
+    launch_command_name = models.CharField(max_length=120)
     exploratory_pg_port = models.IntegerField(null=True)
 
     STATUS_CHOICES = [

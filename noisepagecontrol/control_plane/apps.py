@@ -1,6 +1,6 @@
 from threading import Thread
 
-from control_plane.services.event_queue.consumer import init_event_consumer
+from control_plane.services.command_queue.consumer import init_command_consumer
 from django.apps import AppConfig
 
 
@@ -10,11 +10,11 @@ class ControlPlaneConfig(AppConfig):
 
     def ready(self):
         """
-        Init event consumer
+        Init command consumer
 
         TODO: Add robustness to the consumer thread.
         What happens if it fails?
         """
 
-        thread = Thread(target=init_event_consumer)
+        thread = Thread(target=init_command_consumer)
         thread.start()

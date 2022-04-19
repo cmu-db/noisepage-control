@@ -17,7 +17,7 @@ def collect_data(request):
 
     data = json.loads(request.body)
 
-    event_name = data["event_name"]
+    command_name = data["command_name"]
     resource_id = data["resource_id"]
 
     config = data["config"]
@@ -27,7 +27,7 @@ def collect_data(request):
     thread = Thread(
         target=execute_data_collector,
         args=(
-            event_name,
+            command_name,
             resource_id,
             data_collector_type,
             postgres_port,

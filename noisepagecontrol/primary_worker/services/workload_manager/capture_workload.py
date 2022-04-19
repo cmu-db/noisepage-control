@@ -21,7 +21,7 @@ logger = logging.getLogger("primary_worker")
 WORKLOAD_CAPTURE_MUTEX = Lock()
 
 
-def capture_workload(time_period, event_name, resource_id):
+def capture_workload(time_period, command_name, resource_id):
     """
     This method captures the workload on a primary instance.
     Only allow one concurrent capture;
@@ -52,7 +52,7 @@ def capture_workload(time_period, event_name, resource_id):
         archive_path = create_workload_archive(capture_start_time, capture_end_time)
 
         # Transfer archive to control plane
-        transfer_workload(archive_path, event_name, resource_id)
+        transfer_workload(archive_path, command_name, resource_id)
 
     finally:
         WORKLOAD_CAPTURE_MUTEX.release()
