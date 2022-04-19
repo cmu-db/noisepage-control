@@ -12,7 +12,7 @@ def get_database_names(postgres_port):
     """
 
     port = postgres_port
-    pg_username = "kushagrasingh"
+    pg_username = settings.POSTGRES_USER
 
     command = 'sudo -u "%s" "%s" "%s" "%s"' % (
         pg_username,
