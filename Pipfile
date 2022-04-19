@@ -1,0 +1,21 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+Django = "*"
+psycopg2 = "*"
+kombu = "*"
+celery = "*"
+uuid = "*"
+requests = "*"
+
+[dev-packages]
+black = "*"
+flake8 = "*"
+isort = "*"
+pre-commit = "*"
+
+[requires]
+python_version = "3.8"
