@@ -23,7 +23,7 @@ def init_command_consumer():
         consumer = connection.Consumer(ampq_queue, callbacks=[process_command])
         consumer.consume()
         while True:
-            connection.drain_events()
+            connection.drain_commands()
 
 
 def process_command(command, message_obj):
