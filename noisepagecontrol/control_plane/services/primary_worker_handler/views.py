@@ -2,12 +2,11 @@ import json
 import logging
 from threading import Thread
 
+from control_plane.services.event_queue.event_types import EventType
+from control_plane.services.event_queue.producer import publish_event
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
-
-from control_plane.services.event_queue.producer import publish_event
-from control_plane.services.event_queue.event_types import EventType
 
 from .save_captured_workload import save_captured_workload
 

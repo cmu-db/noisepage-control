@@ -1,6 +1,6 @@
-import time
 import logging
 import subprocess
+import time
 
 from django.conf import settings
 

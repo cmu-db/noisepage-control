@@ -1,4 +1,4 @@
-[{   
+[{
 	"event_type": "LAUNCH_PRIMARY_WORKER",
 	"event_name": "LAUNCH_PRIMARY_WORKER_abc",
 	"parent_event_names" : []
@@ -45,5 +45,5 @@
 	},
 	"parent_event_names" : [
 		"COLLECT_DATA_FROM_EXPLORATORY_abc"
-	]	
+	]
 }]

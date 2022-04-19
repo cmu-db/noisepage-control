@@ -1,13 +1,12 @@
 import json
 import logging
+
 import requests
-
-from django.conf import settings
-
 from control_plane.services.resource_manager.initialise_resource import (
     initialise_resource,
 )
 from control_plane.services.resource_manager.resource_type import ResourceType
+from django.conf import settings
 
 logger = logging.getLogger("control_plane")
 

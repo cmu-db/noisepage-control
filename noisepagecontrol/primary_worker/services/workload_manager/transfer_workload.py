@@ -1,9 +1,8 @@
-import os
 import json
 import logging
-import requests
 from io import StringIO
 
+import requests
 from django.conf import settings
 
 logger = logging.getLogger("primary_worker")
@@ -35,4 +34,4 @@ def transfer_workload(archive_path, event_name, resource_id):
         ]
 
         headers = {"Content-type": "multipart/form-data"}
-        requests.post(url, files=files)
+        requests.post(url, files=files, headers=headers)

@@ -1,11 +1,10 @@
 import json
-import requests
 import time
-
 from threading import Thread
 
-from django.conf import settings
+import requests
 from django.apps import AppConfig
+from django.conf import settings
 
 
 def send_service_ready_to_control_plane():

@@ -1,13 +1,11 @@
 from django.urls import path
-
-from . import views
+from exploratory_worker.services.data_collector.views import collect_data
 from exploratory_worker.services.exploratory_postgres_manager.views import (
     launch_exploratory_postgres,
     stop_exploratory_postgres,
 )
-from exploratory_worker.services.data_collector.views import (
-    collect_data,
-)
+
+from . import views
 
 urlpatterns = [
     path("", views.index, name="index"),

@@ -1,10 +1,10 @@
-import logging
 import json
+import logging
 from threading import Thread
 
+from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
-from django.http import HttpResponse
 
 from .execute_data_collector import execute_data_collector
 

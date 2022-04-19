@@ -1,9 +1,6 @@
-import os
-import uuid
-import shutil
 import logging
-from io import StringIO
-from datetime import datetime
+import os
+import shutil
 
 from django.conf import settings
 

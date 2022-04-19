@@ -26,7 +26,7 @@ def get_database_catalog(postgres_port, database_name):
 
     """
         Result would be somthing like this:
-            headers      
+            headers
         -------------------
         catalog ...
         catalog ...

@@ -28,7 +28,7 @@ def get_database_names(postgres_port):
 
     """
         Result would be somthing like this:
-            datname      
+            datname
         -------------------
         postgres
         noisepage_control

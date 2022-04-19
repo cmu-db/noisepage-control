@@ -2,8 +2,8 @@ import json
 import logging
 import subprocess
 
-from django.conf import settings
 import requests
+from django.conf import settings
 
 from .get_data_directory import get_data_directory
 

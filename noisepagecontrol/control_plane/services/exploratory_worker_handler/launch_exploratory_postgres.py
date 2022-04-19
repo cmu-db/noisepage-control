@@ -1,7 +1,7 @@
 import json
 import logging
-import requests
 
+import requests
 from django.conf import settings
 
 logger = logging.getLogger("control_plane")

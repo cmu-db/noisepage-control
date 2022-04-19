@@ -1,18 +1,22 @@
-import time
 import logging
-from threading import Lock
+import time
 from datetime import datetime
+from threading import Lock
 
-from primary_worker.services.primary_executor.enable_logging import enable_logging
-from primary_worker.services.primary_executor.disable_logging import disable_logging
+from primary_worker.services.primary_executor.disable_logging import (
+    disable_logging,
+)
+from primary_worker.services.primary_executor.enable_logging import (
+    enable_logging,
+)
 
 from .create_workload_archive import create_workload_archive
 from .transfer_workload import transfer_workload
 
 logger = logging.getLogger("primary_worker")
 
-""" 
-    Lock to prevent multiple concurrent workload captures 
+"""
+    Lock to prevent multiple concurrent workload captures
 """
 WORKLOAD_CAPTURE_MUTEX = Lock()
 

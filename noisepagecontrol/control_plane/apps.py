@@ -1,6 +1,7 @@
-from django.apps import AppConfig
-from control_plane.services.event_queue.consumer import init_event_consumer
 from threading import Thread
+
+from control_plane.services.event_queue.consumer import init_event_consumer
+from django.apps import AppConfig
 
 
 class ControlPlaneConfig(AppConfig):

@@ -28,8 +28,8 @@ def get_logging_dir():
 
     """
         Result would be somthing like this:
-        
-        setting 
+
+        setting
         ---------
         log
         (1 row)

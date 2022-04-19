@@ -27,8 +27,8 @@ def get_data_dir():
 
     """
         Result would be somthing like this:
-        
-        setting 
+
+        setting
         ---------
         /home/kush/db/main/data
         (1 row)

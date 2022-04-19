@@ -1,15 +1,16 @@
-import os
 import logging
+import os
 
 from constants import (
-    TUNING_ID_ENV_VAR_KEY,
-    CONTROL_PLANE_URL_ENV_KEY,
     CONTROL_PLANE_PORT_ENV_KEY,
+    CONTROL_PLANE_URL_ENV_KEY,
     LAUNCH_EVENT_NAME_ENV_VAR_KEY,
     REPLICA_DB_PORT_ENV_VAR_KEY,
+    TUNING_ID_ENV_VAR_KEY,
 )
 
 logger = logging.getLogger("control_plane")
+
 
 # TODO: Need to do checks here to prevent double spawning
 # TODO: Mark this as a celery task when spawning across machines

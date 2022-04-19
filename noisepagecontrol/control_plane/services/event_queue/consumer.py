@@ -1,17 +1,14 @@
 import json
+
+import control_plane.services.exploratory_worker_handler.event_handler as exploratory_worker_event_handler
+import control_plane.services.primary_worker_handler.event_handler as primary_worker_event_handler
+import control_plane.services.tuning_manager.event_handler as tuning_manager_event_handler
 from kombu import Connection
 
-from .config import (
-    ampq_queue,
-    ampq_connection_string,
-)
-from .event_handler_types import EventHandlerType
 from .child_event_publisher import publish_child_events
+from .config import ampq_connection_string, ampq_queue
 from .event_handler_mapping import EventHandlerMapping
-
-import control_plane.services.tuning_manager.event_handler as tuning_manager_event_handler
-import control_plane.services.primary_worker_handler.event_handler as primary_worker_event_handler
-import control_plane.services.exploratory_worker_handler.event_handler as exploratory_worker_event_handler
+from .event_handler_types import EventHandlerType
 
 # This maps event_handler_type -> module that handles that event
 event_handler = {
@@ -37,7 +34,7 @@ def process_event(event, message_obj):
     event_handler_type = EventHandlerMapping[event_type]
     completed = event["completed"]
 
-    if completed == True:
+    if completed:
         publish_child_events(event)
     else:
         event_handler[event_handler_type].handle_event(event)

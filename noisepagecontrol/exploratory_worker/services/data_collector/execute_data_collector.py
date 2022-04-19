@@ -3,11 +3,12 @@ import uuid
 
 from django.conf import settings
 
-from .data_collector_type import DataCollectorType
+from .benchbase_data_collector.benchbase_data_collector import (
+    BenchbaseDataCollector,
+)
 from .catalog_data_collector.catalog_data_collector import CatalogDataCollector
-from .benchbase_data_collector.benchbase_data_collector import BenchbaseDataCollector
-
 from .create_data_archive import create_data_archive
+from .data_collector_type import DataCollectorType
 from .transfer_data import transfer_data
 
 DATA_COLLECTOR_MAP = {
