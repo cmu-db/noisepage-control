@@ -4,7 +4,7 @@ from django.db import models
 from django.core.exceptions import ValidationError
 
 from environments.environment_types import EnvironmentType
-from django.contrib.postgres.fields import JSONField
+from django.contrib.postgres.fields import JSONField, ArrayField
 
 from .database_state_types import DatabaseStateType
 
@@ -37,6 +37,9 @@ class Database(models.Model):
         (DatabaseStateType.COLLECTING_STATE, "COLLECTING_STATE"),
     ]
     state = models.CharField(max_length=120, choices=DATABSE_STATE_CHOICES)
+
+    errors = ArrayField(models.TextField(), blank=True, default = list)
+
 
 
 class SelfManagedPostgresConfig(models.Model):

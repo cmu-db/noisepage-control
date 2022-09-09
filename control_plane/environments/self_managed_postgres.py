@@ -18,38 +18,6 @@ def init_client(host, port, user, key_filename):
     )
     return client
 
-def hasSudo(host, port, user, key_filename):
-
-    client = init_client(host, port, user, key_filename)
-    _, stdout, stderr = client.exec_command("groups %s" % (user))
-    stdout=stdout.read()
-    stderr=stderr.read()
-    client.close()
-
-    if len(stderr) != 0:
-        print ("error", error)
-        return False
-
-    return b'sudo' in stdout.split()
-
-def launch_primary_daemon(host, port, user, key_filename):
-    client = init_client(host, port, user, key_filename)
-    sftp = client.open_sftp()
-    sftp.put(settings.LAUNCH_PRIMARY_DAEMON_SCRIPT, "launch_primary_daemon.sh")
-    client.exec_command("sudo chmod +x launch_primary_daemon.sh")
-    client.exec_command("sudo ./launch_primary_daemon.sh")
-    # Do HC
-    client.close()
-
-def launch_replica_daemon(host, port, user, key_filename):
-    client = init_client(host, port, user, key_filename)
-    sftp = client.open_sftp()
-    sftp.put(settings.LAUNCH_REPLICA_DAEMON_SCRIPT, "launch_replica_daemon.sh")
-    client.exec_command("sudo chmod +x launch_replica_daemon.sh")
-    client.exec_command("sudo ./launch_replica_daemon.sh")
-    # Do HC
-    client.close()
-
 class SelfManagedPostgresEnvironment(BaseEnvironment):
 
     def __init__(self, database):
@@ -88,19 +56,46 @@ class SelfManagedPostgresEnvironment(BaseEnvironment):
         client = self.init_primary_ssh_client()
         sftp = client.open_sftp()
         sftp.put(settings.LAUNCH_PRIMARY_DAEMON_SCRIPT, "launch_primary_daemon.sh")
-        client.exec_command("sudo chmod +x launch_primary_daemon.sh")
-        client.exec_command("sudo ./launch_primary_daemon.sh")
-        # Do HC
+
+        _, _, stderr = client.exec_command("chmod +x launch_primary_daemon.sh")
+        stderr=stderr.read()
+        if len(stderr):
+            return False, "Cannot launch primary daemon\n" + str(stderr)
+
+        print ("starting")
+        _, _, stderr = client.exec_command("./launch_primary_daemon.sh")
+        stderr=stderr.read()
+        if len(stderr):
+            return False, "Cannot launch primary daemon\n" + str(stderr)
+
+        print ("done")
         client.close()
+
+        return True, ""
+
+        # Do HC
 
     def launch_replica_daemon(self):
         client = self.init_replica_ssh_client()
         sftp = client.open_sftp()
         sftp.put(settings.LAUNCH_REPLICA_DAEMON_SCRIPT, "launch_replica_daemon.sh")
-        client.exec_command("sudo chmod +x launch_replica_daemon.sh")
-        client.exec_command("sudo ./launch_replica_daemon.sh")
-        # Do HC
+
+        _, _, stderr = client.exec_command("chmod +x launch_replica_daemon.sh")
+        stderr=stderr.read()
+        if len(stderr):
+            return False, "Cannot launch replica daemon\n" + str(stderr)
+
+        _, _, stderr = client.exec_command("./launch_replica_daemon.sh", get_pty = True)
+        stderr=stderr.read()
+        if len(stderr):
+            return False, "Cannot launch replica daemon\n" + str(stderr)
+
+        print ("done")
         client.close()
+
+        # Do HC
+
+        return True, ""
 
     def test_connectivity(self):
 
@@ -132,9 +127,18 @@ class SelfManagedPostgresEnvironment(BaseEnvironment):
 
 
     def configure(self):
-        # Launch daemons etc.
-        self.launch_primary_daemon()
-        self.launch_replica_daemon()
+        # Launch daemons
+        print ("launching primary")
+        launched, err = self.launch_primary_daemon()
+        if not launched:
+            print ("returning ", launched)
+            return False, err
+
+        print ("launching replica")
+        launched, err = self.launch_replica_daemon()
+        if not launched:
+            return False, err
+
         return True, ""
 
     def collect_workload(self):

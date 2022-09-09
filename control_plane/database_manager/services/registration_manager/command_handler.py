@@ -39,12 +39,20 @@ def handle_register_database_command(command):
         env = AWSRDSPostgresEnvironment(database)
 
     config_valid, err = env.test_connectivity()
-    configured_successfully, err = env.configure()
 
-    if config_valid and configured_successfully:
-        database.state = DatabaseStateType.HEALTHY
-    else:
+    if not config_valid:
+        database.errors.append(err)
         database.state = DatabaseStateType.UNHEALTHY
+    else:
+        print ("configuring")
+        configured_successfully, err = env.configure()
+        
+        if not configured_successfully:
+            database.errors.append(err)
+            database.state = DatabaseStateType.UNHEALTHY
+
+        else:
+            database.state = DatabaseStateType.HEALTHY
     database.save()
 
     publish_command(
