@@ -44,7 +44,6 @@ def handle_register_database_command(command):
         database.errors.append(err)
         database.state = DatabaseStateType.UNHEALTHY
     else:
-        print ("configuring")
         configured_successfully, err = env.configure()
         
         if not configured_successfully:

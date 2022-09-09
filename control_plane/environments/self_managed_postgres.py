@@ -1,6 +1,8 @@
 from .base_environment import BaseEnvironment
 
 import paramiko
+import requests
+
 from paramiko.client import SSHClient
 from django.conf import settings
 
@@ -24,7 +26,7 @@ class SelfManagedPostgresEnvironment(BaseEnvironment):
         self.database = database
         self.config = database.selfmanagedpostgresconfig
 
-    def init_primary_ssh_client(self):
+    def _init_primary_ssh_client(self):
         return init_client(
             self.config.primary_host,
             int(self.config.primary_ssh_port),
@@ -32,7 +34,7 @@ class SelfManagedPostgresEnvironment(BaseEnvironment):
             get_resource_filepath(self.config.primary_ssh_key),
         )
 
-    def init_replica_ssh_client(self):
+    def _init_replica_ssh_client(self):
         return init_client(
             self.config.replica_host,
             int(self.config.replica_ssh_port),
@@ -40,7 +42,7 @@ class SelfManagedPostgresEnvironment(BaseEnvironment):
             get_resource_filepath(self.config.replica_ssh_key),
         )
 
-    def has_sudo(self, client):
+    def _has_sudo(self, client):
         _, stdout, stderr = client.exec_command("groups")
         stdout=stdout.read()
         stderr=stderr.read()
@@ -52,61 +54,85 @@ class SelfManagedPostgresEnvironment(BaseEnvironment):
 
         return b'sudo' in stdout.split()
 
+    def _check_primary_worker_health(self):
+        hc_url = "http://%s:%s/healthcheck" % (
+            self.config.primary_host,
+            "9000",
+        )
+
+        resp = requests.get(hc_url)
+        return resp.content == b"OK"
+
+    def _check_replica_worker_health(self):
+        hc_url = "http://%s:%s/healthcheck" % (
+            self.config.replica_host,
+            "9000",
+        )
+
+        resp = requests.get(hc_url)
+        return resp.content == b"OK"
+
     def launch_primary_daemon(self):
-        client = self.init_primary_ssh_client()
+        client = self._init_primary_ssh_client()
         sftp = client.open_sftp()
         sftp.put(settings.LAUNCH_PRIMARY_DAEMON_SCRIPT, "launch_primary_daemon.sh")
 
-        _, _, stderr = client.exec_command("chmod +x launch_primary_daemon.sh")
+        _, stdout, stderr = client.exec_command("chmod +x launch_primary_daemon.sh")
+        stdout.read()
         stderr=stderr.read()
         if len(stderr):
             return False, "Cannot launch primary daemon\n" + str(stderr)
 
-        print ("starting")
-        _, _, stderr = client.exec_command("./launch_primary_daemon.sh")
-        stderr=stderr.read()
-        if len(stderr):
-            return False, "Cannot launch primary daemon\n" + str(stderr)
+        # We need to wait out the script's execution; easiset way is to read stdout and stderr
+        _, stdout, stderr = client.exec_command("./launch_primary_daemon.sh")
+        stdout.read()
+        stderr.read()
 
-        print ("done")
         client.close()
 
-        return True, ""
-
-        # Do HC
+        if self._check_primary_worker_health():
+            return True, ""
+        else:
+            return False, "Could not start primary daemon"
 
     def launch_replica_daemon(self):
-        client = self.init_replica_ssh_client()
+        client = self._init_replica_ssh_client()
         sftp = client.open_sftp()
         sftp.put(settings.LAUNCH_REPLICA_DAEMON_SCRIPT, "launch_replica_daemon.sh")
 
-        _, _, stderr = client.exec_command("chmod +x launch_replica_daemon.sh")
+        _, stdout, stderr = client.exec_command("chmod +x launch_replica_daemon.sh")
+        stdout.read()
         stderr=stderr.read()
         if len(stderr):
             return False, "Cannot launch replica daemon\n" + str(stderr)
 
-        _, _, stderr = client.exec_command("./launch_replica_daemon.sh", get_pty = True)
-        stderr=stderr.read()
-        if len(stderr):
-            return False, "Cannot launch replica daemon\n" + str(stderr)
+        # We need to wait out the script's execution; easiset way is to read stdout and stderr
+        _, stdout, stderr = client.exec_command("./launch_replica_daemon.sh")
+        stdout.read()
+        stderr.read()
 
-        print ("done")
         client.close()
 
         # Do HC
+        if self._check_replica_worker_health():
+            return True, ""
+        else:
+            return False, "Could not start replica daemon"
 
-        return True, ""
+
+    ######################## BASE METHOD IMPLEMENTATIONS ########################
 
     def test_connectivity(self):
 
         # 1. Check sudo permissions on primary
         has_sudo_on_primary = False
-        # try:
-        primary_ssh_client = self.init_primary_ssh_client()
-        has_sudo_on_primary = self.has_sudo(primary_ssh_client)
-        primary_ssh_client.close()
-        # except:
-        #     pass
+        try:
+            primary_ssh_client = self._init_primary_ssh_client()
+            has_sudo_on_primary = self._has_sudo(primary_ssh_client)
+            primary_ssh_client.close()
+        except:
+            return False, "Exception while connecting to primary"
+            pass
 
         if not has_sudo_on_primary:
             return False, "No sudo on primary"
@@ -114,11 +140,11 @@ class SelfManagedPostgresEnvironment(BaseEnvironment):
         # 2. Check sudo permissions on replica
         has_sudo_on_replica = False
         try:
-            replica_ssh_client = self.init_replica_ssh_client()
-            has_sudo_on_replica = self.has_sudo(replica_ssh_client)
+            replica_ssh_client = self._init_replica_ssh_client()
+            has_sudo_on_replica = self._has_sudo(replica_ssh_client)
             replica_ssh_client.close()
         except:
-            pass
+            return False, "Exception while connecting to primary"
 
         if not has_sudo_on_replica:
             return False, "No sudo on replica"
@@ -127,14 +153,13 @@ class SelfManagedPostgresEnvironment(BaseEnvironment):
 
 
     def configure(self):
-        # Launch daemons
-        print ("launching primary")
+        
+        # Launch primary daemon
         launched, err = self.launch_primary_daemon()
         if not launched:
-            print ("returning ", launched)
             return False, err
 
-        print ("launching replica")
+        # Launch replica daemon
         launched, err = self.launch_replica_daemon()
         if not launched:
             return False, err
