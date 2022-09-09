@@ -7,5 +7,5 @@ def index():
     return 'Hello this is replica worker'
 
 @app.route('/healthcheck')
-def index():
+def healthcheck():
     return 'OK'

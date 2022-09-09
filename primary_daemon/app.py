@@ -7,5 +7,5 @@ def index():
     return 'Hello this is primary worker'
 
 @app.route('/healthcheck')
-def index():
+def healthcheck():
     return 'OK'
