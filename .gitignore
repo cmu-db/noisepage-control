@@ -10,6 +10,7 @@ media
 
 # Control plane generated files
 control_plane/resources
+control_plane/database_manager/resources/*
 
 # Backup files # 
 *.bak 

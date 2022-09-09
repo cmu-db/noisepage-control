@@ -3,10 +3,13 @@ import uuid
 from django.db import models
 from django.core.exceptions import ValidationError
 
-from environment_manager.environment_types import EnvironmentType
+from environments.environment_types import EnvironmentType
 from django.contrib.postgres.fields import JSONField
 
 from .database_state_types import DatabaseStateType
+
+from .services.command_queue.models import Command
+from resource_manager.models import Resource
 
 def autogenerate_uuid():
     return str(uuid.uuid4())
@@ -22,25 +25,7 @@ class Database(models.Model):
     environment_type = models.CharField(max_length=120, choices=ENVIRONMENT_TYPE_CHOICES)
 
     # Whether the resource is active or removed
-    active = models.BooleanField(default=False)
-
-    """
-        - primary_host
-        - primary_ssh_port
-        - primary_ssh_user
-        - primary_pem_key
-        - primary_pg_user
-        - primary_pg_port
-
-        - replica_host
-        - replica_ssh_port
-        - replica_ssh_user
-        - replica_pem_key
-        - replica_pg_user
-        - replica_pg_port
-
-    """
-    self_managed_postgres_config = models.JSONField(default=dict)
+    active = models.BooleanField(default=True)
 
     DATABSE_STATE_CHOICES = [
         (DatabaseStateType.REGISTERING, "REGISTERING"),
@@ -54,4 +39,24 @@ class Database(models.Model):
     state = models.CharField(max_length=120, choices=DATABSE_STATE_CHOICES)
 
 
+class SelfManagedPostgresConfig(models.Model):
 
+    database = models.OneToOneField(
+        Database, on_delete=models.CASCADE, primary_key=True)
+
+    primary_host = models.CharField(max_length=120, blank = False, null = False)
+    primary_ssh_port = models.CharField(max_length=120, blank = False, null = False)
+    primary_ssh_user = models.CharField(max_length=120, blank = False, null = False)
+    primary_pg_user = models.CharField(max_length=120, blank = False, null = False)
+    primary_pg_port = models.CharField(max_length=120, blank = False, null = False)
+
+    replica_host = models.CharField(max_length=120, blank = False, null = False)
+    replica_ssh_port = models.CharField(max_length=120, blank = False, null = False)
+    replica_ssh_user = models.CharField(max_length=120, blank = False, null = False)
+    replica_pg_user = models.CharField(max_length=120, blank = False, null = False)
+    replica_pg_port = models.CharField(max_length=120, blank = False, null = False)
+
+    primary_ssh_key = models.OneToOneField(
+        Resource, on_delete=models.CASCADE, related_name = "primary_ssh_key")
+    replica_ssh_key = models.OneToOneField(
+        Resource, on_delete=models.CASCADE, related_name = "replica_ssh_key")

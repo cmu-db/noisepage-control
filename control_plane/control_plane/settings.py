@@ -15,6 +15,11 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+RESOURCE_DIR = BASE_DIR / "database_manager" / "resources"
+
+SCRIPTS_DIR = BASE_DIR / "scripts"
+LAUNCH_PRIMARY_DAEMON_SCRIPT = SCRIPTS_DIR / "launch_primary_daemon.sh"
+LAUNCH_REPLICA_DAEMON_SCRIPT = SCRIPTS_DIR / "launch_replica_daemon.sh"
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
@@ -41,7 +46,8 @@ INSTALLED_APPS = [
 
 INSTALLED_APPS += [
     'database_manager',
-    'environment_manager',
+    'environments',
+    'resource_manager',
 ]
 
 MIDDLEWARE = [
@@ -135,3 +141,49 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+LOGGING_DIR = BASE_DIR / "logs"
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "verbose": {
+            "format": "{levelname} {asctime} {module} {process:d} {thread:d} {message}",
+            "style": "{",
+        },
+        "simple": {
+            "format": "{levelname} {message}",
+            "style": "{",
+        },
+    },
+    "filters": {
+        "require_debug_true": {
+            "()": "django.utils.log.RequireDebugTrue",
+        },
+    },
+    "handlers": {
+        "control_plane_info": {
+            "level": "INFO",
+            "class": "logging.FileHandler",
+            "filename": LOGGING_DIR / "control_plane_info.log",
+            "formatter": "verbose",
+        },
+        "control_plane_debug": {
+            "level": "DEBUG",
+            "class": "logging.FileHandler",
+            "filename": LOGGING_DIR / "control_plane_debug.log",
+            "formatter": "verbose",
+        },
+        "console": {
+            "class": "logging.StreamHandler",
+        },
+    },
+    "loggers": {
+        "control_plane": {
+            "handlers": ["control_plane_info", "control_plane_debug"],
+            "level": "DEBUG",
+            "propagate": True,
+        },
+    },
+}

@@ -1,0 +1,57 @@
+<form action="/database_manager/register/" method = "POST" enctype="multipart/form-data">
+    <label for="environment">Choose an environment</label><br>
+    <select id="environment" name="environment" size="1">
+      <option value="SELF_MANAGED_POSTGRES">SELF_MANAGED_POSTGRES</option>
+      <option value="AWS_RDS_POSTGRES">AWS_RDS_POSTGRES</option>
+    </select><br><br><br>
+
+    <br /><label for="primary_host">Primary host:</label><br>
+    <input type="text" id="primary_host" name="primary_host" value = "ec2-18-217-99-54.us-east-2.compute.amazonaws.com"><br>
+
+    <label for="primary_ssh_port">Primary SSH port:</label><br>
+    <input type="text" id="primary_ssh_port" name="primary_ssh_port" value = "22"><br>
+
+    <label for="primary_ssh_user">Primary SSH user:</label><br>
+    <input type="text" id="primary_ssh_user" name="primary_ssh_user" value = "ubuntu"><br>
+
+    <label for="primary_pg_user">Primary Postgres user:</label><br>
+    <input type="text" id="primary_pg_user" name="primary_pg_user" value = "postgres"><br>
+
+    <label for="primary_pg_port">Primary Postgres port:</label><br>
+    <input type="text" id="primary_pg_port" name="primary_pg_port" value = "10000"><br>
+
+    <label for="primary_key_file">Primary key:</label><br>
+    <input type="file" id = "primary_key_file" name="primary_key_file" /><br>
+
+    <br />
+    <br />
+    <br />
+    <br />
+
+    <label for="replica_host">Replica host:</label><br>
+    <input type="text" id="replica_host" name="replica_host" value = "ec2-18-222-240-209.us-east-2.compute.amazonaws.com"><br>
+
+    <label for="replica_ssh_port">Replica SSH port:</label><br>
+    <input type="text" id="replica_ssh_port" name="replica_ssh_port" value = "22"><br>
+
+    <label for="replica_ssh_user">Replica SSH user:</label><br>
+    <input type="text" id="replica_ssh_user" name="replica_ssh_user" value = "ubuntu"><br>
+
+    <label for="replica_pg_user">Replica Postgres user:</label><br>
+    <input type="text" id="replica_pg_user" name="replica_pg_user" value = "postgres"><br>
+
+    <label for="replica_pg_port">Replica Postgres port:</label><br>
+    <input type="text" id="replica_pg_port" name="replica_pg_port" value = 10001><br>
+
+    <label for="replica_key_file">Replica key:</label><br>
+    <input type="file" id = "replica_key_file" name="replica_key_file" /><br>
+
+
+    <br />
+    <br />
+    <br />
+    <br />
+    
+    <input type="submit" value="Submit">
+
+  </form>

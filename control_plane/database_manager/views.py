@@ -1,80 +1,88 @@
+import json
+
 from django.http import HttpResponse
 
 from django.core import serializers
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
+from django.shortcuts import render
 
-from environment_manager.environment_types import EnvironmentType
+from environments.environment_types import EnvironmentType
 
-from .models import Database
+from .models import Database, SelfManagedPostgresConfig
 from .database_state_types import DatabaseStateType
 
-import json
+from .services.command_queue.producer import publish_command
+from .services.command_queue.models import Command
+from .services.command_queue.command_types import CommandType
 
-import paramiko
-from paramiko.client import SSHClient
-
+from resource_manager.views import initialise_resource, save_resource, initialise_resource_dir
+from resource_manager.resource_type import ResourceType
 
 @csrf_exempt
 @require_http_methods(["GET"])
 def list_databases(request):
 
-    client = SSHClient()
-    client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    client.connect(
-        hostname = "ec2-18-217-99-54.us-east-2.compute.amazonaws.com",
-        port = 22,
-        username = "ubuntu",
-        key_filename = "./resources/keys/test.pem",
-        timeout = 30,
-    )
-
-    stdin, stdout, stderr = client.exec_command('sudo -v')
-    print (stdin, stdout, stderr)
-
-    stdout=stdout.read()
-    print (stdout)
-    client.close()
-
-    return HttpResponse("Hello, world. This is all databases view")
+    return render(request, 'index.html', context={})
 
 
 @csrf_exempt
-@require_http_methods(["POST"])
+@require_http_methods(["GET", "POST"])
 def register_database(request):
+    if request.method == "POST":
+        return register_new_database(request)
+    return render(request, 'register_database.html', context={})
 
-    data = json.loads(request.body)
 
-    if "environment" not in data:
-        return HttpResponse('No environment specified', status=403)
+"""
+    Registers a new database
+    1. Creates db entries
+    2. Inits resource directory
+    3. Fires off registration command
+"""
+def register_new_database(request):
 
-    environment = data["environment"]
+    if "environment" not in request.POST:
+        return HttpResponse('Unrecognised environment', status=403)
+    environment = request.POST["environment"]
 
     # Create a new intsance
     new_database = Database(
         environment_type = environment,
         state = DatabaseStateType.REGISTERING,
     )
+    new_database.save()
+
+    # Init resource dir for database
+    initialise_resource_dir(new_database.database_id)
 
     # Load up config
     if environment == EnvironmentType.SELF_MANAGED_POSTGRES:
-        if "self_managed_postgres_config" not in data:
-            return HttpResponse('"self_managed_postgres_config" not specified', status=403)
-        config = data["self_managed_postgres_config"]
+        if not is_self_managed_postgress_config_valid(request.POST):
+            return HttpResponse('Invalid config', status=403)
 
-        if not is_self_managed_postgress_config_valid(config):
-            return HttpResponse('invalid config', status=403)
-
-        new_database.self_managed_postgres_config = config
+        register_new_self_managed_postgres_database(request, new_database)
 
     elif environment == EnvironmentType.AWS_RDS_POSTGRES:
-        if "aws_rds_postgres_config" not in data:
-            return HttpResponse('"aws_rds_postgres_config" not specified', status=403)
-        new_database.self_managed_postgres_config = data["aws_rds_postgres_config"]
+        pass
     else:
         return HttpResponse('Unrecognised environment', status=403)
+
+    # Fire register database command
+    new_command = Command(
+        command_type=CommandType.REGISTER_DATABASE,
+        parent_command_ids=[],
+        database_id=new_database.database_id,
+        completed=False,
+    )
+    new_command.save()
     
-    new_database.save()
+    publish_command(
+        new_command.command_type,
+        new_command.command_id,
+        new_command.database_id,
+        {}
+    )
 
     return HttpResponse(
         serializers.serialize(
@@ -87,10 +95,9 @@ def register_database(request):
     )
 
 
-
 self_managed_postgres_config_keys = [
-    "primary_host", "primary_ssh_port", "primary_ssh_user", "primary_pem_key", "primary_pg_user", "primary_pg_port",
-    "replica_host", "replica_ssh_port", "replica_ssh_user", "replica_pem_key", "replica_pg_user", "replica_pg_port"
+    "primary_host", "primary_ssh_port", "primary_ssh_user", "primary_pg_user", "primary_pg_port",
+    "replica_host", "replica_ssh_port", "replica_ssh_user", "replica_pg_user", "replica_pg_port"
 ]
 
 def is_self_managed_postgress_config_valid(config):
@@ -99,3 +106,43 @@ def is_self_managed_postgress_config_valid(config):
             return False
 
     return True
+
+def register_new_self_managed_postgres_database(request, database):
+
+    # Save primary key
+    resource_id = initialise_resource(database.database_id, ResourceType.KEY)
+    primary_key_resource = save_resource(
+        database.database_id, 
+        resource_id, 
+        request.FILES["primary_key_file"].read(), 
+        "primary_key.pem"
+    )
+
+    # Save replica key
+    resource_id = initialise_resource(database.database_id, ResourceType.KEY)
+    replica_key_resource = save_resource(
+        database.database_id, 
+        resource_id, 
+        request.FILES["replica_key_file"].read(), 
+        "replica_key.pem"
+    )    
+
+    config = SelfManagedPostgresConfig(
+        database = database,
+
+        primary_host = request.POST["primary_host"],
+        primary_ssh_port = request.POST["primary_ssh_port"],
+        primary_ssh_user = request.POST["primary_ssh_user"],
+        primary_pg_user = request.POST["primary_pg_user"],
+        primary_pg_port = request.POST["primary_pg_port"],
+        replica_host = request.POST["replica_host"],
+        replica_ssh_port = request.POST["replica_ssh_port"],
+        replica_ssh_user = request.POST["replica_ssh_user"],
+        replica_pg_user = request.POST["replica_pg_user"],
+        replica_pg_port = request.POST["replica_pg_port"],   
+
+        primary_ssh_key = primary_key_resource,
+        replica_ssh_key = replica_key_resource,         
+    )
+
+    config.save()
