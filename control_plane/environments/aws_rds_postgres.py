@@ -1,11 +1,11 @@
 from .base_environment import BaseEnvironment
 
-class AWSRDSPostgresEnvironment(BaseEnvironment):
 
+class AWSRDSPostgresEnvironment(BaseEnvironment):
     def test_connectivity(self):
         # Tests pem keys work
         # Any other permissions
-        print ("testing connectivity aws rds", self.database)
+        print("testing connectivity aws rds", self.database)
         pass
 
     def collect_workload(self):

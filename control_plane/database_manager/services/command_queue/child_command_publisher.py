@@ -44,8 +44,8 @@ def publish_child_commands(completed_command):
             logger.info("Can execute child command %s" % (child_command.command_id))
             publish_command(
                 command_type=child_command.command_type,
-                command_id = child_command.command_id,
-                database_id = database_id,
+                command_id=child_command.command_id,
+                database_id=database_id,
                 data={
                     "command_id": child_command.command_id,
                     "config": child_command.config,

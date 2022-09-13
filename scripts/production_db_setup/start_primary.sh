@@ -49,4 +49,3 @@ REPLICATION_SLOT_COMMAND="select * from pg_create_physical_replication_slot('db0
 sudo -u postgres bash -c "echo \"${REPLICATION_SLOT_COMMAND}\" | psql -p ${PRIMARY_PORT} template1"
 
 # sudo -u postgres bash -c "${POSTGRES_BIN_DIR}/pg_ctl -D '${PRIMARY_DIR}' stop"
-

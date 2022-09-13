@@ -15,7 +15,7 @@ def publish_command(command_type, command_id, database_id, data, completed=False
         "completed": completed,
     }
 
-    print ("publishing", command)
+    print("publishing", command)
     with Connection(ampq_connection_string) as connection:
         with connection.Producer(serializer="json") as producer:
             producer.publish(

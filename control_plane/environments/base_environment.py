@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 
+
 class BaseEnvironment(ABC):
     def __init__(self, database):
         self.database = database

@@ -1,27 +1,26 @@
-from .base_environment import BaseEnvironment
-
 import paramiko
 import requests
-
-from paramiko.client import SSHClient
 from django.conf import settings
-
+from paramiko.client import SSHClient
 from resource_manager.views import get_resource_filepath
+
+from .base_environment import BaseEnvironment
+
 
 def init_client(host, port, user, key_filename):
     client = SSHClient()
     client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     client.connect(
-        hostname = host,
-        port = port,
-        username = user,
-        key_filename = key_filename,
-        timeout = 30, 
+        hostname=host,
+        port=port,
+        username=user,
+        key_filename=key_filename,
+        timeout=30,
     )
     return client
 
-class SelfManagedPostgresEnvironment(BaseEnvironment):
 
+class SelfManagedPostgresEnvironment(BaseEnvironment):
     def __init__(self, database):
         self.database = database
         self.config = database.selfmanagedpostgresconfig
@@ -44,15 +43,15 @@ class SelfManagedPostgresEnvironment(BaseEnvironment):
 
     def _has_sudo(self, client):
         _, stdout, stderr = client.exec_command("groups")
-        stdout=stdout.read()
-        stderr=stderr.read()
+        stdout = stdout.read()
+        stderr = stderr.read()
         client.close()
 
         if len(stderr) != 0:
-            print ("error", error)
+            print("error", stderr)
             return False
 
-        return b'sudo' in stdout.split()
+        return b"sudo" in stdout.split()
 
     def _check_primary_worker_health(self):
         hc_url = "http://%s:%s/healthcheck" % (
@@ -79,7 +78,7 @@ class SelfManagedPostgresEnvironment(BaseEnvironment):
 
         _, stdout, stderr = client.exec_command("chmod +x launch_primary_daemon.sh")
         stdout.read()
-        stderr=stderr.read()
+        stderr = stderr.read()
         if len(stderr):
             return False, "Cannot launch primary daemon\n" + str(stderr)
 
@@ -102,7 +101,7 @@ class SelfManagedPostgresEnvironment(BaseEnvironment):
 
         _, stdout, stderr = client.exec_command("chmod +x launch_replica_daemon.sh")
         stdout.read()
-        stderr=stderr.read()
+        stderr = stderr.read()
         if len(stderr):
             return False, "Cannot launch replica daemon\n" + str(stderr)
 
@@ -119,7 +118,6 @@ class SelfManagedPostgresEnvironment(BaseEnvironment):
         else:
             return False, "Could not start replica daemon"
 
-
     ######################## BASE METHOD IMPLEMENTATIONS ########################
 
     def test_connectivity(self):
@@ -130,7 +128,7 @@ class SelfManagedPostgresEnvironment(BaseEnvironment):
             primary_ssh_client = self._init_primary_ssh_client()
             has_sudo_on_primary = self._has_sudo(primary_ssh_client)
             primary_ssh_client.close()
-        except:
+        except Exception:
             return False, "Exception while connecting to primary"
             pass
 
@@ -143,7 +141,7 @@ class SelfManagedPostgresEnvironment(BaseEnvironment):
             replica_ssh_client = self._init_replica_ssh_client()
             has_sudo_on_replica = self._has_sudo(replica_ssh_client)
             replica_ssh_client.close()
-        except:
+        except Exception:
             return False, "Exception while connecting to primary"
 
         if not has_sudo_on_replica:
@@ -151,9 +149,8 @@ class SelfManagedPostgresEnvironment(BaseEnvironment):
 
         return True, ""
 
-
     def configure(self):
-        
+
         # Launch primary daemon
         launched, err = self.launch_primary_daemon()
         if not launched:

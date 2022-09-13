@@ -1,7 +1,7 @@
 import json
 
-import database_manager.services.registration_manager.command_handler as registration_command_handler
 import database_manager.services.environment_manager.command_handler as environment_command_handler
+import database_manager.services.registration_manager.command_handler as registration_command_handler
 from kombu import Connection
 
 from .child_command_publisher import publish_child_commands
@@ -26,7 +26,7 @@ def init_command_consumer():
 
 def process_command(command, message_obj):
 
-    print ("consumed", command)
+    print("consumed", command)
     command = json.loads(command)
     command_type = command["command_type"]
     command_handler_type = CommandHandlerMapping[command_type]

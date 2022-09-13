@@ -4,8 +4,10 @@ from django.db import models
 
 from .resource_type import ResourceType
 
+
 def autogenerate_uuid():
     return str(uuid.uuid4())
+
 
 class Resource(models.Model):
 

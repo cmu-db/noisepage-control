@@ -1,13 +1,14 @@
-from django.apps import AppConfig
 from threading import Thread
 
+from database_manager.services.command_queue.consumer import (
+    init_command_consumer,
+)
+from django.apps import AppConfig
 
-from database_manager.services.command_queue.consumer import init_command_consumer
 
 class DatabaseManagerConfig(AppConfig):
-    default_auto_field = 'django.db.models.BigAutoField'
-    name = 'database_manager'
-
+    default_auto_field = "django.db.models.BigAutoField"
+    name = "database_manager"
 
     def ready(self):
         """

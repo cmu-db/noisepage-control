@@ -7,13 +7,15 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('database_manager', '0001_initial'),
+        ("database_manager", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='database',
-            name='errors',
-            field=django.contrib.postgres.fields.ArrayField(base_field=models.TextField(), blank=True, default=list, size=None),
+            model_name="database",
+            name="errors",
+            field=django.contrib.postgres.fields.ArrayField(
+                base_field=models.TextField(), blank=True, default=list, size=None
+            ),
         ),
     ]

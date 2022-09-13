@@ -1,4 +1,3 @@
-from django.conf import settings
 from kombu import Exchange, Queue
 
 ampq_exchange = Exchange("command", "direct", durable=True)
