@@ -11,5 +11,7 @@ virtualenv venv
 source venv/bin/activate
 pip install flask
 
+chmod +x scripts/*.sh
+
 nohup flask run -h 0.0.0.0 -p 9000 >/dev/null 2>&1 &
 sleep 5

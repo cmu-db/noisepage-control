@@ -24,6 +24,5 @@ sudo -u postgres bash -c "echo \"ALTER SYSTEM SET log_destination='stderr';\" | 
 sudo -u postgres bash -c "echo \"ALTER SYSTEM SET log_statement='none';\" | psql -p ${DATABASE_PORT}"
 sudo -u postgres bash -c "echo \"ALTER SYSTEM SET logging_collector=off;\" | psql -p ${DATABASE_PORT}"
 
-
 # Restart postgres
 sudo -u postgres bash -c "${POSTGRES_BIN_DIR}/pg_ctl restart -D '${DATA_DIR}'"

@@ -1,15 +1,17 @@
 from flask import Flask
+from pathlib import Path
 
 app = Flask(__name__)
 
 from threading import Lock
 
 
-"""
-    Lock to prevent multiple concurrent workload captures
-"""
-WORKLOAD_CAPTURE_MUTEX = Lock()
+from primary_executor import PrimaryExecutor
 
+ROOT_DIR = Path(app.root_path)
+SCRIPTS_DIR = ROOT_DIR / "scripts"
+
+database_executor = PrimaryExecutor(SCRIPTS_DIR, "postgres", "10000")
 
 @app.route('/')
 def index():
