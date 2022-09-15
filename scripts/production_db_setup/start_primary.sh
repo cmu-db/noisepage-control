@@ -1,3 +1,8 @@
+# sudo sh -c 'echo "deb [arch=amd64] http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
+# wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+# sudo apt-get update
+# sudo apt-get -y install postgresql-14
+
 #!/bin/bash
 
 ##################################  NOTE  ##################################
@@ -6,9 +11,9 @@
 
 ##############################  Configurations  ##############################
 
-PRIMARY_IP="18.217.99.54"
+PRIMARY_IP="54.242.174.185"
 PRIMARY_PORT="10000"
-REPLICA_IP="18.222.240.209"
+REPLICA_IP="54.226.115.17"
 REPLICATION_USERNAME="repl"
 
 # This specifies where the postgres cluster should reside
