@@ -44,7 +44,7 @@ class PrimaryExecutor():
         return Path(data_dir)
 
 
-    def start_logging(self):
+    def enable_logging(self):
         """
         Enable logging on the primary instance.
         WARNING: Results in a restart
@@ -54,16 +54,16 @@ class PrimaryExecutor():
         command = '"%s" "%s" "%s" "%s"' % (
             self.SCRIPTS_DIR / ENABLE_DATABASE_LOGGING_SCRIPT_NAME,
             self.data_dir,
-            self.posrgres_port,
+            self.postgres_port,
             self.postgres_username,
         )
 
         subprocess.call(command, shell=True)
         time.sleep(10)
 
-    def stop_logging(self):
+    def disable_logging(self):
         """
-        Enable logging on the primary instance.
+        Disable logging on the primary instance.
         WARNING: Results in a restart
         Script needs to be executed by postgres user
         """
@@ -71,7 +71,7 @@ class PrimaryExecutor():
         command = '"%s" "%s" "%s" "%s"' % (
             self.SCRIPTS_DIR / DISABLE_DATABASE_LOGGING_SCRIPT_NAME,
             self.data_dir,
-            self.posrgres_port,
+            self.postgres_port,
             self.postgres_username,
         )
 
