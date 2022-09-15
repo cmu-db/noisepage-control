@@ -1,13 +1,19 @@
 import os 
 import time
 import subprocess
+
 from pathlib import Path
+from threading import Lock
+from datetime import datetime
+
+
 
 GET_DATABASE_DATA_DIR_SCRIPT_NAME = "get_database_data_dir.sh"
 GET_DATABASE_LOGGING_DIR_SCRIPT = "get_database_logging_dir.sh"
-
 ENABLE_DATABASE_LOGGING_SCRIPT_NAME = "enable_database_logging.sh"
 DISABLE_DATABASE_LOGGING_SCRIPT_NAME = "disable_database_logging.sh"
+
+
 
 class PrimaryExecutor():
 
@@ -15,6 +21,8 @@ class PrimaryExecutor():
         self.SCRIPTS_DIR = scripts_dir
         self.postgres_username = postgres_username
         self.postgres_port = posrgres_port
+        
+        self.WORKLOAD_CAPTURE_MUTEX = Lock()
 
         # Figure out data dir on start up
         self.data_dir = self.get_data_dir()
@@ -49,7 +57,7 @@ class PrimaryExecutor():
 
 
     """ Get logging dir from database settings """
-    def get_logging_dir():
+    def get_logging_dir(self):
         
         command = '"%s" "%s" "%s"' % (
             self.SCRIPTS_DIR / GET_DATABASE_LOGGING_DIR_SCRIPT,
@@ -109,3 +117,46 @@ class PrimaryExecutor():
 
         subprocess.call(command, shell=True)
         time.sleep(5)
+
+
+
+
+    """
+    This method captures the workload on a primary instance.
+    Only allow one concurrent capture;
+    synchronised via `WORKLOAD_CAPTURE_MUTEX`
+    """
+    def capture_workload(self, time_period):
+
+        logger.info("Waiting for mutex")
+        self.WORKLOAD_CAPTURE_MUTEX.acquire()
+        logger.info("Starting workload capture for %d seconds" % (time_period))
+
+
+        try:
+            # Enable logging
+            self.enable_logging()
+            print ("Enabled logging")
+
+            # Wait for time_period seconds
+            capture_start_time = datetime.now()
+            for it in range(0, time_period, 5):
+                time.sleep(5)
+                print ("Captured %d seconds" % (it + 5))
+            capture_end_time = datetime.now()
+
+            # Disable logging
+            self.disable_logging()
+            print ("Disabled logging")
+
+            # Create workload archive
+            # archive_path = create_workload_archive(capture_start_time, capture_end_time)
+
+            # Transfer archive to control plane
+            # transfer_workload(archive_path, command_name, resource_id)
+
+        finally:
+            WORKLOAD_CAPTURE_MUTEX.release()
+
+
+        return self.get_database_logging_dir(), capture_start_time, capture_end_time
