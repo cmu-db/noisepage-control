@@ -1,8 +1,11 @@
 import os 
+import time
 import subprocess
 from pathlib import Path
 
-GET_DATABASE_DATA_DIR_SCRIPT_NAME = "get_database_datadir.sh"
+GET_DATABASE_DATA_DIR_SCRIPT_NAME = "get_database_data_dir.sh"
+GET_DATABASE_LOGGING_DIR_SCRIPT = "get_database_logging_dir.sh"
+
 ENABLE_DATABASE_LOGGING_SCRIPT_NAME = "enable_database_logging.sh"
 DISABLE_DATABASE_LOGGING_SCRIPT_NAME = "disable_database_logging.sh"
 
@@ -15,6 +18,7 @@ class PrimaryExecutor():
 
         # Figure out data dir on start up
         self.data_dir = self.get_data_dir()
+
 
     """ Get data dir from database settings """
     def get_data_dir(self):
@@ -44,6 +48,34 @@ class PrimaryExecutor():
         return Path(data_dir)
 
 
+    """ Get logging dir from database settings """
+    def get_logging_dir():
+        
+        command = '"%s" "%s" "%s"' % (
+            self.SCRIPTS_DIR / GET_DATABASE_LOGGING_DIR_SCRIPT,
+            self.postgres_port,
+            self.postgres_username,
+        )
+
+        process = subprocess.Popen(
+            command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE
+        )
+        out, err = process.communicate()
+
+        """
+            Result would be somthing like this:
+
+            setting
+            ---------
+            log
+            (1 row)
+
+            We need to extract the value
+        """
+        log_dir = out.decode("utf-8").split("\n")[2].strip()
+
+        return self.data_dir / log_dir
+
     def enable_logging(self):
         """
         Enable logging on the primary instance.
@@ -59,7 +91,7 @@ class PrimaryExecutor():
         )
 
         subprocess.call(command, shell=True)
-        time.sleep(10)
+        time.sleep(5)
 
     def disable_logging(self):
         """
@@ -76,4 +108,4 @@ class PrimaryExecutor():
         )
 
         subprocess.call(command, shell=True)
-        time.sleep(10)
+        time.sleep(5)
