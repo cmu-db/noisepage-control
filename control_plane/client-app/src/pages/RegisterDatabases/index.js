@@ -59,7 +59,7 @@ function RegisterDatabase() {
             </Tabs>
           </Box>
           <TabPanel value={activeTabIdx} index={0}>
-            <RegisterForm />
+            <RegisterForm environment="SELF_MANAGED_POSTGRES" />
           </TabPanel>
           <TabPanel value={activeTabIdx} index={1}>
             Item Two
