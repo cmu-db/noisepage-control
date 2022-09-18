@@ -5,10 +5,8 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Link from '@mui/material/Link';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import Navigator from './Navigator';
-import Content from './Content';
-import Header from './Header';
-import RegisterDatabase from './pages/RegisterDatabase';
+import Navigator from './components/Navigator';
+import RegisterDatabase from './pages/RegisterDatabases';
 import MyDatabases from './pages/MyDatabases';
 import theme from './theme';
 
@@ -61,14 +59,10 @@ export default function App() {
               <Route path="/" exact element={<Navigate to="/databases" />} />
               <Route path="/register" element={<RegisterDatabase />} />
               <Route path="/databases" element={<MyDatabases />} />
-            </Routes>            
-            {/* <Header onDrawerToggle={handleDrawerToggle} />
-            <Box component="main" sx={{ flex: 1, py: 6, px: 4, bgcolor: '#eaeff1' }}>
-              <Content />
-            </Box>
+            </Routes>    
             <Box component="footer" sx={{ p: 2, bgcolor: '#eaeff1' }}>
               <Copyright />
-            </Box> */}
+            </Box>
           </Box>
         </Box>
       </BrowserRouter>

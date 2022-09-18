@@ -17,8 +17,8 @@ import Typography from '@mui/material/Typography';
 
 const lightColor = 'rgba(255, 255, 255, 0.7)';
 
-function Header(props) {
-  const { onDrawerToggle } = props;
+function Header({ title }) {
+  // const { onDrawerToggle } = props;
 
   return (
     <React.Fragment>
@@ -80,7 +80,7 @@ function Header(props) {
         }}
       >
         <Typography color="inherit" variant="h5" component="h1">
-          Register Databases
+          {title}
         </Typography>
 
         {/* <Toolbar>
@@ -110,20 +110,21 @@ function Header(props) {
           {/* </Grid>
         </Toolbar> */}
       </AppBar>
-      <AppBar component="div" position="static" elevation={0} sx={{ zIndex: 0 }}>
+      {/* <AppBar component="div" position="static" elevation={0} sx={{ zIndex: 0 }}>
         <Tabs value={0} textColor="inherit">
           <Tab label="Users" />
           <Tab label="Sign-in method" />
           <Tab label="Templates" />
           <Tab label="Usage" />
         </Tabs>
-      </AppBar>
+      </AppBar> */}
     </React.Fragment>
   );
 }
 
 Header.propTypes = {
-  onDrawerToggle: PropTypes.func.isRequired,
+  // onDrawerToggle: PropTypes.func.isRequired,
+  title: PropTypes.string.isRequired
 };
 
 export default Header;

@@ -17,7 +17,8 @@ import SettingsInputComponentIcon from '@mui/icons-material/SettingsInputCompone
 import TimerIcon from '@mui/icons-material/Timer';
 import SettingsIcon from '@mui/icons-material/Settings';
 import PhonelinkSetupIcon from '@mui/icons-material/PhonelinkSetup';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
+import theme from '../theme';
 
 // const categories = [
 //   {
@@ -76,6 +77,8 @@ const itemCategory = {
   px: 3,
 };
 
+const activeClassNameFunc = ({ isActive }) => (isActive ? "Mui-selected" : "");
+
 export default function Navigator(props) {
   const { ...other } = props;
 
@@ -112,12 +115,12 @@ export default function Navigator(props) {
         ))} */}
         {tabs.map(({ name, icon, link }, tabId) => (
           <ListItem sx={{display: 'flex'}} disablePadding key={name}>
-            <Link to={link} style={{ textDecoration: 'none', flex: '1' }}>
-              <ListItemButton selected={tabId == activeTabId} sx={item} onClick={() => {setActiveTabId(tabId)}}>
+            <NavLink to={link} style={{ textDecoration: 'none', flex: '1' }}>
+              <ListItemButton sx={item} selected={activeTabId === tabId} onClick={() => {setActiveTabId(tabId)}}>
                 <ListItemIcon>{icon}</ListItemIcon>
                 <ListItemText>{name}</ListItemText>
               </ListItemButton>
-            </Link>
+            </NavLink>
           </ListItem>
         ))}
       </List>
