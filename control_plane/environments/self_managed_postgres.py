@@ -2,6 +2,7 @@ from .base_environment import BaseEnvironment
 
 import paramiko
 import requests
+import json
 
 from paramiko.client import SSHClient
 from django.conf import settings
@@ -55,7 +56,7 @@ class SelfManagedPostgresEnvironment(BaseEnvironment):
         return b'sudo' in stdout.split()
 
     def _check_primary_worker_health(self):
-        hc_url = "http://%s:%s/healthcheck" % (
+        hc_url = "http://%s:%s/healthcheck/" % (
             self.config.primary_host,
             "9000",
         )
@@ -64,7 +65,7 @@ class SelfManagedPostgresEnvironment(BaseEnvironment):
         return resp.content == b"OK"
 
     def _check_replica_worker_health(self):
-        hc_url = "http://%s:%s/healthcheck" % (
+        hc_url = "http://%s:%s/healthcheck/" % (
             self.config.replica_host,
             "9000",
         )
@@ -168,6 +169,22 @@ class SelfManagedPostgresEnvironment(BaseEnvironment):
 
     def collect_workload(self, time_period, resource_id):
         print ("self managed postgres collecting workoad", time_period, resource_id)
+        url = "http://%s:%s/collect_workload/" % (
+            self.config.primary_host,
+            "9000",
+        )
+
+        data = {
+            "resource_id": resource_id,
+            "time_period": time_period,
+            "callback_url": "http://ec2-34-207-82-72.compute-1.amazonaws.com/database_manager/workload/collect_workload_callback/"
+        }
+
+        print (url, data)
+
+        headers = {"Content-type": "application/json"}
+        requests.post(url, data=json.dumps(data), headers=headers)
+
         # Gets a workload and archives it
         pass
 

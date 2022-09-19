@@ -1,3 +1,5 @@
+import json 
+
 from django.http import HttpResponse
 
 from django.views.decorators.csrf import csrf_exempt
@@ -30,7 +32,6 @@ def collect_workload(request):
     print (database)
 
 
-
     # Init a new resource
     resource_id = initialise_resource(database_id, ResourceType.WORKLOAD)
     print ("New resource", resource_id)
@@ -40,3 +41,20 @@ def collect_workload(request):
     # Send request to remote executor
     return HttpResponse("OK")
     
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def collect_workload_callback(request):
+
+    data = json.loads(request.FILES["data"].read().decode("utf-8"))
+
+    resource_id = data["resource_id"]
+    
+    print("Received collected data. Tuning id: %s Command name: %s" % (tuning_id))
+
+    captured_workload_tar = request.FILES["workload"].read()
+    captured_workload_filename = request.FILES["workload"].name
+
+    save_resource(resource_id, captured_workload_tar, captured_workload_filename)
+
+    return HttpResponse("OK")

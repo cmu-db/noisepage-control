@@ -6,6 +6,6 @@ app = Flask(__name__)
 def index():
     return 'Hello this is replica worker'
 
-@app.route('/healthcheck')
+@app.route('/healthcheck/')
 def healthcheck():
     return 'OK'

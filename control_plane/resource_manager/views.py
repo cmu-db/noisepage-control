@@ -53,19 +53,19 @@ def initialise_resource(database_id, resource_type):
     return resource.resource_id
 
 
-def save_resource(database_id, resource_id, resource_file, resource_filename):
-
-    logger.info(
-        "Saving worload with resource_id %s database_id %s" % (resource_id, database_id)
-    )
+def save_resource(resource_id, resource_file, resource_filename):
 
     # Fetch resource entry
     from .models import Resource
 
     resource = Resource.objects.get(resource_id=resource_id)
 
+    logger.info(
+        "Saving worload with resource_id %s database_id %s" % (resource_id, resource.database_id)
+    )
+
     # Make new dir for resource
-    resource_dir = settings.RESOURCE_DIR / database_id / resource_id
+    resource_dir = settings.RESOURCE_DIR / resource.database_id / resource_id
     os.mkdir(resource_dir)
 
     # Write file to resource dir
