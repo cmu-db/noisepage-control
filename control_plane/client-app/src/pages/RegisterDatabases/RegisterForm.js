@@ -3,7 +3,10 @@ import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
-import { Typography } from '@mui/material';
+import Typography from '@mui/material/Typography';
+import FormHelperText from '@mui/material/FormHelperText';
+
+import UploadFile from '@mui/icons-material/UploadFile';
 import axios from '../../util/axios';
 
 function RegisterForm({ environment }) {
@@ -109,10 +112,16 @@ function RegisterForm({ environment }) {
             variant="standard"
             onChange={handleInput}
           />
-          <Button variant="contained" component="label">
+          <Button variant="contained" component="label" sx={{ m: 1, mt: 2 }}>
+            <UploadFile />
             Upload Primary Key
             <input type="file" name="primary_key_file" hidden onChange={handleUpload}/>
           </Button>
+          {
+            formInput.primary_key_file
+              ? <FormHelperText sx={{ m: 1 }} variant="body1">{formInput.primary_key_file.name}</FormHelperText>
+              : <FormHelperText sx={{ m: 1 }} error variant="body1">No file selected</FormHelperText>
+          }
         </Grid>
         <Grid item xs={12} sm={4}>
           <Typography variant="h5">Replica Database</Typography>
@@ -156,13 +165,19 @@ function RegisterForm({ environment }) {
             variant="standard"
             onChange={handleInput}
           />
-          <Button variant="contained" component="label">
+          <Button variant="contained" component="label" sx={{ m: 1, mt: 2 }}>
+            <UploadFile />
             Upload Replica Key
             <input type="file" name="replica_key_file" hidden onChange={handleUpload}/>
           </Button>
+          {
+            formInput.replica_key_file
+              ? <FormHelperText sx={{ m: 1 }} variant="body1">{formInput.replica_key_file.name}</FormHelperText>
+              : <FormHelperText sx={{ m: 1 }} error variant="body1">No file selected</FormHelperText>
+          }
         </Grid>
         <Grid item xs={12} sx={{ p: 1, py: 3 }}>
-          <Button variant="contained" color="primary" type="submit" size="large">
+          <Button variant="contained" color="secondary" type="submit" size="large">
             Register
           </Button>
         </Grid>
