@@ -1,7 +1,10 @@
 import os
+import json
+import requests
 import shutil
 import uuid
 from datetime import datetime
+from io import StringIO
 
 def create_workload_archive(capture_start_time, capture_end_time, resource_dir, log_dir):
 
