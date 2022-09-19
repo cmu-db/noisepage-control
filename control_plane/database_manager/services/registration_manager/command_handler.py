@@ -7,6 +7,7 @@ from database_manager.services.command_queue.command_types import CommandType
 from database_manager.services.command_queue.producer import publish_command
 from database_manager.database_state_types import DatabaseStateType
 
+from environments.environment import init_environment
 from environments.environment_types import EnvironmentType
 from environments.self_managed_postgres import SelfManagedPostgresEnvironment
 from environments.aws_rds_postgres import AWSRDSPostgresEnvironment
@@ -33,11 +34,7 @@ def handle_register_database_command(command):
     database = Database.objects.get(database_id = database_id)
     
     # Create approproate environemnt implementation
-    if database.environment_type == EnvironmentType.SELF_MANAGED_POSTGRES:
-        env = SelfManagedPostgresEnvironment(database)
-    elif database.environment_type == EnvironmentType.AWS_RDS_POSTGRES:
-        env = AWSRDSPostgresEnvironment(database)
-
+    env = init_environment(database)
     config_valid, err = env.test_connectivity()
 
     if not config_valid:

@@ -23,7 +23,7 @@ class BaseEnvironment(ABC):
         pass
 
     @abstractmethod
-    def collect_workload(self):
+    def collect_workload(self, time_period, resource_id):
         # Gets a workload and archives it
         pass
 

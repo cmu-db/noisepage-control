@@ -166,7 +166,8 @@ class SelfManagedPostgresEnvironment(BaseEnvironment):
 
         return True, ""
 
-    def collect_workload(self):
+    def collect_workload(self, time_period, resource_id):
+        print ("self managed postgres collecting workoad", time_period, resource_id)
         # Gets a workload and archives it
         pass
 
