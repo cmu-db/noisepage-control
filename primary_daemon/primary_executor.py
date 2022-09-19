@@ -84,12 +84,12 @@ class PrimaryExecutor():
 
         return self.data_dir / log_dir
 
+    """
+    Enable logging on the database.
+    WARNING: Results in a restart
+    Script needs to be executed by postgres user
+    """
     def enable_logging(self):
-        """
-        Enable logging on the primary instance.
-        WARNING: Results in a restart
-        Script needs to be executed by postgres user
-        """
 
         command = '"%s" "%s" "%s" "%s"' % (
             self.SCRIPTS_DIR / ENABLE_DATABASE_LOGGING_SCRIPT_NAME,
@@ -101,12 +101,13 @@ class PrimaryExecutor():
         subprocess.call(command, shell=True)
         time.sleep(5)
 
+
+    """
+    Disable logging on the database.
+    WARNING: Results in a restart
+    Script needs to be executed by postgres user
+    """
     def disable_logging(self):
-        """
-        Disable logging on the primary instance.
-        WARNING: Results in a restart
-        Script needs to be executed by postgres user
-        """
 
         command = '"%s" "%s" "%s" "%s"' % (
             self.SCRIPTS_DIR / DISABLE_DATABASE_LOGGING_SCRIPT_NAME,
@@ -156,7 +157,7 @@ class PrimaryExecutor():
             # transfer_workload(archive_path, command_name, resource_id)
 
         finally:
-            WORKLOAD_CAPTURE_MUTEX.release()
+            self.WORKLOAD_CAPTURE_MUTEX.release()
 
 
-        return self.get_database_logging_dir(), capture_start_time, capture_end_time
+        return self.get_logging_dir(), capture_start_time, capture_end_time
