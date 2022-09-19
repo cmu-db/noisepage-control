@@ -1,12 +1,15 @@
-import { useReducer } from 'react';
+import { useState, useReducer } from 'react';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
+import LoadingButton from '@mui/lab/LoadingButton';
 import Typography from '@mui/material/Typography';
 import FormHelperText from '@mui/material/FormHelperText';
 
 import UploadFile from '@mui/icons-material/UploadFile';
+import Send from '@mui/icons-material/Send';
+import Done from '@mui/icons-material/Done';
 import axios from '../../util/axios';
 
 function RegisterForm({ environment }) {
@@ -28,10 +31,13 @@ function RegisterForm({ environment }) {
       replica_key_file: null
     }
   );
+  const [registerLoading, setRegisterLoading] = useState(false);
+  const [registerSuccess, setRegisterSuccess] = useState(false);
 
   const handleSubmit = async e => {
     e.preventDefault();
     console.log(formInput);
+    setRegisterLoading(true);
 
     const formData = new FormData();
     Object.keys(formInput).forEach(key => {
@@ -41,6 +47,8 @@ function RegisterForm({ environment }) {
     try {
       const res = await axios.post('/database_manager/register/', formData)
       console.log(res);
+      setRegisterLoading(false);
+      setRegisterSuccess(true);
     } catch (error) {
       console.error(error);
     }
@@ -112,8 +120,7 @@ function RegisterForm({ environment }) {
             variant="standard"
             onChange={handleInput}
           />
-          <Button variant="contained" component="label" sx={{ m: 1, mt: 2 }}>
-            <UploadFile />
+          <Button variant="contained" component="label" startIcon={<UploadFile />} sx={{ m: 1, mt: 2 }}>
             Upload Primary Key
             <input type="file" name="primary_key_file" hidden onChange={handleUpload}/>
           </Button>
@@ -165,8 +172,7 @@ function RegisterForm({ environment }) {
             variant="standard"
             onChange={handleInput}
           />
-          <Button variant="contained" component="label" sx={{ m: 1, mt: 2 }}>
-            <UploadFile />
+          <Button variant="contained" component="label" startIcon={<UploadFile />} sx={{ m: 1, mt: 2 }}>
             Upload Replica Key
             <input type="file" name="replica_key_file" hidden onChange={handleUpload}/>
           </Button>
@@ -177,9 +183,19 @@ function RegisterForm({ environment }) {
           }
         </Grid>
         <Grid item xs={12} sx={{ p: 1, py: 3 }}>
-          <Button variant="contained" color="secondary" type="submit" size="large">
+          <LoadingButton
+            variant="contained"
+            color="secondary"
+            startIcon={registerSuccess ? <Done /> : <Send />}
+            type="submit"
+            size="large"
+            loading={registerLoading}
+            loadingPosition="start"
+            disabled={registerSuccess}
+            sx={{ '&.Mui-disabled': { bgcolor: '#a5d6a7' } }}
+          >
             Register
-          </Button>
+          </LoadingButton>
         </Grid>
       </Grid>
     </Box>
