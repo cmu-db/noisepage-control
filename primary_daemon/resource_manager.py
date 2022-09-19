@@ -1,14 +1,7 @@
-import logging
 import os
 import shutil
 import uuid
 from datetime import datetime
-
-from django.conf import settings
-from primary_worker.services.primary_executor.get_logging_dir import (
-    get_logging_dir,
-)
-
 
 def create_workload_archive(capture_start_time, capture_end_time, resource_dir, log_dir):
 
@@ -37,7 +30,7 @@ def create_workload_archive(capture_start_time, capture_end_time, resource_dir, 
         dst = workload_capture_dir / file_name
         shutil.copyfile(src, dst)
 
-    logger.info("Copied log files")
+    print("Copied log files")
 
     # 7. Make archive
     shutil.make_archive(
@@ -45,6 +38,6 @@ def create_workload_archive(capture_start_time, capture_end_time, resource_dir, 
     )
     archive_path = str(workload_capture_base_dir / identifier) + ".tar.gz"
 
-    logger.info("Created archive %s" % (archive_path))
+    print("Created archive %s" % (archive_path))
 
     return archive_path

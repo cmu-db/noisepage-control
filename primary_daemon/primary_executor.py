@@ -129,10 +129,7 @@ class PrimaryExecutor():
     """
     def capture_workload(self, time_period):
 
-        logger.info("Waiting for mutex")
         self.WORKLOAD_CAPTURE_MUTEX.acquire()
-        logger.info("Starting workload capture for %d seconds" % (time_period))
-
 
         try:
             # Enable logging
