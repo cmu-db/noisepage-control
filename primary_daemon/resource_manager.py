@@ -57,5 +57,4 @@ def transfer_archive(archive_path, resource_id, callback_url):
             ("data", ("data.json", data_file, "application/json")),
         ]
 
-        requests.post(url, files=files)
-
+        requests.post(callback_url, files=files)

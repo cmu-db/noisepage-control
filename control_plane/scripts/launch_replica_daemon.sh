@@ -1,3 +1,4 @@
+sudo apt-get update
 sudo apt -y install python3-virtualenv
 
 git clone https://github.com/cmu-db/noisepage-control
@@ -10,6 +11,7 @@ cd replica_daemon/
 virtualenv venv
 source venv/bin/activate
 pip install flask
+pip install requests
 
 chmod +x scripts/*.sh
 

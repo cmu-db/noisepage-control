@@ -167,7 +167,7 @@ class SelfManagedPostgresEnvironment(BaseEnvironment):
 
         return True, ""
 
-    def collect_workload(self, time_period, resource_id):
+    def collect_workload(self, time_period, resource_id, callback_url):
         print ("self managed postgres collecting workoad", time_period, resource_id)
         url = "http://%s:%s/collect_workload/" % (
             self.config.primary_host,
@@ -177,7 +177,7 @@ class SelfManagedPostgresEnvironment(BaseEnvironment):
         data = {
             "resource_id": resource_id,
             "time_period": time_period,
-            "callback_url": "http://ec2-34-207-82-72.compute-1.amazonaws.com/database_manager/workload/collect_workload_callback/"
+            "callback_url": callback_url,
         }
 
         print (url, data)

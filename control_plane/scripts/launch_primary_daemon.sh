@@ -1,3 +1,4 @@
+sudo apt-get update
 sudo apt -y install python3-virtualenv
 
 git clone https://github.com/cmu-db/noisepage-control

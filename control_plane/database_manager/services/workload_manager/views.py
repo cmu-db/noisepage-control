@@ -36,7 +36,9 @@ def collect_workload(request):
     resource_id = initialise_resource(database_id, ResourceType.WORKLOAD)
     print ("New resource", resource_id)
 
-    env.collect_workload(time_period, resource_id)
+    # TODO: Pick this from settings
+    callback_url = "http://ec2-34-207-82-72.compute-1.amazonaws.com:8000/database_manager/workload/collect_workload_callback/"
+    env.collect_workload(time_period, resource_id, callback_url)
 
     # Send request to remote executor
     return HttpResponse("OK")
@@ -50,7 +52,8 @@ def collect_workload_callback(request):
 
     resource_id = data["resource_id"]
     
-    print("Received collected data. Tuning id: %s Command name: %s" % (tuning_id))
+    print("Received collected data. Resource id: %s" % (resource_id))
+
 
     captured_workload_tar = request.FILES["workload"].read()
     captured_workload_filename = request.FILES["workload"].name
