@@ -14,7 +14,7 @@ from environments.environment import init_environment
 @require_http_methods(["GET", "POST"])
 def index(request):
     if request.method == "POST":
-        return collect_workload(request)
+        return collect_state(request)
     return HttpResponse("Hello, world. This is state manager")
 
 
