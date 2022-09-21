@@ -13,6 +13,7 @@ GET_DATABASE_LOGGING_DIR_SCRIPT = "get_database_logging_dir.sh"
 ENABLE_DATABASE_LOGGING_SCRIPT_NAME = "enable_database_logging.sh"
 DISABLE_DATABASE_LOGGING_SCRIPT_NAME = "disable_database_logging.sh"
 
+GET_DATABASE_NAMES_SCRIPT = "get_database_names.sh"
 
 
 class PrimaryExecutor():
@@ -83,6 +84,37 @@ class PrimaryExecutor():
         log_dir = out.decode("utf-8").split("\n")[2].strip()
 
         return self.data_dir / log_dir
+
+    """ Get logging dir from database settings """
+    def get_database_names(self):
+        
+        command = '"%s" "%s" "%s"' % (
+            self.SCRIPTS_DIR / GET_DATABASE_NAMES_SCRIPT,
+            self.postgres_port,
+            self.postgres_username,
+        )
+
+        process = subprocess.Popen(
+            command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE
+        )
+        out, err = process.communicate()
+
+        """
+            Result would be somthing like this:
+
+            setting
+            ---------
+            log
+            (1 row)
+
+            We need to extract the value
+        """
+        database_names = list(
+            map(lambda db_name: db_name.strip(), out.decode("utf-8").split("\n")[2:-3])
+        )
+
+        return database_names
+
 
     """
     Enable logging on the database.
