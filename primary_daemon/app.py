@@ -1,3 +1,6 @@
+import os
+import uuid
+
 from flask import Flask, request
 
 from pathlib import Path
@@ -7,7 +10,7 @@ app = Flask(__name__)
 from threading import Thread
 
 from primary_executor import PrimaryExecutor
-from resource_manager import create_workload_archive, transfer_archive
+from resource_manager import create_workload_archive, transfer_archive, create_state_archive
 
 ROOT_DIR = Path(app.root_path)
 SCRIPTS_DIR = ROOT_DIR / "scripts"
@@ -77,13 +80,13 @@ def capture_and_transfer_state(resource_id, callback_url):
     # Create a new dir for collected states
     identifier = str(uuid.uuid4())
     state_dir = RESOURCE_DIR / identifier
-    os.mkdir(workload_capture_dir)
+    os.mkdir(state_dir)
 
 
     for database_name in database_names:
         # Create a dir for the current database
         database_state_dir = state_dir / database_name
-        os.mkdir(workload_capture_dir)
+        os.mkdir(database_state_dir)
 
         catalog = database_executor.get_database_catalog(database_name)
         with open(database_state_dir / "catalog.txt", "w") as fp:
@@ -93,5 +96,5 @@ def capture_and_transfer_state(resource_id, callback_url):
         with open(database_state_dir / "index.txt", "w") as fp:
             fp.write(index_info)
 
-    archive_path = create_state_archive(start_time, end_time, RESOURCE_DIR, log_dir)
+    archive_path = create_state_archive(RESOURCE_DIR, identifier, state_dir)
     transfer_state_archive(archive_path, resource_id, callback_url)

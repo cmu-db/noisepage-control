@@ -9,4 +9,8 @@ urlpatterns = [
         "workload/",
         include("database_manager.services.workload_manager.urls"),
     ),
+    path(
+        "state/",
+        include("database_manager.services.state_manager.urls"),
+    ),
 ]

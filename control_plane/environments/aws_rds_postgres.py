@@ -12,7 +12,7 @@ class AWSRDSPostgresEnvironment(BaseEnvironment):
         # Gets a workload and archives it
         pass
 
-    def collect_state(self):
+    def collect_state(self, resource_id, callback_url):
         # Gets state and archives it
         pass
 

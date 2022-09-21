@@ -168,7 +168,9 @@ class SelfManagedPostgresEnvironment(BaseEnvironment):
         return True, ""
 
     def collect_workload(self, time_period, resource_id, callback_url):
+        # Gets a workload and archives it
         print ("self managed postgres collecting workoad", time_period, resource_id)
+
         url = "http://%s:%s/collect_workload/" % (
             self.config.primary_host,
             "9000",
@@ -185,12 +187,25 @@ class SelfManagedPostgresEnvironment(BaseEnvironment):
         headers = {"Content-type": "application/json"}
         requests.post(url, data=json.dumps(data), headers=headers)
 
-        # Gets a workload and archives it
-        pass
 
-    def collect_state(self):
+    def collect_state(self, resource_id, callback_url):
         # Gets state and archives it
-        pass
+        print ("self managed postgres collecting state", resource_id)
+
+        url = "http://%s:%s/collect_state/" % (
+            self.config.primary_host,
+            "9000",
+        )
+
+        data = {
+            "resource_id": resource_id,
+            "callback_url": callback_url,
+        }
+
+        print (url, data)
+
+        headers = {"Content-type": "application/json"}
+        requests.post(url, data=json.dumps(data), headers=headers)
 
     def collect_metrics(self):
         # Gets metrics and archives it
