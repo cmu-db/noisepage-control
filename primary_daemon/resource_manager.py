@@ -45,6 +45,16 @@ def create_workload_archive(capture_start_time, capture_end_time, resource_dir, 
 
     return archive_path
 
+def create_state_archive(resource_dir, identifier, state_dir):
+
+    shutil.make_archive(
+        resource_dir / identifier, "gztar", resource_dir, identifier
+    )
+    archive_path = str(resource_dir / identifier) + ".tar.gz"
+    print("Created archive %s" % (archive_path))
+
+    return archive_path
+
 
 # Transfer archive to control plane
 def transfer_archive(archive_path, resource_id, callback_url):
@@ -57,6 +67,22 @@ def transfer_archive(archive_path, resource_id, callback_url):
 
         files = [
             ("workload", ("workload.tar.gz", fp, "application/x-gtar")),
+            ("data", ("data.json", data_file, "application/json")),
+        ]
+
+        requests.post(callback_url, files=files)
+
+# Transfer archive to control plane
+def transfer_state_archive(archive_path, resource_id, callback_url):
+
+    data = {
+        "resource_id": resource_id,
+    }
+
+    with StringIO(json.dumps(data)) as data_file, open(archive_path, "rb") as fp:
+
+        files = [
+            ("state", ("state.tar.gz", fp, "application/x-gtar")),
             ("data", ("data.json", data_file, "application/json")),
         ]
 

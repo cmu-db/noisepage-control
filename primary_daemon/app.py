@@ -51,3 +51,47 @@ def capture_and_transfer_workload(resource_id, time_period, callback_url):
     log_dir, start_time, end_time = database_executor.capture_workload(time_period)
     archive_path = create_workload_archive(start_time, end_time, RESOURCE_DIR, log_dir)
     transfer_archive(archive_path, resource_id, callback_url)
+
+
+@app.route('/collect_state/', methods = ['POST'])
+def collect_state():
+
+    data = request.get_json()
+    resource_id = data["resource_id"]
+    callback_url = data["callback_url"]
+
+    print ("Starting thread with", data)
+
+    thread = Thread(
+        target=capture_and_transfer_state, 
+        args=(resource_id, callback_url)
+    )
+    thread.start()
+
+    return 'OK'
+
+def capture_and_transfer_state(resource_id, callback_url):
+
+    database_names = database_executor.get_database_names()
+
+    # Create a new dir for collected states
+    identifier = str(uuid.uuid4())
+    state_dir = RESOURCE_DIR / identifier
+    os.mkdir(workload_capture_dir)
+
+
+    for database_name in database_names:
+        # Create a dir for the current database
+        database_state_dir = state_dir / database_name
+        os.mkdir(workload_capture_dir)
+
+        catalog = database_executor.get_database_catalog(database_name)
+        with open(database_state_dir / "catalog.txt", "w") as fp:
+            fp.write(catalog)
+
+        index_info = database_executor.get_database_index(database_name)
+        with open(database_state_dir / "index.txt", "w") as fp:
+            fp.write(index_info)
+
+    archive_path = create_state_archive(start_time, end_time, RESOURCE_DIR, log_dir)
+    transfer_state_archive(archive_path, resource_id, callback_url)
