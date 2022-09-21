@@ -10,7 +10,7 @@ app = Flask(__name__)
 from threading import Thread
 
 from primary_executor import PrimaryExecutor
-from resource_manager import create_workload_archive, transfer_archive, create_state_archive
+from resource_manager import create_workload_archive, transfer_archive, create_state_archive, transfer_state_archive
 
 ROOT_DIR = Path(app.root_path)
 SCRIPTS_DIR = ROOT_DIR / "scripts"
@@ -82,16 +82,21 @@ def capture_and_transfer_state(resource_id, callback_url):
     state_dir = RESOURCE_DIR / identifier
     os.mkdir(state_dir)
 
+    # Write all db names to a file
+    with open(state_dir / "databases.txt", "w") as fp:
+        fp.write("\n".join(database_names))
 
     for database_name in database_names:
         # Create a dir for the current database
         database_state_dir = state_dir / database_name
         os.mkdir(database_state_dir)
 
+        # Write current catalog
         catalog = database_executor.get_database_catalog(database_name)
         with open(database_state_dir / "catalog.txt", "w") as fp:
             fp.write(catalog)
 
+        # Write current indexes
         index_info = database_executor.get_database_index(database_name)
         with open(database_state_dir / "index.txt", "w") as fp:
             fp.write(index_info)

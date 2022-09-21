@@ -61,7 +61,7 @@ def save_resource(resource_id, resource_file, resource_filename):
     resource = Resource.objects.get(resource_id=resource_id)
 
     logger.info(
-        "Saving worload with resource_id %s database_id %s" % (resource_id, resource.database_id)
+        "Saving resource with id %s for database %s" % (resource_id, resource.database_id)
     )
 
     # Make new dir for resource
