@@ -47,10 +47,11 @@ function RegisterForm({ environment }) {
     try {
       const res = await axios.post('/database_manager/register/', formData)
       console.log(res);
-      setRegisterLoading(false);
       setRegisterSuccess(true);
     } catch (error) {
       console.error(error);
+    } finally {
+      setRegisterLoading(false);
     }
   }
 
@@ -86,6 +87,7 @@ function RegisterForm({ environment }) {
             name="primary_host"
             label="Primary Host"
             variant="standard"
+            defaultValue="ec2-18-217-99-54.us-east-2.compute.amazonaws.com"
             onChange={handleInput}
           />
           <TextField
@@ -94,6 +96,7 @@ function RegisterForm({ environment }) {
             name="primary_ssh_port"
             label="Primary SSH Port"
             variant="standard"
+            defaultValue="22"
             onChange={handleInput}
           />
           <TextField
@@ -102,6 +105,7 @@ function RegisterForm({ environment }) {
             name="primary_ssh_user"
             label="Primary SSH User"
             variant="standard"
+            defaultValue="ubuntu"
             onChange={handleInput}
           />
           <TextField
@@ -110,6 +114,7 @@ function RegisterForm({ environment }) {
             name="primary_pg_user"
             label="Primary Postgres User"
             variant="standard"
+            defaultValue="postgres"
             onChange={handleInput}
           />
           <TextField
@@ -118,6 +123,7 @@ function RegisterForm({ environment }) {
             name="primary_pg_port"
             label="Primary Postgres Port"
             variant="standard"
+            defaultValue="10000"
             onChange={handleInput}
           />
           <Button variant="contained" component="label" startIcon={<UploadFile />} sx={{ m: 1, mt: 2 }}>
@@ -138,6 +144,7 @@ function RegisterForm({ environment }) {
             name="replica_host"
             label="Replica Host"
             variant="standard"
+            defaultValue="ec2-18-222-240-209.us-east-2.compute.amazonaws.com"
             onChange={handleInput}
           />
           <TextField
@@ -146,6 +153,7 @@ function RegisterForm({ environment }) {
             name="replica_ssh_port"
             label="Replica SSH Port"
             variant="standard"
+            defaultValue="22"
             onChange={handleInput}
           />
           <TextField
@@ -154,6 +162,7 @@ function RegisterForm({ environment }) {
             name="replica_ssh_user"
             label="Replica SSH User"
             variant="standard"
+            defaultValue="ubuntu"
             onChange={handleInput}
           />
           <TextField
@@ -162,6 +171,7 @@ function RegisterForm({ environment }) {
             name="replica_pg_user"
             label="Replica Postgres User"
             variant="standard"
+            defaultValue="postgres"
             onChange={handleInput}
           />
           <TextField
@@ -170,6 +180,7 @@ function RegisterForm({ environment }) {
             name="replica_pg_port"
             label="Replica Postgres Port"
             variant="standard"
+            defaultValue="10001"
             onChange={handleInput}
           />
           <Button variant="contained" component="label" startIcon={<UploadFile />} sx={{ m: 1, mt: 2 }}>
