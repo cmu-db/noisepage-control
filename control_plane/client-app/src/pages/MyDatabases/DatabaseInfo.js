@@ -1,8 +1,8 @@
 import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import CardActions from '@mui/material/CardActions';
 import Button from '@mui/material/Button';
+import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
+import DatabaseRegisterState from '../../util/databaseRegisterState';
 
 export default function DatabaseInfo(props) {
   const { databaseInfo: info } = props;
@@ -12,22 +12,34 @@ export default function DatabaseInfo(props) {
     return date.toLocaleString();
   }
 
+  const getStateColor = (state) => {
+    switch (DatabaseRegisterState[state]) {
+      case DatabaseRegisterState.HEALTHY:
+        return 'success';
+      case DatabaseRegisterState.UNHEALTHY:
+        return 'error';
+      default:
+        return 'info';
+    }
+  }
+
   return (
     <Card sx={{ minWidth: 275, mb: 4 }}>
-      <CardContent>
-        <Typography variant="h4">Database ID: {info.database_id}</Typography>
-        <Typography>Created At: {parseCreated(info.created)}</Typography>
-        <Typography>Environment Type: {info.environment_type}</Typography>
-        <Typography>Active: {info.active ? 'yes' : 'no'}</Typography>
-        <Typography>State: {info.state}</Typography>
-        <Typography>Errors: {info.errors}</Typography>
-        {info.self_managed_postgres_config && Object.keys(info.self_managed_postgres_config).map((key) => (
-          <Typography key={key}>{key}: {info.self_managed_postgres_config[key]}</Typography>
-        ))}
-      </CardContent>
-      <CardActions>
-        <Button>Manage</Button>
-      </CardActions>
+      <Grid container spacing={2} alignItems="center" sx={{ p: 2, px: 3 }} >
+          <Grid item xs={12} md={10}>
+            <Typography variant="h4">Database ID: {info.database_id}</Typography>
+          </Grid>
+          <Grid item xs={12} md={2}>
+            <Typography variant="h6" sx={{ display: 'inline-block' }}>State: &nbsp;</Typography>
+            <Typography variant="h6" sx={{ display: 'inline-block' }} color={getStateColor(info.state)}>{DatabaseRegisterState[info.state]}</Typography>
+          </Grid>
+          <Grid item xs={12} md={10}>
+            <Button>Manage</Button>
+          </Grid>
+          <Grid item xs={12} md={2}>
+            <Typography>Created At: {parseCreated(info.created)}</Typography>
+          </Grid>
+      </Grid>
     </Card>
   );
 }
