@@ -17,17 +17,17 @@ function RegisterForm({ environment }) {
     (state, newState) => ({ ...state, ...newState }),
     {
       environment: environment,
-      primary_host: '',
-      primary_ssh_port: '',
-      primary_ssh_user: '',
-      primary_pg_user: '',
-      primary_pg_port: '',
+      primary_host: 'ec2-54-242-174-185.compute-1.amazonaws.com',
+      primary_ssh_port: '22',
+      primary_ssh_user: 'ubuntu',
+      primary_pg_user: 'postgres',
+      primary_pg_port: '10000',
       primary_key_file: null,
-      replica_host: '',
-      replica_ssh_port: '',
-      replica_ssh_user: '',
-      replica_pg_user: '',
-      replica_pg_port: '',
+      replica_host: 'ec2-54-226-115-17.compute-1.amazonaws.com',
+      replica_ssh_port: '22',
+      replica_ssh_user: 'ubuntu',
+      replica_pg_user: 'postgres',
+      replica_pg_port: '10001',
       replica_key_file: null
     }
   );
@@ -87,7 +87,7 @@ function RegisterForm({ environment }) {
             name="primary_host"
             label="Primary Host"
             variant="standard"
-            defaultValue="ec2-18-217-99-54.us-east-2.compute.amazonaws.com"
+            defaultValue="ec2-54-242-174-185.compute-1.amazonaws.com"
             onChange={handleInput}
           />
           <TextField
@@ -144,7 +144,7 @@ function RegisterForm({ environment }) {
             name="replica_host"
             label="Replica Host"
             variant="standard"
-            defaultValue="ec2-18-222-240-209.us-east-2.compute.amazonaws.com"
+            defaultValue="ec2-54-226-115-17.compute-1.amazonaws.com"
             onChange={handleInput}
           />
           <TextField

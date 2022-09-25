@@ -15,11 +15,11 @@ export default function DatabaseInfo(props) {
   const getStateColor = (state) => {
     switch (DatabaseRegisterState[state]) {
       case DatabaseRegisterState.HEALTHY:
-        return 'success';
+        return 'success.main';
       case DatabaseRegisterState.UNHEALTHY:
         return 'error';
       default:
-        return 'info';
+        return 'warning.light';
     }
   }
 
