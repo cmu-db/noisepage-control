@@ -1,5 +1,5 @@
 import uuid 
-
+from datetime import datetime
 from django.db import models
 from django.core.exceptions import ValidationError
 
@@ -39,6 +39,8 @@ class Database(models.Model):
     state = models.CharField(max_length=120, choices=DATABSE_STATE_CHOICES)
 
     errors = ArrayField(models.TextField(), blank=True, default = list)
+    
+    created = models.DateTimeField(auto_now_add=True)
 
 
 

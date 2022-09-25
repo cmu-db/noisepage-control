@@ -2,7 +2,6 @@ import * as React from 'react';
 import { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Header from '../../components/Header';
-import Content from '../../components/Content';
 import DatabaseInfo from './DatabaseInfo';
 import axios from '../../util/axios';
 
@@ -18,14 +17,17 @@ function MyDatabases() {
     fetchDatabaseInfos();
   }, []);
 
+  const renderSortedDatabaseInfos = () => {
+    const infos = [...databaseInfos];
+    infos.sort((a, b) => new Date(b.created) - new Date(a.created));
+    return infos.map(info => <DatabaseInfo key={info.database_id} databaseInfo={info} />);
+  }
+
   return (
     <React.Fragment>
       <Header title="My Databases" />
       <Box component="main" sx={{ flex: 1, py: 6, px: 6, bgcolor: '#eaeff1' }}>
-        {console.log(databaseInfos)}
-        {databaseInfos && databaseInfos.map((databaseInfo) => (
-          <DatabaseInfo key={databaseInfo.database_id} databaseInfo={databaseInfo} />
-        ))}
+        {databaseInfos && renderSortedDatabaseInfos()}
       </Box>
     </React.Fragment>
   )

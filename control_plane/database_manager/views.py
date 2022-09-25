@@ -25,7 +25,7 @@ from resource_manager.resource_type import ResourceType
 def list_databases(request):
     dbs_with_config = get_database_with_config()
     return HttpResponse(
-        json.dumps(dbs_with_config),
+        json.dumps(dbs_with_config, default=str),
         content_type="application/json"
     )
 
@@ -159,6 +159,7 @@ def get_database_with_config():
         "active": db.active,
         "state": db.state,
         "errors": db.errors,
+        "created": db.created,
         "self_managed_postgres_config": {
             "primary_host": db.selfmanagedpostgresconfig.primary_host,
             "primary_ssh_port": db.selfmanagedpostgresconfig.primary_ssh_port,

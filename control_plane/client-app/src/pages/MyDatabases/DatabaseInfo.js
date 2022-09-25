@@ -7,10 +7,16 @@ import Typography from '@mui/material/Typography';
 export default function DatabaseInfo(props) {
   const { databaseInfo: info } = props;
 
+  const parseCreated = (created) => {
+    const date = new Date(created);
+    return date.toLocaleString();
+  }
+
   return (
     <Card sx={{ minWidth: 275, mb: 4 }}>
       <CardContent>
         <Typography variant="h4">Database ID: {info.database_id}</Typography>
+        <Typography>Created At: {parseCreated(info.created)}</Typography>
         <Typography>Environment Type: {info.environment_type}</Typography>
         <Typography>Active: {info.active ? 'yes' : 'no'}</Typography>
         <Typography>State: {info.state}</Typography>
