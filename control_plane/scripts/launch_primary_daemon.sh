@@ -12,7 +12,7 @@ virtualenv venv
 source venv/bin/activate
 pip install flask
 
-mkdir resources
+mkdir -p resources
 chmod +x scripts/*.sh
 
 nohup sudo venv/bin/flask run -h 0.0.0.0 -p 9000 >/dev/null 2>&1 &
