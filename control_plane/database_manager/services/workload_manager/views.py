@@ -91,8 +91,9 @@ def download_workload(request, workload_id):
         return HttpResponse("File not available")
 
     filepath = get_resource_filepath(workload)
+    print (filepath)
     with open(filepath, "rb") as fp:
-            response = FileResponse(fp)
+        response = FileResponse(fp)
 
     response['Content-Type'] = "application/gzip"
     # response['Content-Length'] = size
