@@ -7,12 +7,20 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import Button from '@mui/material/Button';
+import LoadingButton from '@mui/lab/LoadingButton';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Input from '@mui/material/Input';
+import Grid from '@mui/material/Grid';
 import LibraryAdd from '@mui/icons-material/LibraryAdd';
+import Done from '@mui/icons-material/Done';
 import axios from '../../util/axios';
 
 export default function WorkloadContent({ databaseId }) {
   const [workloads, setWorkloads] = useState();
+  const [timePeriod, setTimePeriod] = useState(10);
+  const [workloadSubmitLoading, setWorkloadSubmitLoading] = useState(false);
+  const [workloadSubmitSuccess, setWorkloadSubmitSuccess] = useState(false);
   
   useEffect(() => {
     async function fetchWorkloads() {
@@ -26,6 +34,26 @@ export default function WorkloadContent({ databaseId }) {
     }
     fetchWorkloads();
   }, [databaseId]);
+
+  const handleInputChange = (event) => {
+    setTimePeriod(event.target.value === '' ? 10 : Number(event.target.value));
+  };
+
+  const handleCollectWorkload = async (event) => {
+    event.preventDefault();
+    console.log(`Submit collect workload for ${timePeriod} seconds`);
+    setWorkloadSubmitLoading(true);
+
+    try {
+      const res = await axios.post(`/database_manager/workload/${databaseId}`, {time_period: timePeriod});
+      console.log(res);
+      setWorkloadSubmitSuccess(true);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setWorkloadSubmitLoading(false);
+    }
+  };
 
   return workloads && (
     <React.Fragment>
@@ -54,9 +82,39 @@ export default function WorkloadContent({ databaseId }) {
           </TableBody>
         </Table>
       </TableContainer>
-      <Button variant="contained" startIcon={<LibraryAdd />} sx={{ mt: 3 }}>
-        Collect New Workload
-      </Button>
+      <Grid container sx={{ m: 1, mt: 4 }}>
+        <Grid item xs={12} sm={6} lg={4}>
+          <Typography variant="h6" sx={{ mb: 3 }}>Collect a New Workload</Typography>
+          <Box sx={{ display: 'flex' }}>
+            <Typography id="input-slider" sx={{ mr: 1, mt: 0.1 }}>
+              Time Period:
+            </Typography>
+            <Input
+              value={timePeriod}
+              size="small"
+              onChange={handleInputChange}
+              inputProps={{
+                step: 10,
+                min: 10,
+                type: 'number',
+                'aria-labelledby': 'input-slider',
+              }}
+              sx={{ maxWidth: 70 }}
+            />
+          </Box>
+          <LoadingButton
+            variant="contained"
+            startIcon={workloadSubmitSuccess ? <Done /> : <LibraryAdd />}
+            sx={{ mt: 4, '&.Mui-disabled': { bgcolor: '#a5d6a7' } }}
+            onClick={handleCollectWorkload}
+            loading={workloadSubmitLoading}
+            loadingPosition="start"
+            disabled={workloadSubmitSuccess}
+          >
+            Collect!
+          </LoadingButton>
+        </Grid>
+      </Grid>
     </React.Fragment>
   )
 }
