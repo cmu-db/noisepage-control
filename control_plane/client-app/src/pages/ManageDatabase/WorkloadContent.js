@@ -75,9 +75,14 @@ export default function WorkloadContent({ databaseId }) {
                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
               >
                 <TableCell component="th" scope="row">
-                  <Link href={`${axios.defaults.baseURL}/workload/download/${workload.resource_id}`} underline="always">
-                    {workload.resource_id}
-                  </Link>
+                  {workload.available
+                    ?
+                    <Link href={`${axios.defaults.baseURL}/database_manager/workload/download/${workload.resource_id}`} underline="always">
+                      {workload.resource_id}
+                    </Link>
+                    :
+                    workload.resource_id
+                  }
                 </TableCell>
                 <TableCell>{workload.resource_name}</TableCell>
                 <TableCell>{workload.available ? 'Available' : 'Collecting'}</TableCell>
