@@ -1,11 +1,11 @@
 import json 
 
-from django.http import HttpResponse
+from django.http import HttpResponse, FileResponse
 
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 
-from resource_manager.views import initialise_resource, save_resource
+from resource_manager.views import initialise_resource, save_resource, get_resource_filepath
 from resource_manager.resource_type import ResourceType
 
 from environments.environment import init_environment
@@ -79,3 +79,21 @@ def get_workloads(request, database_id):
         json.dumps(workloads),
         content_type="application/json"
     )
+
+@csrf_exempt
+@require_http_methods(["GET"])
+def download_workload(request, workload_id):
+
+    from resource_manager.models import Resource
+    workload = Resource.objects.get(resource_id = workload_id)
+
+    if workload.available == False:
+        return HttpResponse("File not available")
+
+    filepath = get_resource_filepath(workload)
+    with open(filepath, "rb") as fp:
+            response = FileResponse(fp)
+
+    response['Content-Type'] = private_file.content_type
+    response['Content-Length'] = size
+    return response
