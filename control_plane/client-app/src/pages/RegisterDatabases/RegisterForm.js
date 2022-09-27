@@ -1,4 +1,5 @@
 import { useState, useReducer } from 'react';
+import { Navigate } from 'react-router-dom';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
@@ -6,7 +7,6 @@ import Button from '@mui/material/Button';
 import LoadingButton from '@mui/lab/LoadingButton';
 import Typography from '@mui/material/Typography';
 import FormHelperText from '@mui/material/FormHelperText';
-
 import UploadFile from '@mui/icons-material/UploadFile';
 import Send from '@mui/icons-material/Send';
 import Done from '@mui/icons-material/Done';
@@ -33,6 +33,7 @@ function RegisterForm({ environment }) {
   );
   const [registerLoading, setRegisterLoading] = useState(false);
   const [registerSuccess, setRegisterSuccess] = useState(false);
+  const [formSubmitted, setFormSubmitted] = useState(false);
 
   const handleSubmit = async e => {
     e.preventDefault();
@@ -48,6 +49,7 @@ function RegisterForm({ environment }) {
       const res = await axios.post('/database_manager/register/', formData)
       console.log(res);
       setRegisterSuccess(true);
+      setFormSubmitted(true);
     } catch (error) {
       console.error(error);
     } finally {
@@ -67,7 +69,7 @@ function RegisterForm({ environment }) {
     setFormInput({ [name]: file });
   }
 
-  return (
+  return formSubmitted ? <Navigate replace to="/databases" /> : (
     <Box
       component="form"
       sx={{

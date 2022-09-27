@@ -9,6 +9,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import LoadingButton from '@mui/lab/LoadingButton';
 import Box from '@mui/material/Box';
+import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
 import Input from '@mui/material/Input';
 import Grid from '@mui/material/Grid';
@@ -48,6 +49,7 @@ export default function WorkloadContent({ databaseId }) {
       const res = await axios.post(`/database_manager/workload/${databaseId}`, {time_period: timePeriod});
       console.log(res);
       setWorkloadSubmitSuccess(true);
+      window.location.reload();
     } catch (error) {
       console.error(error);
     } finally {
@@ -63,7 +65,7 @@ export default function WorkloadContent({ databaseId }) {
             <TableRow>
               <TableCell>Workload ID</TableCell>
               <TableCell>Workload Name</TableCell>
-              <TableCell>Available</TableCell>
+              <TableCell>Status</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -73,10 +75,12 @@ export default function WorkloadContent({ databaseId }) {
                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
               >
                 <TableCell component="th" scope="row">
-                  {workload.resource_id}
+                  <Link href={`${axios.defaults.baseURL}/workload/download/${workload.resource_id}`} underline="always">
+                    {workload.resource_id}
+                  </Link>
                 </TableCell>
                 <TableCell>{workload.resource_name}</TableCell>
-                <TableCell>{workload.available.toString()}</TableCell>
+                <TableCell>{workload.available ? 'Available' : 'Collecting'}</TableCell>
               </TableRow>
             ))}
           </TableBody>
