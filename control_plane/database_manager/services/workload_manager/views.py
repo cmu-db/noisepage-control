@@ -94,6 +94,6 @@ def download_workload(request, workload_id):
     with open(filepath, "rb") as fp:
             response = FileResponse(fp)
 
-    response['Content-Type'] = private_file.content_type
-    response['Content-Length'] = size
+    response['Content-Type'] = "application/gzip"
+    # response['Content-Length'] = size
     return response
