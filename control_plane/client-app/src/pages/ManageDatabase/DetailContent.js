@@ -11,12 +11,16 @@ export default function DetailContent({ databaseId }) {
   
   useEffect(() => {
     async function fetchDatabaseDetail() {
-      const res = await axios.get(`/database_manager/databases/${databaseId}`);
-      console.log(res);
-      setDatabaseDetail(res.data);
+      try {
+        const res = await axios.get(`/database_manager/databases/${databaseId}`);
+        console.log(res);
+        setDatabaseDetail(res.data);
+      } catch (error) {
+        console.error(error)
+      }
     }
     fetchDatabaseDetail();
-  }, []);
+  }, [databaseId]);
 
   return databaseDetail && (
     <List>
