@@ -11,6 +11,7 @@ cd primary_daemon/
 virtualenv venv
 source venv/bin/activate
 pip install flask
+pip install requests
 
 mkdir -p resources
 chmod +x scripts/*.sh
