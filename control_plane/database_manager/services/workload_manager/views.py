@@ -10,23 +10,29 @@ from resource_manager.resource_type import ResourceType
 
 from environments.environment import init_environment
 
+
 @csrf_exempt
-@require_http_methods(["GET", "POST"])
+@require_http_methods(["GET"])
 def index(request):
-    if request.method == "POST":
-        return collect_workload(request)
     return HttpResponse("Hello, world. This is workload manager")
 
 
-def collect_workload(request):
+@csrf_exempt
+@require_http_methods(["GET", "POST"])
+def workloads(request, database_id):
+    if request.method == "POST":
+        body = json.loads(request.body.decode("utf-8"))
+        return collect_workload(request, database_id, body["time_period"])
+    elif request.method == "GET":
+        return get_workloads(request, database_id)
+
+
+def collect_workload(request, database_id, time_period):
 
     from database_manager.models import Database
 
 
     # Fetch database and init environment
-    database_id = request.POST["database_id"]
-    time_period = request.POST["time_period"]
-
     database = Database.objects.get(database_id = database_id)
     env = init_environment(database)
     print (database)
@@ -42,7 +48,7 @@ def collect_workload(request):
 
     # Send request to remote executor
     return HttpResponse("OK")
-    
+
 
 @csrf_exempt
 @require_http_methods(["POST"])
@@ -61,3 +67,15 @@ def collect_workload_callback(request):
     save_resource(resource_id, captured_workload_tar, captured_workload_filename)
 
     return HttpResponse("OK")
+
+
+@csrf_exempt
+@require_http_methods(["GET"])
+def get_workloads(request, database_id):
+    # get workload with datbase_id
+    from resource_manager.models import Resource
+    workloads = list(Resource.objects.filter(database_id=database_id, resource_type=ResourceType.WORKLOAD).values())
+    return HttpResponse(
+        json.dumps(workloads),
+        content_type="application/json"
+    )

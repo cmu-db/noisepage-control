@@ -131,9 +131,8 @@ class SelfManagedPostgresEnvironment(BaseEnvironment):
             primary_ssh_client = self._init_primary_ssh_client()
             has_sudo_on_primary = self._has_sudo(primary_ssh_client)
             primary_ssh_client.close()
-        except:
-            return False, "Exception while connecting to primary"
-            pass
+        except Exception as e:
+            return False, f"Exception while connecting to primary: {str(e)}"
 
         if not has_sudo_on_primary:
             return False, "No sudo on primary"
