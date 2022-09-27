@@ -11,21 +11,12 @@ export default function DetailContent({ databaseId }) {
   
   useEffect(() => {
     async function fetchDatabaseDetail() {
-      const res = await axios.get(`/database_manager/${databaseId}`);
+      const res = await axios.get(`/database_manager/databases/${databaseId}`);
       console.log(res);
       setDatabaseDetail(res.data);
     }
     fetchDatabaseDetail();
   }, []);
-
-      // render databaseDetail as <List>
-      // <ListItem>
-      //   <ListItemText primary="Database ID" secondary={databaseDetail.database_id} />
-      // </ListItem>
-      // <Divider />
-      // <ListItem>
-      //   <ListItemText primary="Database Name" secondary={databaseDetail.database_name} />
-      // </ListItem>
 
   return databaseDetail && (
     <List>

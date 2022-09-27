@@ -8,6 +8,7 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Header from '../../components/Header';
 import DetailContent from './DetailContent';
+import WorkloadContent from './WorkloadContent';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -83,7 +84,7 @@ function ManageDatabase() {
             </Tabs>
           </Box>
           <TabPanel value={activeTabIdx} index={0}>
-            Workloads
+            <WorkloadContent databaseId={id} />
           </TabPanel>
           <TabPanel value={activeTabIdx} index={1}>
             States

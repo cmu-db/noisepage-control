@@ -10,7 +10,7 @@ function MyDatabases() {
 
   useEffect(() => {
     async function fetchDatabaseInfos() {
-      const res = await axios.get('/database_manager/');
+      const res = await axios.get('/database_manager/databases');
       console.log(res);
       setDatabaseInfos(res.data);
     }
