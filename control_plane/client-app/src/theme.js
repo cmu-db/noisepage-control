@@ -10,11 +10,17 @@ let theme = createTheme({
     },
   },
   typography: {
-    h5: {
-      fontWeight: 500,
-      fontSize: 26,
-      letterSpacing: 0.5,
-    },
+    // h5: {
+    //   fontWeight: 500,
+    //   fontSize: 26,
+    //   letterSpacing: 0.5,
+    // },
+    h4: {
+      fontSize: 28
+    }
+    // allVariants: {
+      // color: 'red'
+    // }
   },
   shape: {
     borderRadius: 8,

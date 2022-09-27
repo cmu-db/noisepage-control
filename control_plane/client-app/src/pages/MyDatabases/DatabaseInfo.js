@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 import Card from '@mui/material/Card';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
@@ -26,19 +28,21 @@ export default function DatabaseInfo(props) {
   return (
     <Card sx={{ minWidth: 275, mb: 4 }}>
       <Grid container spacing={2} alignItems="center" sx={{ p: 2, px: 3 }} >
-          <Grid item xs={12} md={10}>
-            <Typography variant="h4">Database ID: {info.database_id}</Typography>
-          </Grid>
-          <Grid item xs={12} md={2}>
-            <Typography variant="h6" sx={{ display: 'inline-block' }}>State: &nbsp;</Typography>
-            <Typography variant="h6" sx={{ display: 'inline-block' }} color={getStateColor(info.state)}>{DatabaseRegisterState[info.state]}</Typography>
-          </Grid>
-          <Grid item xs={12} md={10}>
+        <Grid item xs={12} md={10}>
+          <Typography variant="h4">Database ID: {info.database_id}</Typography>
+        </Grid>
+        <Grid item xs={12} md={2}>
+          <Typography variant="h6" sx={{ display: 'inline-block' }}>State: &nbsp;</Typography>
+          <Typography variant="h6" sx={{ display: 'inline-block' }} color={getStateColor(info.state)}>{DatabaseRegisterState[info.state]}</Typography>
+        </Grid>
+        <Grid item xs={12} md={10}>
+          <Link to={`/databases/${info.database_id}`}>
             <Button>Manage</Button>
-          </Grid>
-          <Grid item xs={12} md={2}>
-            <Typography>Created At: {parseCreated(info.created)}</Typography>
-          </Grid>
+          </Link>
+        </Grid>
+        <Grid item xs={12} md={2}>
+          <Typography>Created At: {parseCreated(info.created)}</Typography>
+        </Grid>
       </Grid>
     </Card>
   );

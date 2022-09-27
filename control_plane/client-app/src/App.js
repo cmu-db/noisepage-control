@@ -8,6 +8,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Navigator from './components/Navigator';
 import RegisterDatabase from './pages/RegisterDatabases';
 import MyDatabases from './pages/MyDatabases';
+import ManageDatabase from './pages/ManageDatabase';
 import theme from './theme';
 
 function Copyright() {
@@ -59,7 +60,8 @@ export default function App() {
               <Route path="/" exact element={<Navigate to="/databases" />} />
               <Route path="/register" element={<RegisterDatabase />} />
               <Route path="/databases" element={<MyDatabases />} />
-            </Routes>    
+              <Route path="/databases/:id" element={<ManageDatabase />} />
+            </Routes>
             <Box component="footer" sx={{ p: 2, bgcolor: '#eaeff1' }}>
               <Copyright />
             </Box>

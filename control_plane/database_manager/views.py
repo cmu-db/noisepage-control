@@ -1,3 +1,4 @@
+from dataclasses import fields
 import json
 
 from django.http import HttpResponse
@@ -23,10 +24,20 @@ from resource_manager.resource_type import ResourceType
 @csrf_exempt
 @require_http_methods(["GET"])
 def list_databases(request):
-    dbs_with_config = get_database_with_config()
+    databases = list(Database.objects.values())
     return HttpResponse(
-        json.dumps(dbs_with_config, default=str),
+        json.dumps(databases, default=str),
         content_type="application/json"
+    )
+
+
+@csrf_exempt
+@require_http_methods(["GET"])
+def get_database(request, database_id):
+    db_with_config = get_database_with_config(database_id)
+    return HttpResponse(
+        json.dumps(db_with_config, default=str),
+        content_type="application/json",
     )
 
 
@@ -150,27 +161,24 @@ def register_new_self_managed_postgres_database(request, database):
     config.save()
 
 
-def get_database_with_config():
+def get_database_with_config(database_id):
     # join database and self_managed_postgres_config
-    dbs_with_config = Database.objects.select_related('selfmanagedpostgresconfig').all()
-    dbs_info = [{
+    db = Database.objects.select_related('selfmanagedpostgresconfig').get(database_id=database_id)
+    return {
         "database_id": db.database_id,
         "environment_type": db.environment_type,
         "active": db.active,
         "state": db.state,
         "errors": db.errors,
         "created": db.created,
-        "self_managed_postgres_config": {
-            "primary_host": db.selfmanagedpostgresconfig.primary_host,
-            "primary_ssh_port": db.selfmanagedpostgresconfig.primary_ssh_port,
-            "primary_ssh_user": db.selfmanagedpostgresconfig.primary_ssh_user,
-            "primary_pg_user": db.selfmanagedpostgresconfig.primary_pg_user,
-            "primary_pg_port": db.selfmanagedpostgresconfig.primary_pg_port,
-            "replica_host": db.selfmanagedpostgresconfig.replica_host,
-            "replica_ssh_port": db.selfmanagedpostgresconfig.replica_ssh_port,
-            "replica_ssh_user": db.selfmanagedpostgresconfig.replica_ssh_user,
-            "replica_pg_user": db.selfmanagedpostgresconfig.replica_pg_user,
-            "replica_pg_port": db.selfmanagedpostgresconfig.replica_pg_port,
-        }
-    } for db in dbs_with_config]
-    return dbs_info
+        "primary_host": db.selfmanagedpostgresconfig.primary_host,
+        "primary_ssh_port": db.selfmanagedpostgresconfig.primary_ssh_port,
+        "primary_ssh_user": db.selfmanagedpostgresconfig.primary_ssh_user,
+        "primary_pg_user": db.selfmanagedpostgresconfig.primary_pg_user,
+        "primary_pg_port": db.selfmanagedpostgresconfig.primary_pg_port,
+        "replica_host": db.selfmanagedpostgresconfig.replica_host,
+        "replica_ssh_port": db.selfmanagedpostgresconfig.replica_ssh_port,
+        "replica_ssh_user": db.selfmanagedpostgresconfig.replica_ssh_user,
+        "replica_pg_user": db.selfmanagedpostgresconfig.replica_pg_user,
+        "replica_pg_port": db.selfmanagedpostgresconfig.replica_pg_port,
+    }
