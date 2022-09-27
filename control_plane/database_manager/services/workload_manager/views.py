@@ -92,9 +92,9 @@ def download_workload(request, workload_id):
 
     filepath = get_resource_filepath(workload)
     print (filepath)
-    with open(filepath, "rb") as fp:
-        response = FileResponse(fp)
+    
+    fp = open(filepath, "rb")
+    response = FileResponse(fp)
 
     response['Content-Type'] = "application/gzip"
-    # response['Content-Length'] = size
     return response
