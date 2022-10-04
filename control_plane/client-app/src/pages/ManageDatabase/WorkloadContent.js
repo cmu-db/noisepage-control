@@ -26,7 +26,7 @@ export default function WorkloadContent({ databaseId }) {
   useEffect(() => {
     async function fetchWorkloads() {
       try {
-        const res = await axios.get(`/database_manager/workload/${databaseId}`);
+        const res = await axios.get(`/database_manager/databases/${databaseId}/workloads`);
         console.log(res);
         setWorkloads(res.data);  
       } catch (error) {
@@ -46,7 +46,7 @@ export default function WorkloadContent({ databaseId }) {
     setWorkloadSubmitLoading(true);
 
     try {
-      const res = await axios.post(`/database_manager/workload/${databaseId}`, {time_period: timePeriod});
+      const res = await axios.post(`/database_manager/databases/${databaseId}/workloads`, {time_period: timePeriod});
       console.log(res);
       setWorkloadSubmitSuccess(true);
       window.location.reload();
@@ -77,7 +77,7 @@ export default function WorkloadContent({ databaseId }) {
                 <TableCell component="th" scope="row">
                   {workload.available
                     ?
-                    <Link href={`${axios.defaults.baseURL}/database_manager/workload/download/${workload.resource_id}`} underline="always">
+                    <Link href={`${axios.defaults.baseURL}/database_manager/workload/${workload.resource_id}`} underline="always">
                       {workload.resource_id}
                     </Link>
                     :
