@@ -38,13 +38,14 @@ def handle_register_database_command(command):
     config_valid, err = env.test_connectivity()
 
     if not config_valid:
-        logger.warning(f'test_connectivity failed. err: {err}')
+        logger.error(f'env.test_connectivity failed. err: {err}')
         database.errors.append(err)
         database.state = DatabaseStateType.UNHEALTHY
     else:
         configured_successfully, err = env.configure()
         
         if not configured_successfully:
+            logger.error(f'env.configure failed. err: {err}')
             database.errors.append(err)
             database.state = DatabaseStateType.UNHEALTHY
 

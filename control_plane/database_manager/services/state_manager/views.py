@@ -18,12 +18,30 @@ def index(request):
     return HttpResponse("Hello, world. This is state manager")
 
 
-def collect_state(request):
+@csrf_exempt
+@require_http_methods(["GET", "POST"])
+def states(request, database_id):
+    if request.method == "POST":
+        return collect_state(request, database_id)
+    elif request.method == "GET":
+        return get_states(request, database_id)
+
+
+def get_states(request, database_id):
+    # get states with database_id
+    from resource_manager.models import Resource
+    states = list(Resource.objects.filter(database_id=database_id, resource_type=ResourceType.STATE).values())
+    return HttpResponse(
+        json.dumps(states),
+        content_type="application/json"
+    )
+
+
+def collect_state(request, database_id):
 
     from database_manager.models import Database
 
     # Fetch database and init environment
-    database_id = request.POST["database_id"]
     database = Database.objects.get(database_id = database_id)
     env = init_environment(database)
     print (database)
