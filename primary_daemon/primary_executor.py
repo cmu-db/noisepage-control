@@ -16,6 +16,7 @@ DISABLE_DATABASE_LOGGING_SCRIPT_NAME = "disable_database_logging.sh"
 GET_DATABASE_NAMES_SCRIPT = "get_database_names.sh"
 GET_DATABASE_CATALOG_SCRIPT = "get_database_catalog.sh"
 GET_DATABASE_INDEX_SCRIPT = "get_database_index.sh"
+GET_DATABASE_DUMP_SCRIPT = "get_database_dump.sh"
 
 
 class PrimaryExecutor():
@@ -120,10 +121,11 @@ class PrimaryExecutor():
     """ Get catalog for a given database """
     def get_database_catalog(self, database_name):
 
-        command = '"%s" "%s" "%s"' % (
+        command = '"%s" "%s" "%s" "%s" ' % (
             self.SCRIPTS_DIR / GET_DATABASE_CATALOG_SCRIPT,
             self.postgres_port,
             self.postgres_username,
+            database_name
         )
 
         process = subprocess.Popen(
@@ -145,13 +147,43 @@ class PrimaryExecutor():
         catalog = "\n".join(catalog.split("\n")[:-3])
         return catalog
 
-    """ Get catalog for a given database """
+    """ Get indexes for a given database """
     def get_database_index(self, database_name):
 
-        command = '"%s" "%s" "%s"' % (
+        command = '"%s" "%s" "%s" "%s" ' % (
             self.SCRIPTS_DIR / GET_DATABASE_INDEX_SCRIPT,
             self.postgres_port,
             self.postgres_username,
+            database_name
+        )
+
+        process = subprocess.Popen(
+            command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE
+        )
+        out, err = process.communicate()
+
+        """
+            Result would be somthing like this:
+                headers
+            -------------------
+            index ...
+            index ...
+            (2 rows)
+
+
+        """
+        catalog = out.decode("utf-8")
+        catalog = "\n".join(catalog.split("\n")[:-3])
+        return catalog
+
+    """ Get dump for a given database (only schema for now)"""
+    def get_database_dump(self, database_name):
+
+        command = '"%s" "%s" "%s" "%s" ' % (
+            self.SCRIPTS_DIR / GET_DATABASE_DUMP_SCRIPT,
+            self.postgres_port,
+            self.postgres_username,
+            database_name
         )
 
         process = subprocess.Popen(
