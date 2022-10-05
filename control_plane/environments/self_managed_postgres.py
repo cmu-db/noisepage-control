@@ -184,7 +184,7 @@ class SelfManagedPostgresEnvironment(BaseEnvironment):
         print (url, data)
 
         headers = {"Content-type": "application/json"}
-        requests.post(url, data=json.dumps(data), headers=headers)
+        requests.post(url, data=json.dumps(data), headers=headers, timeout=3)
 
 
     def collect_state(self, resource_id, callback_url):
@@ -204,7 +204,8 @@ class SelfManagedPostgresEnvironment(BaseEnvironment):
         print (url, data)
 
         headers = {"Content-type": "application/json"}
-        requests.post(url, data=json.dumps(data), headers=headers)
+        requests.post(url, data=json.dumps(data), headers=headers, timeout=3)
+        
 
     def collect_metrics(self):
         # Gets metrics and archives it
