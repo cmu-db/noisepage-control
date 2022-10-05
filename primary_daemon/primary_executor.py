@@ -191,18 +191,7 @@ class PrimaryExecutor():
         )
         out, err = process.communicate()
 
-        """
-            Result would be somthing like this:
-                headers
-            -------------------
-            index ...
-            index ...
-            (2 rows)
-
-
-        """
         catalog = out.decode("utf-8")
-        catalog = "\n".join(catalog.split("\n")[:-3])
         return catalog
 
     """
