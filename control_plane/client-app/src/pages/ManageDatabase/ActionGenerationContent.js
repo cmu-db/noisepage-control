@@ -162,7 +162,7 @@ export default function ActionGenerationContent({ databaseId }) {
               <Select
                 labelId="demo-simple-select-filled-label"
                 id="demo-simple-select-filled"
-                value={selctedWorkloadId}
+                value={selectedStateId}
                 onChange={handleSelectedStateIdChange}
               >
                 {states && states.map((state) => (
