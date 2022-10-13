@@ -10,6 +10,7 @@ import Header from '../../components/Header';
 import DetailContent from './DetailContent';
 import WorkloadContent from './WorkloadContent';
 import StateContent from './StateContent';
+import ActionGenerationContent from './ActionGenerationContent';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -45,17 +46,7 @@ function a11yProps(index) {
 }
 
 function ManageDatabase() {
-  // const [databaseInfos, setDatabaseInfos] = useState();
   const { id } = useParams()
-
-  // useEffect(() => {
-    // async function fetchDatabaseInfos() {
-    //   const res = await axios.get('/database_manager/');
-    //   console.log(res);
-    //   setDatabaseInfos(res.data);
-    // }
-    // fetchDatabaseInfos();
-  // }, []);
 
   const [activeTabIdx, setActiveTabIdx] = React.useState(0);
 
@@ -80,8 +71,8 @@ function ManageDatabase() {
             <Tabs value={activeTabIdx} onChange={handleChange} aria-label="basic tabs example">
               <Tab label="Workloads" disableRipple sx={{ fontSize: 17 }} {...a11yProps(0)} />
               <Tab label="States" disableRipple sx={{ fontSize: 17 }} {...a11yProps(1)} />
-              <Tab label="Generated Actions" disableRipple sx={{ fontSize: 17 }} {...a11yProps(2)} />
-              <Tab label="Tuning History" disableRipple sx={{ fontSize: 17 }} {...a11yProps(3)} />
+              <Tab label="Action Generation" disableRipple sx={{ fontSize: 17 }} {...a11yProps(2)} />
+              <Tab label="Tune Database" disableRipple sx={{ fontSize: 17 }} {...a11yProps(3)} />
             </Tabs>
           </Box>
           <TabPanel value={activeTabIdx} index={0}>
@@ -91,10 +82,10 @@ function ManageDatabase() {
             <StateContent databaseId={id} />
           </TabPanel>
           <TabPanel value={activeTabIdx} index={2}>
-            Generated Actions
+            <ActionGenerationContent databaseId={id} />
           </TabPanel>
           <TabPanel value={activeTabIdx} index={3}>
-            Tuning History
+            Tune Database
           </TabPanel>
         </Paper>
       </Box>

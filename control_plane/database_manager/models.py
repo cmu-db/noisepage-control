@@ -65,3 +65,18 @@ class SelfManagedPostgresConfig(models.Model):
         Resource, on_delete=models.CASCADE, related_name = "primary_ssh_key")
     replica_ssh_key = models.OneToOneField(
         Resource, on_delete=models.CASCADE, related_name = "replica_ssh_key")
+
+
+class Action(models.Model):
+    action_id = models.CharField(max_length=36, default=autogenerate_uuid)
+    database_id = models.CharField(max_length=36)
+
+    # The workload and state used to generate this action
+    workload_id = models.ForeignKey(Resource, on_delete=models.CASCADE, related_name = "workload_id")
+    state_id = models.ForeignKey(Resource, on_delete=models.CASCADE, related_name = "state_id")
+
+    # Whether the action is available to be used
+    available = models.BooleanField(default=False)
+
+    # The file name of the action
+    action_name = models.CharField(max_length=120, blank=True)
