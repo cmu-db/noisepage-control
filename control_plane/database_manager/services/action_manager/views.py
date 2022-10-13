@@ -17,7 +17,7 @@ def actions(request, database_id):
 
 
 def generate_action(request, database_id, workload_id, state_id):
-    logger.debug("get_actions for database %s, workload %s, state %s", database_id, workload_id, state_id)
+    logger.debug("generate_action for database %s, workload %s, state %s", database_id, workload_id, state_id)
     # TODO: Implement this
     return HttpResponse("OK")
 
