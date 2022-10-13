@@ -21,8 +21,8 @@ export default function ActionGenerationContent({ databaseId }) {
   const [actions, setActions] = useState();
   const [workloads, setWorkloads] = useState();
   const [states, setStates] = useState();
-  const [selctedWorkloadId, setSelectedWorkloadId] = useState();
-  const [selectedStateId, setSelectedStateId] = useState();
+  const [selctedWorkloadId, setSelectedWorkloadId] = useState('');
+  const [selectedStateId, setSelectedStateId] = useState('');
   
   const [submitLoading, setSubmitLoading] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
@@ -146,11 +146,8 @@ export default function ActionGenerationContent({ databaseId }) {
                 value={selctedWorkloadId}
                 onChange={handleSelectedWorkloadIdChange}
               >
-                <MenuItem value="">
-                  <em>None</em>
-                </MenuItem>
                 {workloads.map((workload) => (
-                  <MenuItem value={workload.resource_id}>{workload.resource_id}</MenuItem>
+                  <MenuItem key={workload.resource_id} value={workload.resource_id}>{workload.resource_id}</MenuItem>
                 ))}
               </Select>
             </FormControl>
@@ -168,11 +165,8 @@ export default function ActionGenerationContent({ databaseId }) {
                 value={selctedWorkloadId}
                 onChange={handleSelectedStateIdChange}
               >
-                <MenuItem value="">
-                  <em>None</em>
-                </MenuItem>
                 {states && states.map((state) => (
-                  <MenuItem value={state.resource_id}>{state.resource_id}</MenuItem>
+                  <MenuItem key={state.resource_id} value={state.resource_id}>{state.resource_id}</MenuItem>
                 ))}
               </Select>
             </FormControl>
