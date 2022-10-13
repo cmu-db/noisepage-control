@@ -134,46 +134,50 @@ export default function ActionGenerationContent({ databaseId }) {
       </TableContainer>
       <Box sx={{ m: 1, mt: 4 }}>
         <Typography variant="h6">Generate New Action</Typography>
-        <Box sx={{ display: 'flex', mt: 4 }}>
-          <Typography sx={{ mr: 3 }}>
-            Workload ID
-          </Typography>
-          <FormControl variant="standard" sx={{ top: -4, minWidth: 120 }}>
-            <Select
-              labelId="demo-simple-select-filled-label"
-              id="demo-simple-select-filled"
-              value={selctedWorkloadId}
-              onChange={handleSelectedWorkloadIdChange}
-            >
-              <MenuItem value="">
-                <em>None</em>
-              </MenuItem>
-              {workloads.map((workload) => (
-                <MenuItem value={workload.resource_id}>{workload.resource_id}</MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </Box>
-        <Box sx={{ display: 'flex', mt: 4 }}>
-          <Typography sx={{ mr: 3 }}>
-            State ID
-          </Typography>
-          <FormControl variant="standard" sx={{ top: -4, minWidth: 120 }}>
-            <Select
-              labelId="demo-simple-select-filled-label"
-              id="demo-simple-select-filled"
-              value={selctedWorkloadId}
-              onChange={handleSelectedStateIdChange}
-            >
-              <MenuItem value="">
-                <em>None</em>
-              </MenuItem>
-              {states.map((state) => (
-                <MenuItem value={state.resource_id}>{state.resource_id}</MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </Box>
+        {workloads &&
+          <Box sx={{ display: 'flex', mt: 4 }}>
+            <Typography sx={{ mr: 3 }}>
+              Workload ID
+            </Typography>
+            <FormControl variant="standard" sx={{ top: -4, minWidth: 120 }}>
+              <Select
+                labelId="demo-simple-select-filled-label"
+                id="demo-simple-select-filled"
+                value={selctedWorkloadId}
+                onChange={handleSelectedWorkloadIdChange}
+              >
+                <MenuItem value="">
+                  <em>None</em>
+                </MenuItem>
+                {workloads.map((workload) => (
+                  <MenuItem value={workload.resource_id}>{workload.resource_id}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Box>
+        }
+        {states &&
+          <Box sx={{ display: 'flex', mt: 4 }}>
+            <Typography sx={{ mr: 3 }}>
+              State ID
+            </Typography>
+            <FormControl variant="standard" sx={{ top: -4, minWidth: 120 }}>
+              <Select
+                labelId="demo-simple-select-filled-label"
+                id="demo-simple-select-filled"
+                value={selctedWorkloadId}
+                onChange={handleSelectedStateIdChange}
+              >
+                <MenuItem value="">
+                  <em>None</em>
+                </MenuItem>
+                {states && states.map((state) => (
+                  <MenuItem value={state.resource_id}>{state.resource_id}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Box>      
+        }
         <LoadingButton
           variant="contained"
           startIcon={<LibraryAdd />}
