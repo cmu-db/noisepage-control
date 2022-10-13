@@ -70,7 +70,7 @@ export default function StateContent({ databaseId }) {
                 <TableCell component="th" scope="row">
                   {state.available
                     ?
-                    <Link href={`${axios.defaults.baseURL}/database_manager/state/download/${state.resource_id}`} underline="always">
+                    <Link href={`${axios.defaults.baseURL}/database_manager/state/${state.resource_id}`} underline="always">
                       {state.resource_id}
                     </Link>
                     :
