@@ -21,6 +21,10 @@ SCRIPTS_DIR = BASE_DIR / "scripts"
 LAUNCH_PRIMARY_DAEMON_SCRIPT = SCRIPTS_DIR / "launch_primary_daemon.sh"
 LAUNCH_REPLICA_DAEMON_SCRIPT = SCRIPTS_DIR / "launch_replica_daemon.sh"
 
+# Control plane base url for primary / replica daemons callbacks
+CONTROL_PLANE_CALLBACK_BASE_URL = "http://ec2-34-207-82-72.compute-1.amazonaws.com:8000"  # Kush's EC2 instance
+# CONTROL_PLANE_CALLBACK_BASE_URL = "http://54.82.252.113:8000"  # Tim's EC2 instance
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 

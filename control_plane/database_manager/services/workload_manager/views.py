@@ -4,6 +4,7 @@ from django.http import HttpResponse, FileResponse
 
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
+from django.conf import settings
 
 from resource_manager.views import initialise_resource, save_resource, get_resource_filepath
 from resource_manager.resource_type import ResourceType
@@ -42,8 +43,7 @@ def collect_workload(request, database_id, time_period):
     resource_id = initialise_resource(database_id, ResourceType.WORKLOAD)
     print ("New resource", resource_id)
 
-    # TODO: Pick this from settings
-    callback_url = "http://ec2-34-207-82-72.compute-1.amazonaws.com:8000/database_manager/workload/collect_workload_callback/"
+    callback_url = f"{settings.CONTROL_PLANE_CALLBACK_BASE_URL}/database_manager/workload/collect_workload_callback/"
     env.collect_workload(time_period, resource_id, callback_url)
 
     # Send request to remote executor

@@ -4,6 +4,7 @@ from django.http import HttpResponse
 
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
+from django.conf import settings
 
 from resource_manager.views import initialise_resource, save_resource
 from resource_manager.resource_type import ResourceType
@@ -50,9 +51,8 @@ def collect_state(request, database_id):
     resource_id = initialise_resource(database_id, ResourceType.STATE)
     print ("New resource", resource_id)
 
-    # TODO: Pick this from settings
     # Send request to remote executor
-    callback_url = "http://ec2-34-207-82-72.compute-1.amazonaws.com:8000/database_manager/state/collect_state_callback/"
+    callback_url = f"{settings.CONTROL_PLANE_CALLBACK_BASE_URL}/database_manager/state/collect_state_callback/"
     env.collect_state(resource_id, callback_url)
 
     return HttpResponse("OK")
