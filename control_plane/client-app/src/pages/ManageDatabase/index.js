@@ -10,6 +10,7 @@ import Header from '../../components/Header';
 import DetailContent from './DetailContent';
 import WorkloadContent from './WorkloadContent';
 import StateContent from './StateContent';
+import TuneDatabaseContent from './TuneDatabaseContent';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -45,17 +46,7 @@ function a11yProps(index) {
 }
 
 function ManageDatabase() {
-  // const [databaseInfos, setDatabaseInfos] = useState();
   const { id } = useParams()
-
-  // useEffect(() => {
-    // async function fetchDatabaseInfos() {
-    //   const res = await axios.get('/database_manager/');
-    //   console.log(res);
-    //   setDatabaseInfos(res.data);
-    // }
-    // fetchDatabaseInfos();
-  // }, []);
 
   const [activeTabIdx, setActiveTabIdx] = React.useState(0);
 
@@ -80,8 +71,7 @@ function ManageDatabase() {
             <Tabs value={activeTabIdx} onChange={handleChange} aria-label="basic tabs example">
               <Tab label="Workloads" disableRipple sx={{ fontSize: 17 }} {...a11yProps(0)} />
               <Tab label="States" disableRipple sx={{ fontSize: 17 }} {...a11yProps(1)} />
-              <Tab label="Generated Actions" disableRipple sx={{ fontSize: 17 }} {...a11yProps(2)} />
-              <Tab label="Tuning History" disableRipple sx={{ fontSize: 17 }} {...a11yProps(3)} />
+              <Tab label="Tune Database" disableRipple sx={{ fontSize: 17 }} {...a11yProps(2)} />
             </Tabs>
           </Box>
           <TabPanel value={activeTabIdx} index={0}>
@@ -91,10 +81,7 @@ function ManageDatabase() {
             <StateContent databaseId={id} />
           </TabPanel>
           <TabPanel value={activeTabIdx} index={2}>
-            Generated Actions
-          </TabPanel>
-          <TabPanel value={activeTabIdx} index={3}>
-            Tuning History
+            <TuneDatabaseContent databaseId={id} />
           </TabPanel>
         </Paper>
       </Box>

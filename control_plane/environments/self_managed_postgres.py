@@ -9,6 +9,7 @@ from django.conf import settings
 
 from resource_manager.views import get_resource_filepath
 
+
 def init_client(host, port, user, key_filename):
     client = SSHClient()
     client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
@@ -61,7 +62,7 @@ class SelfManagedPostgresEnvironment(BaseEnvironment):
             "9000",
         )
 
-        resp = requests.get(hc_url)
+        resp = requests.get(hc_url, timeout=5)
         return resp.content == b"OK"
 
     def _check_replica_worker_health(self):
@@ -70,7 +71,7 @@ class SelfManagedPostgresEnvironment(BaseEnvironment):
             "9000",
         )
 
-        resp = requests.get(hc_url)
+        resp = requests.get(hc_url, timeout=5)
         return resp.content == b"OK"
 
     def launch_primary_daemon(self):
@@ -153,16 +154,21 @@ class SelfManagedPostgresEnvironment(BaseEnvironment):
 
 
     def configure(self):
-        
         # Launch primary daemon
-        launched, err = self.launch_primary_daemon()
-        if not launched:
-            return False, err
+        try:
+            launched, err = self.launch_primary_daemon()
+            if not launched:
+                return False, err
+        except Exception as e:
+            return False, f"Exception while launching primary daemon: {str(e)}"
 
         # Launch replica daemon
-        launched, err = self.launch_replica_daemon()
-        if not launched:
-            return False, err
+        try:
+            launched, err = self.launch_replica_daemon()
+            if not launched:
+                return False, err
+        except Exception as e:
+            return False, f"Exception while launching replica daemon: {str(e)}"
 
         return True, ""
 

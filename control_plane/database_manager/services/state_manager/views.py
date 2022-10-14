@@ -1,11 +1,12 @@
 import json 
 
-from django.http import HttpResponse
+from django.http import HttpResponse, FileResponse
 
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
+from django.conf import settings
 
-from resource_manager.views import initialise_resource, save_resource
+from resource_manager.views import initialise_resource, save_resource, get_resource_filepath
 from resource_manager.resource_type import ResourceType
 
 from environments.environment import init_environment
@@ -50,9 +51,8 @@ def collect_state(request, database_id):
     resource_id = initialise_resource(database_id, ResourceType.STATE)
     print ("New resource", resource_id)
 
-    # TODO: Pick this from settings
     # Send request to remote executor
-    callback_url = "http://ec2-34-207-82-72.compute-1.amazonaws.com:8000/database_manager/state/collect_state_callback/"
+    callback_url = f"{settings.CONTROL_PLANE_CALLBACK_BASE_URL}/database_manager/state/collect_state_callback/"
     env.collect_state(resource_id, callback_url)
 
     return HttpResponse("OK")
@@ -72,3 +72,23 @@ def collect_state_callback(request):
     save_resource(resource_id, captured_tar, filename)
 
     return HttpResponse("OK")
+
+@csrf_exempt
+@require_http_methods(["GET"])
+def download_state(request, state_id):
+
+    from resource_manager.models import Resource
+    state = Resource.objects.get(resource_id = state_id)
+
+    if state.available == False:
+        return HttpResponse("File not available")
+
+    filepath = get_resource_filepath(state)
+    print (filepath)
+    
+    fp = open(filepath, "rb")
+    response = FileResponse(fp)
+
+    response['Content-Type'] = "application/gzip"
+    return response
+

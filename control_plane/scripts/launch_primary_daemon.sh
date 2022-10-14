@@ -16,5 +16,5 @@ pip install requests
 mkdir -p resources
 chmod +x scripts/*.sh
 
-nohup sudo venv/bin/flask run -h 0.0.0.0 -p 9000 >/dev/null 2>&1 &
+nohup sudo venv/bin/flask run -h 0.0.0.0 -p 9000 > ~/.primary_daemon.log 2>&1 &
 sleep 5
