@@ -16,9 +16,10 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import LibraryAdd from '@mui/icons-material/LibraryAdd';
 import axios from '../../util/axios';
+import TuningStatus from '../../util/tuningStatus';
 
-export default function ActionGenerationContent({ databaseId }) {
-  const [actions, setActions] = useState();
+export default function TuneDatabaseContent({ databaseId }) {
+  const [tuningInstances, setTuningInstances] = useState();
   const [workloads, setWorkloads] = useState();
   const [states, setStates] = useState();
   const [selctedWorkloadId, setSelectedWorkloadId] = useState('');
@@ -29,11 +30,11 @@ export default function ActionGenerationContent({ databaseId }) {
   
   // TODO: move api calls to a separate file
   useEffect(() => {
-    async function fetchActions() {
+    async function fetchTuningInstances() {
       try {
-        const res = await axios.get(`/database_manager/databases/${databaseId}/actions`);
+        const res = await axios.get(`/database_manager/databases/${databaseId}/tune`);
         console.log(res);
-        setActions(res.data);  
+        setTuningInstances(res.data);  
       } catch (error) {
         console.error(error)
       }
@@ -57,23 +58,23 @@ export default function ActionGenerationContent({ databaseId }) {
       }
     }
 
-    fetchActions();
+    fetchTuningInstances();
     fetchWorkloads();
     fetchStates();
   }, [databaseId]);
 
-  const handleGenerateAction = async (event) => {
-    // if (!selctedWorkloadId || !selectedStateId) {
-    //   return;
-    // }
+  const handleTuneDatabase = async (event) => {
+    if (!selctedWorkloadId || !selectedStateId) {
+      return;
+    }
 
     event.preventDefault();
-    console.log(`Submit generate action`);
+    console.log(`Submit tune database`);
     setSubmitLoading(true);
 
     try {
       const res = await axios.post(
-        `/database_manager/databases/${databaseId}/actions`,
+        `/database_manager/databases/${databaseId}/tune`,
         {workload_id: selctedWorkloadId, state_id: selectedStateId}
       );
       console.log(res);
@@ -94,13 +95,14 @@ export default function ActionGenerationContent({ databaseId }) {
     setSelectedStateId(event.target.value);
   };
 
-  return actions && (
+  return tuningInstances && (
     <React.Fragment>
+      <Typography variant="h6" sx={{ mx: 1, mb: 2 }}>Tuning History</Typography>
       <TableContainer component={Paper}>
         <Table aria-label="simple table">
           <TableHead>
             <TableRow>
-              <TableCell>Action ID</TableCell>
+              <TableCell>Tuning Instance ID</TableCell>
               <TableCell>Action Name</TableCell>
               <TableCell>Workload ID</TableCell>
               <TableCell>State ID</TableCell>
@@ -108,32 +110,23 @@ export default function ActionGenerationContent({ databaseId }) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {actions.map((action) => (
+            {tuningInstances.map((tuningInstance) => (
               <TableRow
-                key={action.action_id}
+                key={tuningInstance.tuning_instance_id}
                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
               >
-                <TableCell component="th" scope="row">
-                  {action.available
-                    ?
-                    <Link href={`${axios.defaults.baseURL}/database_manager/action/${action.action_id}`} underline="always">
-                      {action.action_id}
-                    </Link>
-                    :
-                    action.action_id
-                  }
-                </TableCell>
-                <TableCell>{action.action_name}</TableCell>
-                <TableCell>{action.workload_id}</TableCell>
-                <TableCell>{action.action_id}</TableCell>
-                <TableCell>{action.available ? 'Available' : 'Generating'}</TableCell>
+                <TableCell component="th" scope="row">{tuningInstance.tuning_instance_id}</TableCell>
+                <TableCell>{tuningInstance.action_name}</TableCell>
+                <TableCell>{tuningInstance.workload_id}</TableCell>
+                <TableCell>{tuningInstance.state_id}</TableCell>
+                <TableCell>{tuningInstance.status}</TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </TableContainer>
       <Box sx={{ m: 1, mt: 4 }}>
-        <Typography variant="h6">Generate New Action</Typography>
+        <Typography variant="h6">Tune Database</Typography>
         {workloads &&
           <Box sx={{ display: 'flex', mt: 4 }}>
             <Typography sx={{ mr: 3 }}>
@@ -176,12 +169,12 @@ export default function ActionGenerationContent({ databaseId }) {
           variant="contained"
           startIcon={<LibraryAdd />}
           sx={{ mt: 4, '&.Mui-disabled': { bgcolor: '#a5d6a7' } }}
-          onClick={handleGenerateAction}
+          onClick={handleTuneDatabase}
           loading={submitLoading}
           loadingPosition="start"
           disabled={submitSuccess}
         >
-          Generate Action!
+          Tune!
         </LoadingButton>
       </Box>
     </React.Fragment>

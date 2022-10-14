@@ -10,6 +10,7 @@ from .database_state_types import DatabaseStateType
 
 from .services.command_queue.models import Command
 from resource_manager.models import Resource
+from .types.tuningstatus import TuningStatusType
 
 def autogenerate_uuid():
     return str(uuid.uuid4())
@@ -67,16 +68,21 @@ class SelfManagedPostgresConfig(models.Model):
         Resource, on_delete=models.CASCADE, related_name = "replica_ssh_key")
 
 
-class Action(models.Model):
-    action_id = models.CharField(max_length=36, default=autogenerate_uuid)
+class TuningInstance(models.Model):
+    tuning_instance_id = models.CharField(max_length=36, default=autogenerate_uuid)
     database_id = models.CharField(max_length=36)
 
-    # The workload and state used to generate this action
+    # The workload and state used to generate this tuning instance
     workload_id = models.ForeignKey(Resource, on_delete=models.CASCADE, related_name = "workload_id")
     state_id = models.ForeignKey(Resource, on_delete=models.CASCADE, related_name = "state_id")
 
-    # Whether the action is available to be used
-    available = models.BooleanField(default=False)
+    TUNING_STATUS_CHOICES = [
+        (TuningStatusType.RUNNING, "RUNNING"),
+        (TuningStatusType.FINISHED, "FINISHED"),
+        (TuningStatusType.FAILED, "FAILED"),
+    ]
+
+    status = models.CharField(max_length=32, choices=TUNING_STATUS_CHOICES)
 
     # The file name of the action
     action_name = models.CharField(max_length=120, blank=True)

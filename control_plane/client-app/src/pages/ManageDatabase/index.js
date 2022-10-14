@@ -10,7 +10,7 @@ import Header from '../../components/Header';
 import DetailContent from './DetailContent';
 import WorkloadContent from './WorkloadContent';
 import StateContent from './StateContent';
-import ActionGenerationContent from './ActionGenerationContent';
+import TuneDatabaseContent from './TuneDatabaseContent';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -71,8 +71,7 @@ function ManageDatabase() {
             <Tabs value={activeTabIdx} onChange={handleChange} aria-label="basic tabs example">
               <Tab label="Workloads" disableRipple sx={{ fontSize: 17 }} {...a11yProps(0)} />
               <Tab label="States" disableRipple sx={{ fontSize: 17 }} {...a11yProps(1)} />
-              <Tab label="Action Generation" disableRipple sx={{ fontSize: 17 }} {...a11yProps(2)} />
-              <Tab label="Tune Database" disableRipple sx={{ fontSize: 17 }} {...a11yProps(3)} />
+              <Tab label="Tune Database" disableRipple sx={{ fontSize: 17 }} {...a11yProps(2)} />
             </Tabs>
           </Box>
           <TabPanel value={activeTabIdx} index={0}>
@@ -82,10 +81,7 @@ function ManageDatabase() {
             <StateContent databaseId={id} />
           </TabPanel>
           <TabPanel value={activeTabIdx} index={2}>
-            <ActionGenerationContent databaseId={id} />
-          </TabPanel>
-          <TabPanel value={activeTabIdx} index={3}>
-            Tune Database
+            <TuneDatabaseContent databaseId={id} />
           </TabPanel>
         </Paper>
       </Box>
