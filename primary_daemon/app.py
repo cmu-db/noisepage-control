@@ -35,7 +35,6 @@ def healthcheck():
 def collect_workload():
 
     data = request.get_json()
-    db_name = data["db_name"]
     resource_id = data["resource_id"]
     time_period = data["time_period"]
     callback_url = data["callback_url"]
@@ -44,7 +43,7 @@ def collect_workload():
 
     thread = Thread(
         target=capture_and_transfer_workload, 
-        args=(db_name, resource_id, int(time_period), callback_url)
+        args=(resource_id, int(time_period), callback_url)
     )
     thread.start()
 
