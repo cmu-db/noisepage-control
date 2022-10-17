@@ -32,7 +32,7 @@ def tune_database(callback_url, db_name):
 
     client = docker.from_env()
     exec_logs = client.containers.run(
-        "kushagr2/garbage:v1",
+        "kushagr2/garbage:v2",
         environment = {
             "PG_USERNAME" : "cmudb",
         },
