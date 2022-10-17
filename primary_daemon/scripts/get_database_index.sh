@@ -33,4 +33,4 @@ CROSS  JOIN LATERAL (
    ) opc(operator_classes)
 WHERE  n.nspname !~ '^pg_'
 AND    c.relkind = 'i'
-ORDER  BY 1, 2, 3, 4;\" | psql -p ${DATABASE_PORT} --username ${PG_USERNAME}" -d "${DATABASE_NAME}"
+ORDER  BY 1, 2, 3, 4;\" | psql -p ${DATABASE_PORT} --username ${PG_USERNAME} -d ${DATABASE_NAME}"

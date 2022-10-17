@@ -47,4 +47,4 @@ CROSS JOIN LATERAL (
     AND NOT a.attisdropped
 ) AS t
 WHERE n.nspname ~ '^(public)$'  -- YOUR SCHEMA HERE
-AND pg_catalog.pg_table_is_visible(c.oid);\" | psql -p ${DATABASE_PORT} --username ${PG_USERNAME}" -d "${DATABASE_NAME}"
+AND pg_catalog.pg_table_is_visible(c.oid);\" | psql -p ${DATABASE_PORT} --username ${PG_USERNAME} -d ${DATABASE_NAME}"
