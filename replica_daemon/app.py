@@ -22,11 +22,11 @@ def tune():
     data = json.loads(request.files["data"].read().decode("utf-8"))
     
     workload_tar = request.files['workload'].read()
-    with open("workload", "wb") as wfp:
+    with open("workload.tar.gz", "wb") as wfp:
         wfp.write(workload_tar)
     
     state_tar = request.files['state'].read()
-    with open("state", "wb") as wfp:
+    with open("state.tar.gz", "wb") as wfp:
         wfp.write(state_tar)
 
     callback_url = data["callback_url"]
