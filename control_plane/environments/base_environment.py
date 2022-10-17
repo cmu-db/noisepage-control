@@ -38,7 +38,7 @@ class BaseEnvironment(ABC):
         pass
 
     @abstractmethod
-    def tune(self):
+    def tune(self, workload_file_path, state_file_path, callback_url):
         # Starts tuning
         pass
 

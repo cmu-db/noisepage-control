@@ -219,8 +219,26 @@ class SelfManagedPostgresEnvironment(BaseEnvironment):
         # Gets metrics and archives it
         pass
 
-    def tune(self):
+    def tune(self, workload_file_path, state_file_path, callback_url):
         # Starts tuning
+        print ("self managed postgress tune", workload_file_path, state_file_path)
+
+        url = "http://%s:%s/tune/" % (
+            self.config.replica_host,
+            "9000",
+        )
+
+        data = {
+            # "db_name": self.config.db_name,
+            # "resource_id": resource_id,
+            # "callback_url": callback_url,
+        }
+
+        print (url, data)
+
+        headers = {"Content-type": "application/json"}
+        requests.post(url, data=json.dumps(data), headers=headers, timeout=3)
+
         pass
 
     def apply_action(self):

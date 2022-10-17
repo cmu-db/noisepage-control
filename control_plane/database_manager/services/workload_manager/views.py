@@ -32,12 +32,9 @@ def collect_workload(request, database_id, time_period):
 
     from database_manager.models import Database
 
-
     # Fetch database and init environment
     database = Database.objects.get(database_id = database_id)
     env = init_environment(database)
-    print (database)
-
 
     # Init a new resource
     resource_id = initialise_resource(database_id, ResourceType.WORKLOAD)
