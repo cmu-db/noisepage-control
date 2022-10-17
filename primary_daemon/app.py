@@ -94,7 +94,7 @@ def capture_and_transfer_state(database_name, resource_id, callback_url):
 
     # Write dump
     db_dump = database_executor.get_database_dump(database_name)
-    with open(state_dir / "dump.txt", "w") as fp:
+    with open(state_dir / "dump.sql", "w") as fp:
         fp.write(db_dump)
 
     archive_path = create_state_archive(RESOURCE_DIR, identifier, state_dir)
