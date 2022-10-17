@@ -1,0 +1,45 @@
+Connector:
+  dbname: "noisepage_control"
+  user: "postgres"
+  password: "postgres"
+  host: "localhost"
+  port: 5432
+Workloads:
+  - name: workload # Name used to reference 
+    csvlog: /data/workload.csv # Input CSVLog
+    export: # Export a sample of the queries seen in the csv log, this is used for the index tuner
+      sample_size: 500
+      output: /data/sample.sql #Output file
+Generators:
+  # - generator: DropIndexGenerator
+  #   name: generator1
+  #   args:
+  # - generator: ExhaustiveIndexGenerator
+  #   name: generator2
+  #   args:
+  #     max_width: 2
+  - generator: WorkloadIndexGenerator
+    name: generator3
+    args:
+      workload: workload
+      max_width: 2
+      clauses: 
+        - whereClause
+        - groupClause
+        - sortClause
+  # - generator: TypedIndexGenerator
+  #   name: generator4
+  #   args:
+  #     types:
+  #       - HASH
+  #       - BRIN
+  #       # - BTREE is not needed: currently we've collect actions from the upstream already
+  #     upstream: generator2
+  - generator: NumericalKnobGenerator
+    name: generator5
+    args:
+      knob_name: work_mem
+      mode: POW2
+      min_val: 10
+      max_val: 20
+      interval: 1
