@@ -35,6 +35,7 @@ def healthcheck():
 def collect_workload():
 
     data = request.get_json()
+    db_name = data["db_name"]
     resource_id = data["resource_id"]
     time_period = data["time_period"]
     callback_url = data["callback_url"]
@@ -43,7 +44,7 @@ def collect_workload():
 
     thread = Thread(
         target=capture_and_transfer_workload, 
-        args=(resource_id, int(time_period), callback_url)
+        args=(db_name, resource_id, int(time_period), callback_url)
     )
     thread.start()
 
@@ -60,6 +61,7 @@ def capture_and_transfer_workload(resource_id, time_period, callback_url):
 def collect_state():
 
     data = request.get_json()
+    db_name = data["db_name"]
     resource_id = data["resource_id"]
     callback_url = data["callback_url"]
 
@@ -67,44 +69,34 @@ def collect_state():
 
     thread = Thread(
         target=capture_and_transfer_state, 
-        args=(resource_id, callback_url)
+        args=(db_name, resource_id, callback_url)
     )
     thread.start()
 
     return 'OK'
 
-def capture_and_transfer_state(resource_id, callback_url):
-
-    database_names = database_executor.get_database_names()
+def capture_and_transfer_state(database_name, resource_id, callback_url):
 
     # Create a new dir for collected states
     identifier = str(uuid.uuid4())
     state_dir = RESOURCE_DIR / identifier
     os.mkdir(state_dir)
 
-    # Write all db names to a file
-    with open(state_dir / "databases.txt", "w") as fp:
-        fp.write("\n".join(database_names))
 
-    for database_name in database_names:
-        # Create a dir for the current database
-        database_state_dir = state_dir / database_name
-        os.mkdir(database_state_dir)
+    # Write current catalog
+    catalog = database_executor.get_database_catalog(database_name)
+    with open(state_dir / "catalog.txt", "w") as fp:
+        fp.write(catalog)
 
-        # Write current catalog
-        catalog = database_executor.get_database_catalog(database_name)
-        with open(database_state_dir / "catalog.txt", "w") as fp:
-            fp.write(catalog)
+    # Write current indexes
+    index_info = database_executor.get_database_index(database_name)
+    with open(state_dir / "index.txt", "w") as fp:
+        fp.write(index_info)
 
-        # Write current indexes
-        index_info = database_executor.get_database_index(database_name)
-        with open(database_state_dir / "index.txt", "w") as fp:
-            fp.write(index_info)
-
-        # Write dump
-        db_dump = database_executor.get_database_dump(database_name)
-        with open(database_state_dir / "dump.txt", "w") as fp:
-            fp.write(db_dump)
+    # Write dump
+    db_dump = database_executor.get_database_dump(database_name)
+    with open(state_dir / "dump.txt", "w") as fp:
+        fp.write(db_dump)
 
     archive_path = create_state_archive(RESOURCE_DIR, identifier, state_dir)
     transfer_state_archive(archive_path, resource_id, callback_url)

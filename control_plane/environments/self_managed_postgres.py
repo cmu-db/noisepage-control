@@ -182,6 +182,7 @@ class SelfManagedPostgresEnvironment(BaseEnvironment):
         )
 
         data = {
+            "db_name": self.config.db_name,
             "resource_id": resource_id,
             "time_period": time_period,
             "callback_url": callback_url,
@@ -203,6 +204,7 @@ class SelfManagedPostgresEnvironment(BaseEnvironment):
         )
 
         data = {
+            "db_name": self.config.db_name,
             "resource_id": resource_id,
             "callback_url": callback_url,
         }
