@@ -14,9 +14,9 @@ def healthcheck():
 @app.route('/tune/', methods = ['POST'])
 def tune():
 
-    data = json.loads(request.FILES["data"].read().decode("utf-8"))
-    workload_tar = request.files['workload.tar.gz'].read()
-    state_tar = request.files['state.tar.gz'].read()
+    data = json.loads(request.files["data"].read().decode("utf-8"))
+    workload_tar = request.files['workload'].read()
+    state_tar = request.files['state'].read()
 
     print (data)
     print (workload_tar)

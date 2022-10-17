@@ -238,7 +238,7 @@ class SelfManagedPostgresEnvironment(BaseEnvironment):
             open(state_file_path, "rb") as sfp:
 
             files = [
-                ("worklod", ("workload.tar.gz", wfp, "application/x-gtar")),
+                ("workload", ("workload.tar.gz", wfp, "application/x-gtar")),
                 ("state", ("state.tar.gz", sfp, "application/x-gtar")),
                 ("data", ("data.json", data_file, "application/json")),
             ]
