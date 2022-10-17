@@ -12,4 +12,4 @@ DATABASE_NAME=$3
 
 ###############################################################################
 
-sudo -u postgres bash -c "pg_dump -s -p ${DATABASE_PORT} --username ${PG_USERNAME} -d ${DATABASE_NAME}"
+sudo -u postgres bash -c "pg_dump -C -s -p ${DATABASE_PORT} --username ${PG_USERNAME} -d ${DATABASE_NAME}"

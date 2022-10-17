@@ -6,6 +6,8 @@ from tune import tune_database
 
 app = Flask(__name__)
 
+# tune_database("", "noisepage_control")
+
 @app.route('/')
 def index():
     return 'Hello this is replica worker'
@@ -28,10 +30,11 @@ def tune():
         wfp.write(state_tar)
 
     callback_url = data["callback_url"]
+    db_name = data["db_name"]
 
     thread = Thread(
         target=tune_database, 
-        args=(callback_url,)
+        args=(callback_url, db_name)
     )
     thread.start()
 

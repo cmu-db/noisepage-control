@@ -24,7 +24,7 @@ chmod +x scripts/*.sh
 # Install daemon reqs
 virtualenv venv
 source venv/bin/activate
-pip install flask requests
+pip install flask requests docker
 
 # Start daemon
 nohup sudo venv/bin/flask run -h 0.0.0.0 -p 9000 > ~/.replica_daemon.log 2>&1 &
