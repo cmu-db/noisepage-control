@@ -57,7 +57,6 @@ def collect_workload_callback(request):
     
     print("Received collected data. Resource id: %s" % (resource_id))
 
-
     captured_workload_tar = request.FILES["workload"].read()
     captured_workload_filename = request.FILES["workload"].name
 

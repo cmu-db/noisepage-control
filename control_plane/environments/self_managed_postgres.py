@@ -3,6 +3,7 @@ from .base_environment import BaseEnvironment
 import paramiko
 import requests
 import json
+from io import StringIO
 
 from paramiko.client import SSHClient
 from django.conf import settings
@@ -229,17 +230,20 @@ class SelfManagedPostgresEnvironment(BaseEnvironment):
         )
 
         data = {
-            # "db_name": self.config.db_name,
-            # "resource_id": resource_id,
-            # "callback_url": callback_url,
+            "callback_url": callback_url,
         }
 
-        print (url, data)
+        with StringIO(json.dumps(data)) as data_file, \
+            open(workload_file_path, "rb") as wfp, \
+            open(state_file_path, "rb") as sfp:
 
-        headers = {"Content-type": "application/json"}
-        requests.post(url, data=json.dumps(data), headers=headers, timeout=3)
+            files = [
+                ("worklod", ("workload.tar.gz", wfp, "application/x-gtar")),
+                ("state", ("state.tar.gz", sfp, "application/x-gtar")),
+                ("data", ("data.json", data_file, "application/json")),
+            ]
 
-        pass
+            requests.post(url, files=files, timeout=3)
 
     def apply_action(self):
         # Applies an action

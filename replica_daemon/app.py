@@ -1,4 +1,5 @@
-from flask import Flask
+from flask import Flask, request
+import json
 
 app = Flask(__name__)
 
@@ -13,19 +14,12 @@ def healthcheck():
 @app.route('/tune/', methods = ['POST'])
 def tune():
 
-    data = request.get_json()
+    data = json.loads(request.FILES["data"].read().decode("utf-8"))
+    workload_tar = request.files['workload.tar.gz'].read()
+    state_tar = request.files['state.tar.gz'].read()
 
-    db_name = data["db_name"]
-    resource_id = data["resource_id"]
-    time_period = data["time_period"]
-    callback_url = data["callback_url"]
-
-    print ("Starting thread with", data)
-
-    thread = Thread(
-        target=capture_and_transfer_workload, 
-        args=(db_name, resource_id, int(time_period), callback_url)
-    )
-    thread.start()
+    print (data)
+    print (workload_tar)
+    print (state_tar)
 
     return 'OK'
