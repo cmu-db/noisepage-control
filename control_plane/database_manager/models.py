@@ -50,6 +50,7 @@ class SelfManagedPostgresConfig(models.Model):
     database = models.OneToOneField(
         Database, on_delete=models.CASCADE, primary_key=True)
 
+    db_name = models.CharField(max_length=120, blank = False, null = False)
     primary_host = models.CharField(max_length=120, blank = False, null = False)
     primary_ssh_port = models.CharField(max_length=120, blank = False, null = False)
     primary_ssh_user = models.CharField(max_length=120, blank = False, null = False)

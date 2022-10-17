@@ -17,6 +17,7 @@ function RegisterForm({ environment }) {
     (state, newState) => ({ ...state, ...newState }),
     {
       environment: environment,
+      db_name: 'postgres',
       primary_host: 'ec2-54-242-174-185.compute-1.amazonaws.com',
       primary_ssh_port: '22',
       primary_ssh_user: 'ubuntu',
@@ -83,6 +84,15 @@ function RegisterForm({ environment }) {
       <Grid container>
         <Grid item xs={12} sm={4}>
           <Typography variant="h5">Primary Database</Typography>
+          <TextField
+            required
+            id="db-name"
+            name="db_name"
+            label="Database Name"
+            variant="standard"
+            defaultValue="postgres"
+            onChange={handleInput}
+          />
           <TextField
             required
             id="primary-host"

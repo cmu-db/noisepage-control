@@ -41,6 +41,10 @@ export default function DetailContent({ databaseId }) {
       </ListItem>
       <Divider/>
       <ListItem>
+        <ListItemText primary="Database Name" secondary={databaseDetail.db_name} />
+      </ListItem>
+      <Divider/>
+      <ListItem>
         <ListItemText primary="Primary Host" secondary={databaseDetail.primary_host} />
       </ListItem>
       <Divider/>

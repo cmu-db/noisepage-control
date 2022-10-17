@@ -111,7 +111,7 @@ def register_new_database(request):
 
 
 self_managed_postgres_config_keys = [
-    "primary_host", "primary_ssh_port", "primary_ssh_user", "primary_pg_user", "primary_pg_port",
+    "db_name", "primary_host", "primary_ssh_port", "primary_ssh_user", "primary_pg_user", "primary_pg_port",
     "replica_host", "replica_ssh_port", "replica_ssh_user", "replica_pg_user", "replica_pg_port"
 ]
 
@@ -143,6 +143,7 @@ def register_new_self_managed_postgres_database(request, database):
     config = SelfManagedPostgresConfig(
         database = database,
 
+        db_name = request.POST["db_name"],
         primary_host = request.POST["primary_host"],
         primary_ssh_port = request.POST["primary_ssh_port"],
         primary_ssh_user = request.POST["primary_ssh_user"],
@@ -171,6 +172,7 @@ def get_database_with_config(database_id):
         "state": db.state,
         "errors": db.errors,
         "created": db.created,
+        "db_name": db.selfmanagedpostgresconfig.db_name,
         "primary_host": db.selfmanagedpostgresconfig.primary_host,
         "primary_ssh_port": db.selfmanagedpostgresconfig.primary_ssh_port,
         "primary_ssh_user": db.selfmanagedpostgresconfig.primary_ssh_user,
