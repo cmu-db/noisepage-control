@@ -230,6 +230,7 @@ class SelfManagedPostgresEnvironment(BaseEnvironment):
         )
 
         data = {
+            "db_name": self.config.db_name,
             "callback_url": callback_url,
         }
 
