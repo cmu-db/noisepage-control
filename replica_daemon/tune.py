@@ -20,7 +20,7 @@ def tune_database(callback_url, db_name):
     os.mkdir("data", 0o777)
 
     shutil.copy(workload_filepath, "data/workload.csv")
-    shutil.copy(pgdump_filepath, "data/schema.sql")
+    shutil.copy(pgdump_filepath, "data/dump.sql")
 
     with open("base_configs/garbage_config.yaml", "r") as fp:
         garabage_config = fp.read()
