@@ -4,15 +4,19 @@ import os
 from pathlib import Path
 import docker
 
+IMAGE_NAME = "kushagr2/garbage:v2"
+
 def tune_database(callback_url, db_name):
 
     # Hack to get the workload and state dir. Need to figure this out
     with tarfile.open("workload.tar.gz") as w:
+        workload_dir_name = Path(w.getmembers()[0].name)
         workload_filepath = Path(w.getmembers()[1].name)
         w.extractall()
 
     with tarfile.open("state.tar.gz") as w:
-        pgdump_filepath = Path(w.getmembers()[0].name) / "dump.sql"
+        state_dir_name = Path(w.getmembers()[0].name)
+        pgdump_filepath = state_dir_name / "dump.sql"
         w.extractall()
 
     shutil.rmtree("data", ignore_errors = True) # ignore doesn't exist error
@@ -30,9 +34,10 @@ def tune_database(callback_url, db_name):
 
     parent_dir_path = Path(__file__).parent.resolve()
 
+    # Execute image
     client = docker.from_env()
     exec_logs = client.containers.run(
-        "kushagr2/garbage:v2",
+        IMAGE_NAME,
         environment = {
             "PG_USERNAME" : "cmudb",
         },
@@ -43,5 +48,13 @@ def tune_database(callback_url, db_name):
                 }
             }, 
         detach = False)
+
+    # Garbage generates data/searchspace.json
+
+    # Clean up
+    os.remove("workload.tar.gz")
+    shutil.rmtree(workload_dir_name)
+    os.remove("state.tar.gz")
+    shutil.rmtree(state_dir_name)
 
     print (exec_logs)
