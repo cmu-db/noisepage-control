@@ -13,7 +13,13 @@ psql postgres -U ${PG_USERNAME} < /data/dump.sql
 cd /noisepage-pilot/action/generation
 
 # Run tuning engine
-python3 engine.py -o searchspace.json -c /data/garbage_config.yaml
+python3 engine.py -o search_space.json -c /data/garbage_config.yaml
 
 # Move generated file to mounted directory
-mv searchspace.json /data/
+mv search_space.json /data/
+
+cd /index_selection_evaluation/
+python3 -m selection /data/index_config.json
+
+# Move results to mounted directory
+mv benchmark_results /data/

@@ -22,6 +22,11 @@ RUN chown -R postgres noisepage-pilot
 RUN apt-get -y install python3-dev python3-pip libpq-dev
 RUN pip3 install pglast pandas numpy SQLAlchemy PyYAML plumbum psycopg2
 
+# Clone index selection code
+RUN git clone https://github.com/mkpjnx/index_selection_evaluation.git
+RUN chown -R postgres index_selection_evaluation
+RUN pip3 install pyhdb
+
 # Tuning exec script
 COPY tune.sh tune.sh
 RUN chmod +x tune.sh
