@@ -4,7 +4,8 @@ import os
 from pathlib import Path
 import docker
 
-IMAGE_NAME = "kushagr2/garbage:v2"
+# IMAGE_NAME = "kushagr2/garbage:v2" # Only garbage
+IMAGE_NAME = "kushagr2/garbage:v3" # Garbage + Index
 
 def tune_database(callback_url, db_name):
 
@@ -26,15 +27,22 @@ def tune_database(callback_url, db_name):
     shutil.copy(workload_filepath, "data/workload.csv")
     shutil.copy(pgdump_filepath, "data/dump.sql")
 
+    # Generate garbage config
     with open("base_configs/garbage_config.yaml", "r") as fp:
         garabage_config = fp.read()
     garabage_config = garabage_config.replace('{{{db_name}}}', db_name)
     with open("data/garbage_config.yaml", "w") as fp:
         fp.write(garabage_config)
 
-    parent_dir_path = Path(__file__).parent.resolve()
+    # Generate index selection config
+    with open("base_configs/index_config.json", "r") as fp:
+        index_config = fp.read()
+    index_config = index_config.replace('{{{db_name}}}', db_name)
+    with open("data/index_config.json", "w") as fp:
+        fp.write(index_config)
 
     # Execute image
+    parent_dir_path = Path(__file__).parent.resolve()
     client = docker.from_env()
     exec_logs = client.containers.run(
         IMAGE_NAME,
@@ -48,8 +56,6 @@ def tune_database(callback_url, db_name):
                 }
             }, 
         detach = False)
-
-    # Garbage generates data/searchspace.json
 
     # Clean up
     os.remove("workload.tar.gz")

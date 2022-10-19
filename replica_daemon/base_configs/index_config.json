@@ -1,0 +1,29 @@
+{
+    "database_system": "postgres",
+    "database_cargs": {
+        "user": "postgres",
+        "password": "", 
+        "host": "localhost",
+        "port": 5432
+    },
+
+    "explicit_database_name": "{{{db_name}}}",
+    "explicit_ddl_path": ["/data/", "schema.sql"],
+    
+    "benchmark_name": "custom_{{{db_name}}}",
+    "explicit_query_file": "/data/sample.sql",
+    
+    "scale_factor": 1,
+    "algorithms": [
+        {
+            "name": "db2advis",
+            "parameters": {
+                "try_variations_seconds": 0,
+                "max_index_width": 2,
+                "budget_MB": 1000,
+                "candidate_file": "/data/search_space.json"
+            },
+            "timeout": 300
+        }
+    ]
+}
