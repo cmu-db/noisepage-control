@@ -1,0 +1,22 @@
+2022-09-27 17:51:39.716 UTC,,,155357,,6333382b.25edd,1,,2022-09-27 17:51:39 UTC,,0,LOG,00000,"ending log output to stderr",,"Future log output will go to log destination ""csvlog"".",,,,,,,"","postmaster",,0
+2022-09-27 17:51:39.716 UTC,,,155357,,6333382b.25edd,2,,2022-09-27 17:51:39 UTC,,0,LOG,00000,"starting PostgreSQL 14.5 (Ubuntu 14.5-1.pgdg22.04+1) on x86_64-pc-linux-gnu, compiled by gcc (Ubuntu 11.2.0-19ubuntu1) 11.2.0, 64-bit",,,,,,,,,"","postmaster",,0
+2022-09-27 17:51:39.716 UTC,,,155357,,6333382b.25edd,3,,2022-09-27 17:51:39 UTC,,0,LOG,00000,"listening on IPv4 address ""0.0.0.0"", port 10000",,,,,,,,,"","postmaster",,0
+2022-09-27 17:51:39.716 UTC,,,155357,,6333382b.25edd,4,,2022-09-27 17:51:39 UTC,,0,LOG,00000,"listening on IPv6 address ""::"", port 10000",,,,,,,,,"","postmaster",,0
+2022-09-27 17:51:39.719 UTC,,,155357,,6333382b.25edd,5,,2022-09-27 17:51:39 UTC,,0,LOG,00000,"listening on Unix socket ""/var/run/postgresql/.s.PGSQL.10000""",,,,,,,,,"","postmaster",,0
+2022-09-27 17:51:39.728 UTC,,,155359,,6333382b.25edf,1,,2022-09-27 17:51:39 UTC,,0,LOG,00000,"database system was shut down at 2022-09-27 17:51:39 UTC",,,,,,,,,"","startup",,0
+2022-09-27 17:51:39.737 UTC,,,155357,,6333382b.25edd,6,,2022-09-27 17:51:39 UTC,,0,LOG,00000,"database system is ready to accept connections",,,,,,,,,"","postmaster",,0
+2022-09-27 17:51:48.484 UTC,"postgres","postgres",155372,"[local]",63333831.25eec,1,"idle",2022-09-27 17:51:45 UTC,4/2,0,LOG,00000,"statement: SELECT 5+5;",,,,,,,,,"psql","client backend",,0
+2022-09-27 17:51:50.344 UTC,"postgres","postgres",155372,"[local]",63333831.25eec,2,"idle",2022-09-27 17:51:45 UTC,4/3,0,LOG,00000,"statement: SELECT 5+10;",,,,,,,,,"psql","client backend",,0
+2022-09-27 17:51:53.914 UTC,"postgres","postgres",155372,"[local]",63333831.25eec,3,"idle",2022-09-27 17:51:45 UTC,4/4,0,LOG,00000,"statement: SELECT 5+30;",,,,,,,,,"psql","client backend",,0
+2022-09-27 17:51:56.439 UTC,"postgres","postgres",155372,"[local]",63333831.25eec,4,"idle",2022-09-27 17:51:45 UTC,4/5,0,LOG,00000,"statement: SELECT 10+30;",,,,,,,,,"psql","client backend",,0
+2022-09-27 17:51:58.217 UTC,"postgres","postgres",155372,"[local]",63333831.25eec,5,"idle",2022-09-27 17:51:45 UTC,4/6,0,LOG,00000,"statement: SELECT 10+30;",,,,,,,,,"psql","client backend",,0
+2022-09-27 17:52:00.195 UTC,"postgres","postgres",155372,"[local]",63333831.25eec,6,"idle",2022-09-27 17:51:45 UTC,4/7,0,LOG,00000,"statement: SELECT 10+37;",,,,,,,,,"psql","client backend",,0
+2022-09-27 17:52:02.920 UTC,"postgres","postgres",155372,"[local]",63333831.25eec,7,"idle",2022-09-27 17:51:45 UTC,4/8,0,LOG,00000,"statement: SELECT 10+30;",,,,,,,,,"psql","client backend",,0
+2022-09-27 17:52:34.900 UTC,"postgres","postgres",155383,"[local]",63333862.25ef7,1,"idle",2022-09-27 17:52:34 UTC,4/12,0,LOG,00000,"statement: ALTER SYSTEM SET log_destination='stderr';",,,,,,,,,"psql","client backend",,0
+2022-09-27 17:52:34.962 UTC,"postgres","postgres",155388,"[local]",63333862.25efc,1,"idle",2022-09-27 17:52:34 UTC,4/14,0,LOG,00000,"statement: ALTER SYSTEM SET log_statement='none';",,,,,,,,,"psql","client backend",,0
+2022-09-27 17:52:35.022 UTC,"postgres","postgres",155393,"[local]",63333863.25f01,1,"idle",2022-09-27 17:52:35 UTC,4/16,0,LOG,00000,"statement: ALTER SYSTEM SET logging_collector=off;",,,,,,,,,"psql","client backend",,0
+2022-09-27 17:52:35.042 UTC,,,155357,,6333382b.25edd,7,,2022-09-27 17:51:39 UTC,,0,LOG,00000,"received fast shutdown request",,,,,,,,,"","postmaster",,0
+2022-09-27 17:52:35.046 UTC,,,155357,,6333382b.25edd,8,,2022-09-27 17:51:39 UTC,,0,LOG,00000,"aborting any active transactions",,,,,,,,,"","postmaster",,0
+2022-09-27 17:52:35.052 UTC,,,155357,,6333382b.25edd,9,,2022-09-27 17:51:39 UTC,,0,LOG,00000,"background worker ""logical replication launcher"" (PID 155365) exited with exit code 1",,,,,,,,,"","postmaster",,0
+2022-09-27 17:52:35.053 UTC,,,155360,,6333382b.25ee0,1,,2022-09-27 17:51:39 UTC,,0,LOG,00000,"shutting down",,,,,,,,,"","checkpointer",,0
+2022-09-27 17:52:35.094 UTC,,,155357,,6333382b.25edd,10,,2022-09-27 17:51:39 UTC,,0,LOG,00000,"database system is shut down",,,,,,,,,"","postmaster",,0
