@@ -6,7 +6,7 @@ service postgresql start
 # Create user
 echo "CREATE USER ${PG_USERNAME} WITH SUPERUSER;" | psql
 
-# Restore schema; /schema.sql should be mounted while execing 
+# Restore schema; /dump.sql should be mounted while execing 
 psql postgres -U ${PG_USERNAME} < /data/dump.sql 
 
 # Move to directory
