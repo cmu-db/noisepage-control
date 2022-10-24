@@ -84,6 +84,7 @@ class SelfManagedPostgresEnvironment(BaseEnvironment):
         stdout.read()
         stderr=stderr.read()
         if len(stderr):
+            client.close()
             return False, "Cannot launch primary daemon\n" + str(stderr)
 
         # We need to wait out the script's execution; easiset way is to read stdout and stderr
@@ -107,6 +108,7 @@ class SelfManagedPostgresEnvironment(BaseEnvironment):
         stdout.read()
         stderr=stderr.read()
         if len(stderr):
+            client.close()
             return False, "Cannot launch replica daemon\n" + str(stderr)
 
         # We need to wait out the script's execution; easiset way is to read stdout and stderr
@@ -132,9 +134,10 @@ class SelfManagedPostgresEnvironment(BaseEnvironment):
         try:
             primary_ssh_client = self._init_primary_ssh_client()
             has_sudo_on_primary = self._has_sudo(primary_ssh_client)
-            primary_ssh_client.close()
         except Exception as e:
             return False, f"Exception while connecting to primary: {str(e)}"
+        finally:
+            primary_ssh_client.close()
 
         if not has_sudo_on_primary:
             return False, "No sudo on primary"
@@ -144,9 +147,10 @@ class SelfManagedPostgresEnvironment(BaseEnvironment):
         try:
             replica_ssh_client = self._init_replica_ssh_client()
             has_sudo_on_replica = self._has_sudo(replica_ssh_client)
-            replica_ssh_client.close()
         except:
             return False, "Exception while connecting to primary"
+        finally:
+            replica_ssh_client.close()
 
         if not has_sudo_on_replica:
             return False, "No sudo on replica"
