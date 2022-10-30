@@ -32,6 +32,5 @@ if sudo lsof -t -i:9000 > /dev/null; then
     sudo kill $(sudo lsof -t -i:9000)
 fi
 # Start replica daemon
-sudo kill $(sudo lsof -t -i:9000)
 nohup sudo venv/bin/flask run -h 0.0.0.0 -p 9000 > ~/.replica_daemon.log 2>&1 &
 sleep 5
