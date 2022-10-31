@@ -80,7 +80,7 @@ def apply_action(request, tuning_action_id):
     )
 
     # TODO: Potential race if callback comes back; not likely
-    tuning_action.status = TuningStatusType.APPLYING
+    tuning_action.status = ActionStatusType.APPLYING
     tuning_action.save()
 
     return HttpResponse(

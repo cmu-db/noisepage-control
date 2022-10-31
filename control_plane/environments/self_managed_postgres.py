@@ -252,7 +252,7 @@ class SelfManagedPostgresEnvironment(BaseEnvironment):
 
     def apply_action(self, action_id, command, reboot_required, callback_url):
         url = "http://%s:%s/apply/" % (
-            self.config.replica_host,
+            self.config.primary_host,
             "9000",
         )
 
