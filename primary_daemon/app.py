@@ -55,16 +55,18 @@ def apply():
 
     data = request.get_json()
 
-    action_id = data["action_id"]
+    data = request.get_json()
     db_name = data["db_name"]
+    command = data["command"]
     reboot_required = data["reboot_required"]
+    action_id = data["action_id"]
     callback_url = data["callback_url"]
 
     print ("Starting thread with", data)
 
     thread = Thread(
-        target=capture_and_transfer_workload, 
-        args=(resource_id, int(time_period), callback_url)
+        target=apply_action, 
+        args=(db_name, command, reboot_required, action_id, callback_url)
     )
     thread.start()
 
@@ -82,15 +84,14 @@ def collect_state():
 
     data = request.get_json()
     db_name = data["db_name"]
-    command = data["command"]
     resource_id = data["resource_id"]
     callback_url = data["callback_url"]
 
     print ("Starting thread with", data)
 
     thread = Thread(
-        target=apply_action, 
-        args=(db_name, command, reboot_required, action_id, callback_url)
+        target=capture_and_transfer_state, 
+        args=(db_name, resource_id, callback_url)
     )
     thread.start()
 
