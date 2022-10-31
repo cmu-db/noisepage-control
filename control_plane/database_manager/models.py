@@ -11,6 +11,7 @@ from .database_state_types import DatabaseStateType
 from .services.command_queue.models import Command
 from resource_manager.models import Resource
 from .types.tuningstatus import TuningStatusType
+from .types.action_status import ActionStatusType
 
 def autogenerate_uuid():
     return str(uuid.uuid4())
@@ -87,3 +88,25 @@ class TuningInstance(models.Model):
 
     # The file name of the action
     action_name = models.CharField(max_length=120, blank=True)
+
+class TuningAction(models.Model):
+    tuning_action_id = models.CharField(max_length=36, default=autogenerate_uuid)
+
+    # The tuning instance that generated this action
+    tuning_instance_id = models.CharField(max_length=36)
+
+    # The command; CREATE INDEX ...
+    command = models.CharField(max_length=512)
+
+    # The benefit that would result from applying this action
+    benefit = models.FloatField()
+
+    # Whether the database has to be rebooted after applying the action
+    reboot_required = models.BooleanField(default=False)
+
+    ACTION_STATUS_CHOICES = [
+        (ActionStatusType.NOT_APPLIED, "NOT_APPLIED"),
+        (ActionStatusType.APPLYING, "APPLYING"),
+        (ActionStatusType.APPLIED, "APPLIED"),
+        (ActionStatusType.FAILED, "FAILED"),
+    ]
