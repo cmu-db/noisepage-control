@@ -6,6 +6,9 @@ service postgresql start
 # Create user
 echo "CREATE USER ${PG_USERNAME} WITH SUPERUSER;" | psql
 
+# Create HypoPG extension
+echo "CREATE EXTENSION hypopg;" | psql
+
 # Restore schema; /dump.sql should be mounted while execing 
 psql postgres -U ${PG_USERNAME} < /data/dump.sql 
 
