@@ -24,7 +24,7 @@ class AWSRDSPostgresEnvironment(BaseEnvironment):
         # Starts tuning
         pass
 
-    def def apply_action(self, action_id, command, reboot_required, callback_url)::
+    def apply_action(self, action_id, command, reboot_required, callback_url)::
         # Applies an action
         pass
 
