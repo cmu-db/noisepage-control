@@ -12,6 +12,7 @@ GET_DATABASE_DATA_DIR_SCRIPT_NAME = "get_database_data_dir.sh"
 GET_DATABASE_LOGGING_DIR_SCRIPT = "get_database_logging_dir.sh"
 ENABLE_DATABASE_LOGGING_SCRIPT_NAME = "enable_database_logging.sh"
 DISABLE_DATABASE_LOGGING_SCRIPT_NAME = "disable_database_logging.sh"
+EXECUTE_COMMAND_SCRIPT_NAME = "execute_command.sh"
 
 GET_DATABASE_NAMES_SCRIPT = "get_database_names.sh"
 GET_DATABASE_CATALOG_SCRIPT = "get_database_catalog.sh"
@@ -268,3 +269,28 @@ class PrimaryExecutor():
 
 
         return self.get_logging_dir(), capture_start_time, capture_end_time
+
+
+    """
+    This method captures the workload on a primary instance.
+    Only allow one concurrent capture;
+    synchronised via `WORKLOAD_CAPTURE_MUTEX`
+    """
+    def apply_action(self, cmd, reboot_required, database_name):
+
+        
+        if reboot_required:
+            reboot_required = 1
+        else:
+            reboot_required = 0
+
+        command = '"%s" "%s" "%s" "%s" "%s" "%s"' % (
+            self.SCRIPTS_DIR / EXECUTE_COMMAND_SCRIPT_NAME,
+            cmd,
+            self.data_dir,
+            int(reboot_required),
+            self.postgres_port,
+            self.postgres_username,
+            database_name
+        )
+        subprocess.call(command, shell=True)

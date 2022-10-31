@@ -250,9 +250,22 @@ class SelfManagedPostgresEnvironment(BaseEnvironment):
 
             requests.post(url, files=files, timeout=3)
 
-    def apply_action(self):
-        # Applies an action
-        pass
+    def def apply_action(self, action_id, command, reboot_required, callback_url)::
+        url = "http://%s:%s/apply/" % (
+            self.config.replica_host,
+            "9000",
+        )
+
+        data = {
+            "db_name": self.config.db_name,
+            "action_id": action_id,
+            "command": command,
+            "reboot_required": reboot_required,
+            "callback_url": callback_url,
+        }        
+
+        headers = {"Content-type": "application/json"}
+        requests.post(url, data=json.dumps(data), headers=headers, timeout=3)
 
     def disconnect(self):
         # disconnects and tears down any running objects

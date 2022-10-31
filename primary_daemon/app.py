@@ -2,6 +2,7 @@ import os
 import uuid
 
 from flask import Flask, request
+import requests
 
 from pathlib import Path
 
@@ -49,6 +50,26 @@ def collect_workload():
 
     return 'OK'
 
+@app.route('/apply/', methods = ['POST'])
+def apply():
+
+    data = request.get_json()
+
+    action_id = data["action_id"]
+    db_name = data["db_name"]
+    reboot_required = data["reboot_required"]
+    callback_url = data["callback_url"]
+
+    print ("Starting thread with", data)
+
+    thread = Thread(
+        target=capture_and_transfer_workload, 
+        args=(resource_id, int(time_period), callback_url)
+    )
+    thread.start()
+
+    return 'OK'
+
 
 def capture_and_transfer_workload(resource_id, time_period, callback_url):
     log_dir, start_time, end_time = database_executor.capture_workload(time_period)
@@ -61,14 +82,15 @@ def collect_state():
 
     data = request.get_json()
     db_name = data["db_name"]
+    command = data["command"]
     resource_id = data["resource_id"]
     callback_url = data["callback_url"]
 
     print ("Starting thread with", data)
 
     thread = Thread(
-        target=capture_and_transfer_state, 
-        args=(db_name, resource_id, callback_url)
+        target=apply_action, 
+        args=(db_name, command, reboot_required, action_id, callback_url)
     )
     thread.start()
 
@@ -99,3 +121,17 @@ def capture_and_transfer_state(database_name, resource_id, callback_url):
 
     archive_path = create_state_archive(RESOURCE_DIR, identifier, state_dir)
     transfer_state_archive(archive_path, resource_id, callback_url)
+
+
+def apply_action(database_name, command, reboot_required, action_id, callback_url):
+
+    # Execute on primary
+    database_executor.apply_action(command, reboot_required, database_name)
+
+    # Hit callback
+    # TODO: Add failure status?
+    data = {
+        "action_id": action_id,
+    }        
+    headers = {"Content-type": "application/json"}
+    requests.post(url, data=json.dumps(data), headers=headers, timeout=3)

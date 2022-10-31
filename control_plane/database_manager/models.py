@@ -92,6 +92,9 @@ class TuningInstance(models.Model):
 class TuningAction(models.Model):
     tuning_action_id = models.CharField(max_length=36, default=autogenerate_uuid)
 
+    # The database
+    database_id = models.CharField(max_length=36)
+
     # The tuning instance that generated this action
     tuning_instance_id = models.CharField(max_length=36)
 
@@ -110,3 +113,5 @@ class TuningAction(models.Model):
         (ActionStatusType.APPLIED, "APPLIED"),
         (ActionStatusType.FAILED, "FAILED"),
     ]
+
+    status = models.CharField(max_length=32, choices=ACTION_STATUS_CHOICES)

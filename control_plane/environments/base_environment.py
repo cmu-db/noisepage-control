@@ -43,7 +43,7 @@ class BaseEnvironment(ABC):
         pass
 
     @abstractmethod
-    def apply_action(self):
+    def def apply_action(self, action_id, command, reboot_required, callback_url)::
         # Applies an action
         pass
 
