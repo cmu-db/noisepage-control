@@ -88,5 +88,8 @@ def apply_action(request, tuning_action_id):
         content_type="application/json"
     )
 
+@csrf_exempt
+@require_http_methods(["POST"])
 def apply_action_callback(request):
-    return HttpResponse("action callback")
+    print ("callback for ", action_id)
+    return HttpResponse("OK")

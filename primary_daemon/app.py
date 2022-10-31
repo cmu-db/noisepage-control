@@ -1,5 +1,6 @@
 import os
 import uuid
+import json
 
 from flask import Flask, request
 import requests
@@ -135,4 +136,4 @@ def apply_action(database_name, command, reboot_required, action_id, callback_ur
         "action_id": action_id,
     }        
     headers = {"Content-type": "application/json"}
-    requests.post(url, data=json.dumps(data), headers=headers, timeout=3)
+    requests.post(callback_url, data=json.dumps(data), headers=headers, timeout=3)

@@ -284,13 +284,12 @@ class PrimaryExecutor():
         else:
             reboot_required = 0
 
-        command = '"%s" "%s" "%s" "%s" "%s" "%s"' % (
+        command = '"%s" "%s" "%s" "%s" "%s" "%s" "%s"' % (
             self.SCRIPTS_DIR / EXECUTE_COMMAND_SCRIPT_NAME,
             cmd,
             self.data_dir,
             int(reboot_required),
             self.postgres_port,
             self.postgres_username,
-            database_name
-        )
+            database_name)
         subprocess.call(command, shell=True)
