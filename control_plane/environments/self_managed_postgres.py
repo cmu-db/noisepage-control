@@ -250,7 +250,7 @@ class SelfManagedPostgresEnvironment(BaseEnvironment):
 
             requests.post(url, files=files, timeout=3)
 
-    def apply_action(self, action_id, command, reboot_required, callback_url)::
+    def apply_action(self, action_id, command, reboot_required, callback_url):
         url = "http://%s:%s/apply/" % (
             self.config.replica_host,
             "9000",
