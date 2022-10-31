@@ -6,11 +6,11 @@ ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get update
 RUN apt-get install -y gnupg wget vim git 
 
-# Install PG
+# Install PG & HypoPG
 RUN echo "deb [arch=amd64] http://apt.postgresql.org/pub/repos/apt focal-pgdg main" > /etc/apt/sources.list.d/pgdg.list
 RUN wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -
 RUN apt-get update
-RUN apt-get install -y postgresql-14
+RUN apt-get install -y postgresql-14 postgresql-14-hypopg
 # We use a conf file that allows local login without password
 COPY pg_hba.conf /etc/postgresql/14/main/pg_hba.conf
 
