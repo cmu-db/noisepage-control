@@ -54,7 +54,7 @@ def get_actions(request, database_id):
 
 
 @csrf_exempt
-@require_http_methods(["GET"])
+@require_http_methods(["POST"])
 def apply_action(request, tuning_action_id):
 
     from database_manager.models import TuningAction

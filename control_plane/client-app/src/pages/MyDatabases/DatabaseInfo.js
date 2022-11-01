@@ -5,14 +5,10 @@ import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import DatabaseRegisterState from '../../util/databaseRegisterState';
+import parseDateTime from '../../util/parseDateTime';
 
 export default function DatabaseInfo(props) {
   const { databaseInfo: info } = props;
-
-  const parseCreated = (created) => {
-    const date = new Date(created);
-    return date.toLocaleString();
-  }
 
   const getStateColor = (state) => {
     switch (DatabaseRegisterState[state]) {
@@ -41,7 +37,7 @@ export default function DatabaseInfo(props) {
           </Link>
         </Grid>
         <Grid item xs={12} md={2}>
-          <Typography>Created At: {parseCreated(info.created)}</Typography>
+          <Typography>Created At: {parseDateTime(info.created)}</Typography>
         </Grid>
       </Grid>
     </Card>

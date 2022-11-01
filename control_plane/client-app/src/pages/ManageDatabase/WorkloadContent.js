@@ -12,14 +12,17 @@ import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
 import Input from '@mui/material/Input';
+import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
 import LibraryAdd from '@mui/icons-material/LibraryAdd';
 import Done from '@mui/icons-material/Done';
 import axios from '../../util/axios';
+import parseDateTime from '../../util/parseDateTime';
 
 export default function WorkloadContent({ databaseId }) {
   const [workloads, setWorkloads] = useState();
   const [timePeriod, setTimePeriod] = useState(10);
+  const [friendlyName, setFriendlyName] = useState('');
   const [workloadSubmitLoading, setWorkloadSubmitLoading] = useState(false);
   const [workloadSubmitSuccess, setWorkloadSubmitSuccess] = useState(false);
   
@@ -36,17 +39,26 @@ export default function WorkloadContent({ databaseId }) {
     fetchWorkloads();
   }, [databaseId]);
 
-  const handleInputChange = (event) => {
+  const handleTimePeriodInputChange = (event) => {
     setTimePeriod(event.target.value === '' ? 10 : Number(event.target.value));
+  };
+
+  const handleFriendlyNameInputChange = (event) => {
+    setFriendlyName(event.target.value);
   };
 
   const handleCollectWorkload = async (event) => {
     event.preventDefault();
     console.log(`Submit collect workload for ${timePeriod} seconds`);
+    console.log(`Friendly name: ${friendlyName}`);
     setWorkloadSubmitLoading(true);
 
     try {
-      const res = await axios.post(`/database_manager/databases/${databaseId}/workloads`, {time_period: timePeriod});
+      const body = {
+        time_period: timePeriod,
+        friendly_name: friendlyName
+      };
+      const res = await axios.post(`/database_manager/databases/${databaseId}/workloads`, body);
       console.log(res);
       setWorkloadSubmitSuccess(true);
       window.location.reload();
@@ -63,29 +75,30 @@ export default function WorkloadContent({ databaseId }) {
         <Table aria-label="simple table">
           <TableHead>
             <TableRow>
-              <TableCell>Workload ID</TableCell>
-              <TableCell>Workload Name</TableCell>
+              <TableCell>Friendly Name</TableCell>
+              <TableCell>Duration</TableCell>
               <TableCell>Status</TableCell>
+              <TableCell>Collected At</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {workloads.map((workload) => (
+            {workloads.sort((a, b) => new Date(b.collected_at) - new Date(a.collected_at)).map((workload) => (
               <TableRow
                 key={workload.resource_id}
                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
               >
-                <TableCell component="th" scope="row">
+                <TableCell>{workload.friendly_name}</TableCell>
+                <TableCell>{workload.metadata['time_period']}</TableCell>
+                <TableCell>
                   {workload.available
                     ?
                     <Link href={`${axios.defaults.baseURL}/database_manager/workload/${workload.resource_id}`} underline="always">
-                      {workload.resource_id}
+                      Available
                     </Link>
-                    :
-                    workload.resource_id
+                    : 'Collecting'
                   }
                 </TableCell>
-                <TableCell>{workload.resource_name}</TableCell>
-                <TableCell>{workload.available ? 'Available' : 'Collecting'}</TableCell>
+                <TableCell>{parseDateTime(workload.collected_at)}</TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -95,13 +108,13 @@ export default function WorkloadContent({ databaseId }) {
         <Grid item xs={12} sm={6} lg={4}>
           <Typography variant="h6" sx={{ mb: 3 }}>Collect a New Workload</Typography>
           <Box sx={{ display: 'flex' }}>
-            <Typography id="input-slider" sx={{ mr: 1, mt: 0.1 }}>
+            <Typography id="input-slider" sx={{ mr: 3, mt: 0.1 }}>
               Time Period:
             </Typography>
             <Input
               value={timePeriod}
               size="small"
-              onChange={handleInputChange}
+              onChange={handleTimePeriodInputChange}
               inputProps={{
                 step: 10,
                 min: 10,
@@ -109,6 +122,17 @@ export default function WorkloadContent({ databaseId }) {
                 'aria-labelledby': 'input-slider',
               }}
               sx={{ maxWidth: 70 }}
+            />
+          </Box>
+          <Box sx={{ display: 'flex', mt: 3 }}>
+            <Typography sx={{ mr: 1, mt: 0.4 }}>
+              Friendly Name:
+            </Typography>
+            <TextField
+              required
+              id="workload-friendly-name"
+              variant="standard"
+              onChange={handleFriendlyNameInputChange}
             />
           </Box>
           <LoadingButton
