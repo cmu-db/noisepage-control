@@ -75,8 +75,8 @@ class TuningInstance(models.Model):
     database_id = models.CharField(max_length=36)
 
     # The workload and state used to generate this tuning instance
-    workload_id = models.ForeignKey(Resource, on_delete=models.CASCADE, related_name = "workload_id")
-    state_id = models.ForeignKey(Resource, on_delete=models.CASCADE, related_name = "state_id")
+    workload_id = models.CharField(max_length=36)
+    state_id = models.CharField(max_length=36)
 
     TUNING_STATUS_CHOICES = [
         (TuningStatusType.RUNNING, "RUNNING"),
