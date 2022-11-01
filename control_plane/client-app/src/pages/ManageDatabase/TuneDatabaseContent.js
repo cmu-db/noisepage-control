@@ -11,19 +11,21 @@ import FormControl from '@mui/material/FormControl';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import LoadingButton from '@mui/lab/LoadingButton';
-import Link from '@mui/material/Link';
+import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import LibraryAdd from '@mui/icons-material/LibraryAdd';
 import axios from '../../util/axios';
 import TuningStatus from '../../util/tuningStatus';
+import parseDateTime from '../../util/parseDateTime';
 
 export default function TuneDatabaseContent({ databaseId }) {
   const [tuningInstances, setTuningInstances] = useState();
   const [workloads, setWorkloads] = useState();
   const [states, setStates] = useState();
-  const [selctedWorkloadId, setSelectedWorkloadId] = useState('');
+  const [selectedWorkloadId, setSelectedWorkloadId] = useState('');
   const [selectedStateId, setSelectedStateId] = useState('');
+  const [friendlyName, setFriendlyName] = useState('');
   
   const [submitLoading, setSubmitLoading] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
@@ -64,7 +66,7 @@ export default function TuneDatabaseContent({ databaseId }) {
   }, [databaseId]);
 
   const handleTuneDatabase = async (event) => {
-    if (!selctedWorkloadId || !selectedStateId) {
+    if (!selectedWorkloadId || !selectedStateId) {
       return;
     }
 
@@ -73,9 +75,14 @@ export default function TuneDatabaseContent({ databaseId }) {
     setSubmitLoading(true);
 
     try {
+      const body = {
+        workload_id: selectedWorkloadId,
+        state_id: selectedStateId,
+        friendly_name: friendlyName,
+      }
       const res = await axios.post(
         `/database_manager/databases/${databaseId}/tune`,
-        {workload_id: selctedWorkloadId, state_id: selectedStateId}
+        body
       );
       console.log(res);
       setSubmitSuccess(true);
@@ -95,6 +102,18 @@ export default function TuneDatabaseContent({ databaseId }) {
     setSelectedStateId(event.target.value);
   };
 
+  const handleFriendlyNameInputChange = (event) => {
+    setFriendlyName(event.target.value);
+  };
+
+  const getWorkloadName = (workloadId) => {
+    return workloads.find(w => w.resource_id === workloadId).friendly_name;
+  };
+
+  const getStateName = (stateId) => {
+    return states.find(w => w.resource_id === stateId).friendly_name;
+  };
+
   return tuningInstances && (
     <React.Fragment>
       <Typography variant="h6" sx={{ mx: 1, mb: 2 }}>Tuning History</Typography>
@@ -102,11 +121,11 @@ export default function TuneDatabaseContent({ databaseId }) {
         <Table aria-label="simple table">
           <TableHead>
             <TableRow>
-              <TableCell>Tuning Instance ID</TableCell>
-              <TableCell>Action Name</TableCell>
-              <TableCell>Workload ID</TableCell>
-              <TableCell>State ID</TableCell>
+              <TableCell>Friendly Name</TableCell>
+              <TableCell>Workload Name</TableCell>
+              <TableCell>State Name</TableCell>
               <TableCell>Status</TableCell>
+              <TableCell>Started At</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -115,11 +134,12 @@ export default function TuneDatabaseContent({ databaseId }) {
                 key={tuningInstance.tuning_instance_id}
                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
               >
-                <TableCell component="th" scope="row">{tuningInstance.tuning_instance_id}</TableCell>
-                <TableCell>{tuningInstance.action_name}</TableCell>
-                <TableCell>{tuningInstance.workload_id}</TableCell>
-                <TableCell>{tuningInstance.state_id}</TableCell>
+                {/* <TableCell component="th" scope="row">{tuningInstance.tuning_instance_id}</TableCell> */}
+                <TableCell>{tuningInstance.friendly_name}</TableCell>
+                <TableCell>{getWorkloadName(tuningInstance.workload_id)}</TableCell>
+                <TableCell>{getStateName(tuningInstance.state_id)}</TableCell>
                 <TableCell>{tuningInstance.status}</TableCell>
+                <TableCell>{parseDateTime(tuningInstance.started_at)}</TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -136,11 +156,11 @@ export default function TuneDatabaseContent({ databaseId }) {
               <Select
                 labelId="demo-simple-select-filled-label"
                 id="demo-simple-select-filled"
-                value={selctedWorkloadId}
+                value={selectedWorkloadId}
                 onChange={handleSelectedWorkloadIdChange}
               >
                 {workloads.map((workload) => (
-                  <MenuItem key={workload.resource_id} value={workload.resource_id}>{workload.resource_id}</MenuItem>
+                  <MenuItem key={workload.resource_id} value={workload.resource_id}>{getWorkloadName(workload.resource_id)}</MenuItem>
                 ))}
               </Select>
             </FormControl>
@@ -159,12 +179,23 @@ export default function TuneDatabaseContent({ databaseId }) {
                 onChange={handleSelectedStateIdChange}
               >
                 {states && states.map((state) => (
-                  <MenuItem key={state.resource_id} value={state.resource_id}>{state.resource_id}</MenuItem>
+                  <MenuItem key={state.resource_id} value={state.resource_id}>{getStateName(state.resource_id)}</MenuItem>
                 ))}
               </Select>
             </FormControl>
           </Box>      
         }
+        <Box sx={{ display: 'flex', mt: 3 }}>
+          <Typography sx={{ mr: 1, mt: 0.4 }}>
+            Friendly Name:
+          </Typography>
+          <TextField
+            required
+            id="tune-friendly-name"
+            variant="standard"
+            onChange={handleFriendlyNameInputChange}
+          />
+        </Box>
         <LoadingButton
           variant="contained"
           startIcon={<LibraryAdd />}

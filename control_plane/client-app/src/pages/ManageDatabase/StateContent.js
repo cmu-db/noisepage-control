@@ -10,13 +10,16 @@ import Paper from '@mui/material/Paper';
 import LoadingButton from '@mui/lab/LoadingButton';
 import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
+import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import LibraryAdd from '@mui/icons-material/LibraryAdd';
 import Done from '@mui/icons-material/Done';
 import axios from '../../util/axios';
+import parseDateTime from '../../util/parseDateTime';
 
 export default function StateContent({ databaseId }) {
   const [states, setStates] = useState();
+  const [friendlyName, setFriendlyName] = useState('');
   const [stateSubmitLoading, setStateSubmitLoading] = useState(false);
   const [stateSubmitSuccess, setStateSubmitSuccess] = useState(false);
   
@@ -33,13 +36,18 @@ export default function StateContent({ databaseId }) {
     fetchStates();
   }, [databaseId]);
 
+  const handleFriendlyNameInputChange = (event) => {
+    setFriendlyName(event.target.value);
+  };
+
   const handleCollectState = async (event) => {
     event.preventDefault();
     console.log(`Submit collect state`);
     setStateSubmitLoading(true);
 
     try {
-      const res = await axios.post(`/database_manager/databases/${databaseId}/states`);
+      const body = { friendly_name: friendlyName };
+      const res = await axios.post(`/database_manager/databases/${databaseId}/states`, body);
       console.log(res);
       setStateSubmitSuccess(true);
       window.location.reload();
@@ -56,9 +64,9 @@ export default function StateContent({ databaseId }) {
         <Table aria-label="simple table">
           <TableHead>
             <TableRow>
-              <TableCell>State ID</TableCell>
-              <TableCell>State Name</TableCell>
+              <TableCell>Friendly Name</TableCell>
               <TableCell>Status</TableCell>
+              <TableCell>Collected At</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -67,18 +75,17 @@ export default function StateContent({ databaseId }) {
                 key={state.resource_id}
                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
               >
-                <TableCell component="th" scope="row">
+                <TableCell>{state.friendly_name}</TableCell>
+                <TableCell>
                   {state.available
                     ?
                     <Link href={`${axios.defaults.baseURL}/database_manager/state/${state.resource_id}`} underline="always">
-                      {state.resource_id}
+                      Available
                     </Link>
-                    :
-                    state.resource_id
+                    : 'Collecting'
                   }
                 </TableCell>
-                <TableCell>{state.resource_name}</TableCell>
-                <TableCell>{state.available ? 'Available' : 'Collecting'}</TableCell>
+                <TableCell>{parseDateTime(state.collected_at)}</TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -86,6 +93,17 @@ export default function StateContent({ databaseId }) {
       </TableContainer>
       <Box sx={{ m: 1, mt: 4 }}>
         <Typography variant="h6">Collect a New State</Typography>
+        <Box sx={{ display: 'flex', mt: 3 }}>
+          <Typography sx={{ mr: 1, mt: 0.4 }}>
+            Friendly Name:
+          </Typography>
+          <TextField
+            required
+            id="state-friendly-name"
+            variant="standard"
+            onChange={handleFriendlyNameInputChange}
+          />
+        </Box>
         <LoadingButton
           variant="contained"
           startIcon={stateSubmitSuccess ? <Done /> : <LibraryAdd />}
