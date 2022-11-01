@@ -91,7 +91,7 @@ class TuningInstance(models.Model):
     started_at = models.DateTimeField(auto_now_add=True)
 
     # When the tuning finished
-    finished_at = models.DateTimeField(blank = True)
+    finished_at = models.DateTimeField(null=True, blank=True)
 
     # The file name of the action
     action_name = models.CharField(max_length=120, blank=True)
