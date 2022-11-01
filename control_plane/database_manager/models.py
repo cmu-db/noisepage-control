@@ -87,6 +87,9 @@ class TuningInstance(models.Model):
 
     status = models.CharField(max_length=32, choices=TUNING_STATUS_CHOICES)
 
+    # When the tuning started
+    started_at = models.DateTimeField(auto_now_add=True)
+
     # When the tuning finished
     finished_at = models.DateTimeField(blank = True)
 

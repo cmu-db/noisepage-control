@@ -25,7 +25,7 @@ def tune(request, database_id):
         return get_tuning_history(request, database_id)
 
 
-def tune_database(request, database_id, workload_id, state_id):
+def tune_database(request, database_id, workload_id, state_id, friendly_name):
     logger.debug("tune_database for database %s, workload %s, state %s", database_id, workload_id, state_id, friendly_name)
     # TODO: Implement this
 

@@ -13,7 +13,7 @@ class Resource(models.Model):
     database_id = models.CharField(max_length=36)
     friendly_name = models.CharField(max_length=512, unique=True, null=False)
 
-    # When the resource was collected
+    # When the resource started being collected
     collected_at = models.DateTimeField(null=True)
 
     # When the resource was available
