@@ -8,6 +8,7 @@ from django.conf import settings
 from environments.environment import init_environment
 from resource_manager.views import get_resource_filepath
 from database_manager.types.tuningstatus import TuningStatusType
+from database_manager.types.action_status import ActionStatusType
 
 
 logger = logging.getLogger("control_plane")
@@ -49,7 +50,7 @@ def tune_database(request, database_id, workload_id, state_id):
 
     # TODO: Move this to async flow; file transfer can take time
     callback_url = f"{settings.CONTROL_PLANE_CALLBACK_BASE_URL}/database_manager/tune/tune_database_callback/"
-    env.tune(workload_file_path, tuning_instance.tuning_instance_id, state_file_path, callback_url)
+    env.tune(tuning_instance.tuning_instance_id, workload_file_path, state_file_path, callback_url)
 
     return HttpResponse("OK")
 
