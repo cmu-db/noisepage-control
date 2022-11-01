@@ -125,7 +125,8 @@ def is_self_managed_postgress_config_valid(config):
 def register_new_self_managed_postgres_database(request, database):
 
     # Save primary key
-    resource_id = initialise_resource(database.database_id, ResourceType.KEY)
+    resource_id = initialise_resource(
+        database.database_id, ResourceType.KEY, "%s_%s" % (database.database_id, "pkey"))
     primary_key_resource = save_resource(
         resource_id, 
         request.FILES["primary_key_file"].read(), 
@@ -133,7 +134,8 @@ def register_new_self_managed_postgres_database(request, database):
     )
 
     # Save replica key
-    resource_id = initialise_resource(database.database_id, ResourceType.KEY)
+    resource_id = initialise_resource(
+        database.database_id, ResourceType.KEY, "%s_%s" % (database.database_id, "rkey"))
     replica_key_resource = save_resource(
         resource_id, 
         request.FILES["replica_key_file"].read(), 

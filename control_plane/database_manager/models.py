@@ -4,7 +4,7 @@ from django.db import models
 from django.core.exceptions import ValidationError
 
 from environments.environment_types import EnvironmentType
-from django.contrib.postgres.fields import JSONField, ArrayField
+from django.contrib.postgres.fields import ArrayField
 
 from .database_state_types import DatabaseStateType
 
@@ -73,6 +73,7 @@ class SelfManagedPostgresConfig(models.Model):
 class TuningInstance(models.Model):
     tuning_instance_id = models.CharField(max_length=36, default=autogenerate_uuid)
     database_id = models.CharField(max_length=36)
+    friendly_name = models.CharField(max_length=36, unique=True)
 
     # The workload and state used to generate this tuning instance
     workload_id = models.CharField(max_length=36)
@@ -85,6 +86,9 @@ class TuningInstance(models.Model):
     ]
 
     status = models.CharField(max_length=32, choices=TUNING_STATUS_CHOICES)
+
+    # When the tuning finished
+    finished_at = models.DateField(blank = True)
 
     # The file name of the action
     action_name = models.CharField(max_length=120, blank=True)

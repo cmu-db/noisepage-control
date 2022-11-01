@@ -1,5 +1,6 @@
 import logging
 import os
+from datetime import datetime
 
 from django.conf import settings
 
@@ -26,7 +27,7 @@ def initialise_resource_dir(database_id):
         % (database_id)
     )
 
-def initialise_resource(database_id, resource_type):
+def initialise_resource(database_id, resource_type, friendly_name, metadata = {}):
     """
     Creates a resource entry which tracks the workload
     to be collected. This entry would be updated
@@ -41,7 +42,9 @@ def initialise_resource(database_id, resource_type):
     resource = Resource(
         database_id=database_id,
         resource_type=resource_type,
+        friendly_name=friendly_name,
         available=False,
+        metadata=metadata,
     )
     resource.save()
 
@@ -79,6 +82,7 @@ def save_resource(resource_id, resource_file, resource_filename):
     # Update resource entry
     resource.available = True
     resource.resource_name = resource_filename
+    resource.available_at = datetime.now()
     resource.save()
 
     return resource
