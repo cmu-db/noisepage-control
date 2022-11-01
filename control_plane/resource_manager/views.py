@@ -45,6 +45,7 @@ def initialise_resource(database_id, resource_type, friendly_name, metadata = {}
         friendly_name=friendly_name,
         available=False,
         metadata=metadata,
+        collected_at=datetime.now(),
     )
     resource.save()
 
