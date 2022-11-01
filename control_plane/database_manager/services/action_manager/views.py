@@ -62,6 +62,8 @@ def apply_action(request, tuning_action_id):
 
     tuning_action = TuningAction.objects.get(tuning_action_id = tuning_action_id)
 
+    # TODO: Prevent applying actions not in "NOT_APPLIED" state
+
     # Get database env
     database_id = tuning_action.database_id
     database = Database.objects.get(database_id = database_id)
@@ -91,6 +93,14 @@ def apply_action(request, tuning_action_id):
 @csrf_exempt
 @require_http_methods(["POST"])
 def apply_action_callback(request):
+
+    from database_manager.models import TuningAction
+
     data = json.loads(request.body.decode('utf-8'))
-    print ("callback for ", data)
+    tuning_action_id = data["action_id"]
+    tuning_action = TuningAction.objects.get(tuning_action_id = tuning_action_id)
+    
+    tuning_action.status = ActionStatusType.APPLIED
+    tuning_action.save()
+
     return HttpResponse("OK")

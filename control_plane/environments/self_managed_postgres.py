@@ -224,7 +224,7 @@ class SelfManagedPostgresEnvironment(BaseEnvironment):
         # Gets metrics and archives it
         pass
 
-    def tune(self, workload_file_path, state_file_path, callback_url):
+    def tune(self, tuning_instance_id, workload_file_path, state_file_path, callback_url):
         # Starts tuning
         print ("self managed postgress tune", workload_file_path, state_file_path)
 
@@ -234,6 +234,7 @@ class SelfManagedPostgresEnvironment(BaseEnvironment):
         )
 
         data = {
+            "tuning_instance_id": tuning_instance_id,
             "db_name": self.config.db_name,
             "callback_url": callback_url,
         }

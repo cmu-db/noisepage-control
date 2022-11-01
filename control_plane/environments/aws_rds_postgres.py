@@ -20,7 +20,7 @@ class AWSRDSPostgresEnvironment(BaseEnvironment):
         # Gets metrics and archives it
         pass
 
-    def tune(self, workload_file_path, state_file_path, callback_url):
+    def tune(self, tuning_instance_id, workload_file_path, state_file_path, callback_url):
         # Starts tuning
         pass
 
