@@ -90,7 +90,7 @@ function RegisterForm({ environment }) {
             name="db_name"
             label="Database Name"
             variant="standard"
-            defaultValue="noisepage_control"
+            defaultValue="postgres"
             onChange={handleInput}
           />
           <TextField
