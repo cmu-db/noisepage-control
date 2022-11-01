@@ -41,7 +41,7 @@ function TuningInstanceRow({ databaseId, tuningInstance, getWorkloadName, getSta
       }
     }
     fetchActions();
-  }, [databaseId]);
+  }, [databaseId, tuningInstance.tuning_instance_id]);
 
   const notApplied = (action) => action.status === 'NOT_APPLIED';
 
