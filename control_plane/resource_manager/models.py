@@ -11,7 +11,7 @@ class Resource(models.Model):
 
     resource_id = models.CharField(max_length=36, default=autogenerate_uuid)
     database_id = models.CharField(max_length=36)
-    friendly_name = models.CharField(max_length=36, unique=True, null=False)
+    friendly_name = models.CharField(max_length=512, unique=True, null=False)
 
     # When the resource was available
     available_at = models.DateField(null = True)

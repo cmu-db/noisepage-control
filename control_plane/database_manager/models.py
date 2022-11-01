@@ -73,7 +73,7 @@ class SelfManagedPostgresConfig(models.Model):
 class TuningInstance(models.Model):
     tuning_instance_id = models.CharField(max_length=36, default=autogenerate_uuid)
     database_id = models.CharField(max_length=36)
-    friendly_name = models.CharField(max_length=36, unique=True)
+    friendly_name = models.CharField(max_length=512, unique=True)
 
     # The workload and state used to generate this tuning instance
     workload_id = models.CharField(max_length=36)
