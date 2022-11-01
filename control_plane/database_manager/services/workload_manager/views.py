@@ -22,13 +22,13 @@ def index(request):
 @require_http_methods(["GET", "POST"])
 def workloads(request, database_id):
     if request.method == "POST":
-        body = json.loads(request.body.decode("utf-8"))
-        return collect_workload(request, database_id, body["time_period"])
+        data = json.loads(request.body.decode("utf-8"))
+        return collect_workload(request, database_id, data["time_period"], data["friendly_name"])
     elif request.method == "GET":
         return get_workloads(request, database_id)
 
 
-def collect_workload(request, database_id, time_period):
+def collect_workload(request, database_id, time_period, friendly_name):
 
     from database_manager.models import Database
 
@@ -37,7 +37,12 @@ def collect_workload(request, database_id, time_period):
     env = init_environment(database)
 
     # Init a new resource
-    resource_id = initialise_resource(database_id, ResourceType.WORKLOAD)
+    resource_id = initialise_resource(
+        database_id, 
+        ResourceType.WORKLOAD, 
+        friendly_name, 
+        {"time_period": time_period}
+    )
     print ("New resource", resource_id)
 
     callback_url = f"{settings.CONTROL_PLANE_CALLBACK_BASE_URL}/database_manager/workload/collect_workload_callback/"

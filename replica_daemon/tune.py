@@ -3,11 +3,14 @@ import shutil
 import os
 from pathlib import Path
 import docker
+import json
+
+import requests
 
 # IMAGE_NAME = "kushagr2/garbage:v2" # Only garbage
 IMAGE_NAME = "kushagr2/garbage:v3" # Garbage + Index
 
-def tune_database(callback_url, db_name):
+def tune_database(tuning_instance_id, db_name, callback_url):
 
     # Hack to get the workload and state dir. Need to figure this out
     with tarfile.open("workload.tar.gz") as w:
@@ -63,4 +66,24 @@ def tune_database(callback_url, db_name):
     os.remove("state.tar.gz")
     shutil.rmtree(state_dir_name)
 
-    print (exec_logs)
+
+
+    # Dummy data; TODO: Get from container out
+    data = {
+        "actions": [
+            {
+                "command": "CREATE INDEX ppp on resource_manager_resource (available);",
+                "benefit": 300.0,
+                "reboot_required": False
+            }, {
+                "command": "ALTER SYSTEM SET max_connections TO '20';",
+                "benefit": 200.0,
+                "reboot_required": True
+            }
+        ],
+        "tuning_instance_id": tuning_instance_id,
+        "exec_logs": exec_logs
+    }
+
+    headers = {"Content-type": "application/json"}
+    requests.post(callback_url, data=json.dumps(data), headers=headers, timeout=3)

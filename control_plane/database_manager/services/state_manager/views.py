@@ -23,7 +23,8 @@ def index(request):
 @require_http_methods(["GET", "POST"])
 def states(request, database_id):
     if request.method == "POST":
-        return collect_state(request, database_id)
+        data = json.loads(request.body.decode("utf-8"))
+        return collect_state(request, database_id, data["friendly_name"])
     elif request.method == "GET":
         return get_states(request, database_id)
 
@@ -38,7 +39,7 @@ def get_states(request, database_id):
     )
 
 
-def collect_state(request, database_id):
+def collect_state(request, database_id, friendly_name):
 
     from database_manager.models import Database
 
@@ -48,7 +49,7 @@ def collect_state(request, database_id):
     print (database)
 
     # Init a new resource
-    resource_id = initialise_resource(database_id, ResourceType.STATE)
+    resource_id = initialise_resource(database_id, ResourceType.STATE, friendly_name)
     print ("New resource", resource_id)
 
     # Send request to remote executor

@@ -31,10 +31,11 @@ def tune():
 
     callback_url = data["callback_url"]
     db_name = data["db_name"]
+    tuning_instance_id = data["tuning_instance_id"]
 
     thread = Thread(
         target=tune_database, 
-        args=(callback_url, db_name)
+        args=(tuning_instance_id, db_name, callback_url)
     )
     thread.start()
 

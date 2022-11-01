@@ -224,7 +224,7 @@ class SelfManagedPostgresEnvironment(BaseEnvironment):
         # Gets metrics and archives it
         pass
 
-    def tune(self, workload_file_path, state_file_path, callback_url):
+    def tune(self, tuning_instance_id, workload_file_path, state_file_path, callback_url):
         # Starts tuning
         print ("self managed postgress tune", workload_file_path, state_file_path)
 
@@ -234,6 +234,7 @@ class SelfManagedPostgresEnvironment(BaseEnvironment):
         )
 
         data = {
+            "tuning_instance_id": tuning_instance_id,
             "db_name": self.config.db_name,
             "callback_url": callback_url,
         }
@@ -250,9 +251,22 @@ class SelfManagedPostgresEnvironment(BaseEnvironment):
 
             requests.post(url, files=files, timeout=3)
 
-    def apply_action(self):
-        # Applies an action
-        pass
+    def apply_action(self, action_id, command, reboot_required, callback_url):
+        url = "http://%s:%s/apply/" % (
+            self.config.primary_host,
+            "9000",
+        )
+
+        data = {
+            "db_name": self.config.db_name,
+            "action_id": action_id,
+            "command": command,
+            "reboot_required": reboot_required,
+            "callback_url": callback_url,
+        }        
+
+        headers = {"Content-type": "application/json"}
+        requests.post(url, data=json.dumps(data), headers=headers, timeout=3)
 
     def disconnect(self):
         # disconnects and tears down any running objects

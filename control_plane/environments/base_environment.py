@@ -38,12 +38,12 @@ class BaseEnvironment(ABC):
         pass
 
     @abstractmethod
-    def tune(self, workload_file_path, state_file_path, callback_url):
+    def tune(self, tuning_instance_id, workload_file_path, state_file_path, callback_url):
         # Starts tuning
         pass
 
     @abstractmethod
-    def apply_action(self):
+    def apply_action(self, action_id, command, reboot_required, callback_url):
         # Applies an action
         pass
 
