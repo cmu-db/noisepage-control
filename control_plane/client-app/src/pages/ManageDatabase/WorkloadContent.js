@@ -82,7 +82,7 @@ export default function WorkloadContent({ databaseId }) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {workloads.map((workload) => (
+            {workloads.sort((a, b) => new Date(b.collected_at) - new Date(a.collected_at)).map((workload) => (
               <TableRow
                 key={workload.resource_id}
                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}

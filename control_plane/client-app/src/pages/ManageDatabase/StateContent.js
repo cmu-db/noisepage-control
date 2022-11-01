@@ -70,7 +70,7 @@ export default function StateContent({ databaseId }) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {states.map((state) => (
+            {states.sort((a, b) => new Date(b.collected_at) - new Date(a.collected_at)).map((state) => (
               <TableRow
                 key={state.resource_id}
                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
