@@ -63,7 +63,7 @@ def get_tuning_history(request, database_id):
     from database_manager.models import TuningInstance
     tuning_instances = list(TuningInstance.objects.filter(database_id=database_id).values())
     return HttpResponse(
-        json.dumps(tuning_instances),
+        json.dumps(tuning_instances, default=str),
         content_type="application/json"
     )
 

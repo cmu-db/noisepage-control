@@ -34,7 +34,7 @@ def get_states(request, database_id):
     from resource_manager.models import Resource
     states = list(Resource.objects.filter(database_id=database_id, resource_type=ResourceType.STATE).values())
     return HttpResponse(
-        json.dumps(states),
+        json.dumps(states, default=str),
         content_type="application/json"
     )
 

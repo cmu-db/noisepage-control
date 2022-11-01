@@ -77,7 +77,7 @@ def get_workloads(request, database_id):
     from resource_manager.models import Resource
     workloads = list(Resource.objects.filter(database_id=database_id, resource_type=ResourceType.WORKLOAD).values())
     return HttpResponse(
-        json.dumps(workloads),
+        json.dumps(workloads, default=str),
         content_type="application/json"
     )
 

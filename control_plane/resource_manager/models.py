@@ -14,7 +14,7 @@ class Resource(models.Model):
     friendly_name = models.CharField(max_length=512, unique=True, null=False)
 
     # When the resource started being collected
-    collected_at = models.DateTimeField(null=True)
+    collected_at = models.DateTimeField(auto_now_add=True)
 
     # When the resource was available
     available_at = models.DateTimeField(null=True)
