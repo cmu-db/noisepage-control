@@ -88,7 +88,7 @@ class TuningInstance(models.Model):
     status = models.CharField(max_length=32, choices=TUNING_STATUS_CHOICES)
 
     # When the tuning finished
-    finished_at = models.DateField(blank = True)
+    finished_at = models.DateTimeField(blank = True)
 
     # The file name of the action
     action_name = models.CharField(max_length=120, blank=True)

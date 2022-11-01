@@ -14,7 +14,7 @@ class Resource(models.Model):
     friendly_name = models.CharField(max_length=512, unique=True, null=False)
 
     # When the resource was available
-    available_at = models.DateField(null = True)
+    available_at = models.DateTimeField(null = True)
 
     # Other stuff, such as worload duration
     metadata = models.JSONField()
