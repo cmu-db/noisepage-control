@@ -14,6 +14,10 @@ RUN apt-get install -y postgresql-14 postgresql-14-hypopg
 # We use a conf file that allows local login without password
 COPY pg_hba.conf /etc/postgresql/14/main/pg_hba.conf
 
+# TODO: this is hard coded for now because Mike's stuff can't parse ddls with table schema prefix.
+# Copy epinion ddl to image for garbage + index_selection to work.
+COPY epinion_ddl.sql /epinion_ddl.sql
+
 # Clone generation code
 RUN git clone https://github.com/mkpjnx/noisepage-pilot.git
 # Make postgres the owner
