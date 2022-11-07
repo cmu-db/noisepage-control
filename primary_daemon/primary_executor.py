@@ -17,7 +17,8 @@ EXECUTE_COMMAND_SCRIPT_NAME = "execute_command.sh"
 GET_DATABASE_NAMES_SCRIPT = "get_database_names.sh"
 GET_DATABASE_CATALOG_SCRIPT = "get_database_catalog.sh"
 GET_DATABASE_INDEX_SCRIPT = "get_database_index.sh"
-GET_DATABASE_DUMP_SCRIPT = "get_database_dump.sh"
+GET_DATABASE_DDL_DUMP_SCRIPT = "get_database_ddl_dump.sh"
+GET_DATABASE_DATA_DUMP_SCRIPT = "get_database_data_dump.sh"
 
 
 class PrimaryExecutor():
@@ -173,15 +174,15 @@ class PrimaryExecutor():
 
 
         """
-        catalog = out.decode("utf-8")
-        catalog = "\n".join(catalog.split("\n")[:-3])
-        return catalog
+        indexes = out.decode("utf-8")
+        indexes = "\n".join(indexes.split("\n")[:-3])
+        return indexes
 
-    """ Get dump for a given database (only schema for now)"""
-    def get_database_dump(self, database_name):
+    """ Get ddl dump for a given database"""
+    def get_database_ddl_dump(self, database_name):
 
         command = '"%s" "%s" "%s" "%s" ' % (
-            self.SCRIPTS_DIR / GET_DATABASE_DUMP_SCRIPT,
+            self.SCRIPTS_DIR / GET_DATABASE_DDL_DUMP_SCRIPT,
             self.postgres_port,
             self.postgres_username,
             database_name
@@ -192,8 +193,15 @@ class PrimaryExecutor():
         )
         out, err = process.communicate()
 
-        catalog = out.decode("utf-8")
-        return catalog
+        ddl = out.decode("utf-8")
+        return ddl
+
+    """ Get data dump for a given database"""
+    def get_database_data_dump(self, database_name):
+        # TODO: Implement this
+        # Use "pg_dump -U username -p port -F t database_name > data_dump.tar"
+        # to get the data dump
+        pass
 
     """
     Enable logging on the database.
