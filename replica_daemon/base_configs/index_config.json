@@ -8,7 +8,7 @@
     },
 
     "explicit_database_name": "{{{db_name}}}",
-    "explicit_ddl_path": ["/", "epinion_ddl.sql"],
+    "explicit_ddl_path": ["/data/", "ddl_dump.sql"],
 
     "benchmark_name": "custom_{{{db_name}}}",
     "explicit_query_file": "/data/sample.sql",
