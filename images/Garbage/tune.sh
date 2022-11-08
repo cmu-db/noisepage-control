@@ -18,10 +18,10 @@ pg_restore -U ${PG_USERNAME} -F t -d postgres < /data/data_dump.tar
 
 ### Hacks to pypass index_selection tool parsing issues
 # Delete all ';' in workload.csv
-sed -i 's/;/./g' /data/workload.csv
+sed 's/;/./g' /data/workload.csv > /data/workload_.csv
 
 # Remove all table schema prefixes in ddl_dump.sql
-python3 remove_table_schema.py /data/ddl_dump.sql
+python3 remove_table_schema.py /data/ddl_dump.sql /data/ddl_dump_.sql
 ###
 
 # Move to directory

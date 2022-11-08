@@ -36,8 +36,9 @@ def remove_table_schema(ddl):
 
 if __name__ == "__main__":
     ddl_filename = sys.argv[1]
+    ddl_output_filename = sys.argv[2]
     with open(ddl_filename, "r") as fp:
         ddl = fp.read()
         ddl = remove_table_schema(ddl)
-    with open(ddl_filename, "w") as fp:
+    with open(ddl_output_filename, "w") as fp:
         fp.write(ddl)

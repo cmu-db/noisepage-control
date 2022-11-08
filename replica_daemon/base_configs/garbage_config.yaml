@@ -6,7 +6,7 @@ Connector:
   port: 5432
 Workloads:
   - name: workload # Name used to reference 
-    csvlog: /data/workload.csv # Input CSVLog
+    csvlog: /data/workload_.csv # Input CSVLog
     export: # Export a sample of the queries seen in the csv log, this is used for the index tuner
       sample_size: 500
       output: /data/sample.sql #Output file
