@@ -121,10 +121,10 @@ def capture_and_transfer_state(database_name, resource_id, callback_url):
     with open(state_dir / "ddl_dump.sql", "w") as fp:
         fp.write(ddl_dump)
 
-    # TODO: Write data dump
-    # data_dump = database_executor.get_database_data_dump(database_name)
-    # with open(state_dir / "data_dump.tar", "w") as fp:
-    #     fp.write(data_dump)
+    # Write ddl dump
+    dump_tar = database_executor.get_database_data_dump_tar(database_name)
+    with open(state_dir / "data_dump.tar", "w") as fp:
+        fp.write(dump_tar)
 
     archive_path = create_state_archive(RESOURCE_DIR, identifier, state_dir)
     transfer_state_archive(archive_path, resource_id, callback_url)

@@ -18,7 +18,7 @@ GET_DATABASE_NAMES_SCRIPT = "get_database_names.sh"
 GET_DATABASE_CATALOG_SCRIPT = "get_database_catalog.sh"
 GET_DATABASE_INDEX_SCRIPT = "get_database_index.sh"
 GET_DATABASE_DDL_DUMP_SCRIPT = "get_database_ddl_dump.sh"
-GET_DATABASE_DATA_DUMP_SCRIPT = "get_database_data_dump.sh"
+GET_DATABASE_DATA_DUMP_TAR_SCRIPT = "get_database_data_dump_tar.sh"
 
 
 class PrimaryExecutor():
@@ -196,12 +196,22 @@ class PrimaryExecutor():
         ddl = out.decode("utf-8")
         return ddl
 
-    """ Get data dump for a given database"""
-    def get_database_data_dump(self, database_name):
-        # TODO: Implement this
-        # Use "pg_dump -U username -p port -F t database_name > data_dump.tar"
-        # to get the data dump
-        pass
+    """ Get data dump (tar) for a given database"""
+    def get_database_data_dump_tar(self, database_name):
+        command = '"%s" "%s" "%s" "%s" ' % (
+            self.SCRIPTS_DIR / GET_DATABASE_DATA_DUMP_TAR_SCRIPT,
+            self.postgres_port,
+            self.postgres_username,
+            database_name
+        )
+
+        process = subprocess.Popen(
+            command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE
+        )
+        out, err = process.communicate()
+
+        dump_tar = out.decode("utf-8")
+        return dump_tar
 
     """
     Enable logging on the database.
