@@ -208,9 +208,8 @@ class PrimaryExecutor():
         process = subprocess.Popen(
             command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE
         )
-        out, err = process.communicate()
 
-        dump_tar = out.decode("utf-8")
+        dump_tar, err = process.communicate()
         return dump_tar
 
     """
