@@ -27,6 +27,9 @@ RUN git clone https://github.com/mkpjnx/index_selection_evaluation.git
 RUN chown -R postgres index_selection_evaluation
 RUN pip3 install pyhdb
 
+# Preprocessing script
+COPY remove_table_schema.py remove_table_schema.py
+
 # Tuning exec script
 COPY tune.sh tune.sh
 RUN chmod +x tune.sh

@@ -8,8 +8,8 @@
     },
 
     "explicit_database_name": "{{{db_name}}}",
-    "explicit_ddl_path": ["/data/", "dump.sql"],
-    
+    "explicit_ddl_path": ["/data/", "ddl_dump_.sql"],
+
     "benchmark_name": "custom_{{{db_name}}}",
     "explicit_query_file": "/data/sample.sql",
     

@@ -20,7 +20,8 @@ def tune_database(tuning_instance_id, db_name, callback_url):
 
     with tarfile.open("state.tar.gz") as w:
         state_dir_name = Path(w.getmembers()[0].name)
-        pgdump_filepath = state_dir_name / "dump.sql"
+        ddl_dump_filepath = state_dir_name / "ddl_dump.sql"
+        data_dump_filepath = state_dir_name / "data_dump.tar"
         w.extractall()
 
     shutil.rmtree("data", ignore_errors = True) # ignore doesn't exist error
@@ -28,7 +29,8 @@ def tune_database(tuning_instance_id, db_name, callback_url):
     os.mkdir("data", 0o777)
 
     shutil.copy(workload_filepath, "data/workload.csv")
-    shutil.copy(pgdump_filepath, "data/dump.sql")
+    shutil.copy(ddl_dump_filepath, "data/ddl_dump.sql")
+    shutil.copy(data_dump_filepath, "data/data_dump.tar")
 
     # Generate garbage config
     with open("base_configs/garbage_config.yaml", "r") as fp:
