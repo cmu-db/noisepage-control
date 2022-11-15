@@ -9,6 +9,9 @@ import Navigator from './components/Navigator';
 import RegisterDatabase from './pages/RegisterDatabases';
 import MyDatabases from './pages/MyDatabases';
 import ManageDatabase from './pages/ManageDatabase';
+import WorkloadContent from './pages/ManageDatabase/WorkloadContent';
+import StateContent from './pages/ManageDatabase/StateContent';
+import TuneDatabaseContent from './pages/ManageDatabase/TuneDatabaseContent';
 import theme from './theme';
 
 function Copyright() {
@@ -60,7 +63,12 @@ export default function App() {
               <Route path="/" exact element={<Navigate to="/databases" />} />
               <Route path="/register" element={<RegisterDatabase />} />
               <Route path="/databases" element={<MyDatabases />} />
-              <Route path="/databases/:id" element={<ManageDatabase />} />
+              <Route path="/databases/:id" element={<ManageDatabase />} >
+                <Route index element={<Navigate to="workloads" />} />
+                <Route path="workloads" element={<WorkloadContent />} />
+                <Route path="states" element={<StateContent />} />
+                <Route path="tunes" element={<TuneDatabaseContent />} />
+              </Route>
             </Routes>
             <Box component="footer" sx={{ p: 2, bgcolor: '#eaeff1' }}>
               <Copyright />

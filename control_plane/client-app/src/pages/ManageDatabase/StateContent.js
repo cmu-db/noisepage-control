@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -17,7 +18,8 @@ import Done from '@mui/icons-material/Done';
 import axios from '../../util/axios';
 import parseDateTime from '../../util/parseDateTime';
 
-export default function StateContent({ databaseId }) {
+export default function StateContent() {
+  const { id: databaseId } = useParams();
   const [states, setStates] = useState();
   const [name, setName] = useState('');
   const [stateSubmitLoading, setStateSubmitLoading] = useState(false);

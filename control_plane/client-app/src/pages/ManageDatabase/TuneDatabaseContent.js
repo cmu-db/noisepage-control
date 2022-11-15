@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import useInterval from 'react-useinterval';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -136,7 +137,8 @@ function TuningInstanceRow({ databaseId, tuningInstance, getWorkloadName, getSta
   )
 }
 
-export default function TuneDatabaseContent({ databaseId }) {
+export default function TuneDatabaseContent() {
+  const { id: databaseId } = useParams();
   const [tuningInstances, setTuningInstances] = useState();
   const [workloads, setWorkloads] = useState();
   const [states, setStates] = useState();

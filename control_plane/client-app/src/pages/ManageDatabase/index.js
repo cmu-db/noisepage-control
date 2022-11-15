@@ -1,7 +1,6 @@
 import * as React from 'react';
-import { useParams } from 'react-router-dom';
-import PropTypes from 'prop-types';
-import { Routes, Route, Link } from "react-router-dom";
+import { useParams, useLocation } from 'react-router-dom';
+import { Link, Outlet } from "react-router-dom";
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
@@ -9,51 +8,18 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Header from '../../components/Header';
 import DetailContent from './DetailContent';
-import WorkloadContent from './WorkloadContent';
-import StateContent from './StateContent';
-import TuneDatabaseContent from './TuneDatabaseContent';
-
-function TabPanel(props) {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-      aria-labelledby={`simple-tab-${index}`}
-      {...other}
-    >
-      {value === index && (
-        <Box sx={{ p: 3 }}>
-          {children}
-        </Box>
-      )}
-    </div>
-  );
-}
-
-TabPanel.propTypes = {
-  children: PropTypes.node,
-  index: PropTypes.number.isRequired,
-  value: PropTypes.number.isRequired,
-};
-
-function a11yProps(index) {
-  return {
-    id: `simple-tab-${index}`,
-    'aria-controls': `simple-tabpanel-${index}`,
-  };
-}
 
 function ManageDatabase() {
   const { id } = useParams()
+  const location = useLocation();
 
-  const [activeTabIdx, setActiveTabIdx] = React.useState(0);
-
-  const handleChange = (event, newValue) => {
-    setActiveTabIdx(newValue);
-  };
+  const getPathOrDefault = () => {
+    const path = location.pathname.split('/').at(-1);
+    if (path === id) {
+      return 'workloads';
+    }
+    return path;
+  }
 
   return (
     <React.Fragment>
@@ -69,21 +35,15 @@ function ManageDatabase() {
         </Paper>
         <Paper sx={{ minWidth: 275 }}>
           <Box sx={{ borderBottom: 1, borderColor: 'divider', p: 1 }}>
-            <Tabs value={activeTabIdx} onChange={handleChange} aria-label="basic tabs example">
-              <Tab label="Workloads" disableRipple sx={{ fontSize: 17 }} {...a11yProps(0)} />
-              <Tab label="States" disableRipple sx={{ fontSize: 17 }} {...a11yProps(1)} />
-              <Tab label="Tune Database" disableRipple sx={{ fontSize: 17 }} {...a11yProps(2)} />
+            <Tabs value={getPathOrDefault()} >
+              <Tab value="workloads" component={Link} to="workloads" label="Workloads" disableRipple sx={{ fontSize: 17 }} />
+              <Tab value="states" component={Link} to="states" label="States" disableRipple sx={{ fontSize: 17 }} />
+              <Tab value="tunes" component={Link} to="tunes" label="Tune Database" disableRipple sx={{ fontSize: 17 }} />
             </Tabs>
           </Box>
-          <TabPanel value={activeTabIdx} index={0}>
-            <WorkloadContent databaseId={id} />
-          </TabPanel>
-          <TabPanel value={activeTabIdx} index={1}>
-            <StateContent databaseId={id} />
-          </TabPanel>
-          <TabPanel value={activeTabIdx} index={2}>
-            <TuneDatabaseContent databaseId={id} />
-          </TabPanel>
+          <Box sx={{ p: 3 }}>
+            <Outlet />
+          </Box>
         </Paper>
       </Box>
     </React.Fragment>
