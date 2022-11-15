@@ -22,7 +22,7 @@ import parseDateTime from '../../util/parseDateTime';
 export default function WorkloadContent({ databaseId }) {
   const [workloads, setWorkloads] = useState();
   const [timePeriod, setTimePeriod] = useState(10);
-  const [friendlyName, setFriendlyName] = useState('');
+  const [name, setName] = useState('');
   const [workloadSubmitLoading, setWorkloadSubmitLoading] = useState(false);
   const [workloadSubmitSuccess, setWorkloadSubmitSuccess] = useState(false);
   
@@ -43,20 +43,20 @@ export default function WorkloadContent({ databaseId }) {
     setTimePeriod(event.target.value === '' ? 10 : Number(event.target.value));
   };
 
-  const handleFriendlyNameInputChange = (event) => {
-    setFriendlyName(event.target.value);
+  const handleNameInputChange = (event) => {
+    setName(event.target.value);
   };
 
   const handleCollectWorkload = async (event) => {
     event.preventDefault();
     console.log(`Submit collect workload for ${timePeriod} seconds`);
-    console.log(`Friendly name: ${friendlyName}`);
+    console.log(`Name: ${name}`);
     setWorkloadSubmitLoading(true);
 
     try {
       const body = {
         time_period: timePeriod,
-        friendly_name: friendlyName
+        friendly_name: name
       };
       const res = await axios.post(`/database_manager/databases/${databaseId}/workloads`, body);
       console.log(res);
@@ -75,7 +75,7 @@ export default function WorkloadContent({ databaseId }) {
         <Table aria-label="simple table">
           <TableHead>
             <TableRow>
-              <TableCell>Friendly Name</TableCell>
+              <TableCell>Name</TableCell>
               <TableCell>Duration</TableCell>
               <TableCell>Status</TableCell>
               <TableCell>Collected At</TableCell>
@@ -126,13 +126,13 @@ export default function WorkloadContent({ databaseId }) {
           </Box>
           <Box sx={{ display: 'flex', mt: 3 }}>
             <Typography sx={{ mr: 1, mt: 0.4 }}>
-              Friendly Name:
+              Name:
             </Typography>
             <TextField
               required
-              id="workload-friendly-name"
+              id="workload-name"
               variant="standard"
-              onChange={handleFriendlyNameInputChange}
+              onChange={handleNameInputChange}
             />
           </Box>
           <LoadingButton
