@@ -177,9 +177,9 @@ class SelfManagedPostgresEnvironment(BaseEnvironment):
 
         return True, ""
 
-    def collect_workload(self, time_period, resource_id, callback_url):
+    def collect_workload(self, num_chunks, resource_id, callback_url):
         # Gets a workload and archives it
-        print ("self managed postgres collecting workoad", time_period, resource_id)
+        print ("self managed postgres collecting workoad", num_chunks, resource_id)
 
         url = "http://%s:%s/collect_workload/" % (
             self.config.primary_host,
@@ -189,7 +189,7 @@ class SelfManagedPostgresEnvironment(BaseEnvironment):
         data = {
             "db_name": self.config.db_name,
             "resource_id": resource_id,
-            "time_period": time_period,
+            "num_chunks": num_chunks,
             "callback_url": callback_url,
         }
 

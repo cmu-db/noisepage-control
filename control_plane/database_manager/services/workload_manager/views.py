@@ -23,12 +23,12 @@ def index(request):
 def workloads(request, database_id):
     if request.method == "POST":
         data = json.loads(request.body.decode("utf-8"))
-        return collect_workload(request, database_id, data["time_period"], data["friendly_name"])
+        return collect_workload(request, database_id, data["num_chunks"], data["friendly_name"])
     elif request.method == "GET":
         return get_workloads(request, database_id)
 
 
-def collect_workload(request, database_id, time_period, friendly_name):
+def collect_workload(request, database_id, num_chunks, friendly_name):
 
     from database_manager.models import Database
 
@@ -41,12 +41,12 @@ def collect_workload(request, database_id, time_period, friendly_name):
         database_id, 
         ResourceType.WORKLOAD, 
         friendly_name, 
-        {"time_period": time_period}
+        {"num_chunks": num_chunks}
     )
     print ("New resource", resource_id)
 
     callback_url = f"{settings.CONTROL_PLANE_CALLBACK_BASE_URL}/database_manager/workload/collect_workload_callback/"
-    env.collect_workload(time_period, resource_id, callback_url)
+    env.collect_workload(num_chunks, resource_id, callback_url)
 
     # Send request to remote executor
     return HttpResponse("OK")
