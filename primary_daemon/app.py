@@ -111,25 +111,25 @@ def capture_and_transfer_state(database_name, database_id, callback_url):
     catalog = database_executor.get_database_catalog(database_name)
     with open(RESOURCE_DIR / "catalog.txt", "w") as fp:
         fp.write(catalog)
-    tar.add(RESOURCE_DIR / "catalog.txt")
+    tar.add(RESOURCE_DIR / "catalog.txt", arcname = "catalog.txt")
 
     # Write current indexes
     index_info = database_executor.get_database_index(database_name)
     with open(RESOURCE_DIR / "index.txt", "w") as fp:
         fp.write(index_info)
-    tar.add(RESOURCE_DIR / "index.txt")
+    tar.add(RESOURCE_DIR / "index.txt", arcname = "index.txt")
 
     # Write ddl dump
     ddl_dump = database_executor.get_database_ddl_dump(database_name)
     with open(RESOURCE_DIR / "ddl_dump.sql", "w") as fp:
         fp.write(ddl_dump)
-    tar.add(RESOURCE_DIR / "ddl_dump.sql")
+    tar.add(RESOURCE_DIR / "ddl_dump.sql", arcname = "ddl_dump.sql")
 
     # Write ddl dump
     dump_tar = database_executor.get_database_data_dump_tar(database_name)
     with open(RESOURCE_DIR / "data_dump.tar", "wb") as fp:
         fp.write(dump_tar)
-    tar.add(RESOURCE_DIR / "data_dump.tar")
+    tar.add(RESOURCE_DIR / "data_dump.tar", arcname = "data_dump.tar")
     tar.close()
 
     transfer_state_archive(archive_path, database_id, collected_at, callback_url)

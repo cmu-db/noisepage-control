@@ -38,7 +38,7 @@ def create_workload_archive(resource_dir, log_dir, database_id, num_chunks):
             })
 
         # Add file to archive
-        tar.add(log_dir / file_name)
+        tar.add(log_dir / file_name, arcname = file_name)
 
     tar.close()
 

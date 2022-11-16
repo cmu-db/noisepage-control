@@ -201,7 +201,6 @@ class SelfManagedPostgresEnvironment(BaseEnvironment):
 
     def collect_state(self, callback_url):
         # Gets state and archives it
-        print ("self managed postgres collecting state", resource_id)
 
         url = "http://%s:%s/collect_state/" % (
             self.config.primary_host,
