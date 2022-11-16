@@ -26,7 +26,10 @@ def create_workload_archive(resource_dir, log_dir, database_id, num_chunks):
         with open(log_dir / file_name, 'r') as fp:
             queries = fp.readlines()
             num_queries = len(queries)
-            sample = random.choices(queries, k = 5)
+            if num_queries < 5:
+                sample = queries
+            else:
+                sample = random.choices(queries, k = 5)
 
             meta_data.append({
                 'file_name': file_name,

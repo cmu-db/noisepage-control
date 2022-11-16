@@ -23,7 +23,6 @@ def index(request):
 @require_http_methods(["GET", "POST"])
 def states(request, database_id):
     if request.method == "POST":
-        data = json.loads(request.body.decode("utf-8"))
         collect_state(database_id)
         return HttpResponse("OK")
 

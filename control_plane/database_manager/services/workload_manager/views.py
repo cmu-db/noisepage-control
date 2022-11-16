@@ -126,6 +126,7 @@ def download_workload(request, workload_id):
 
 # For scheduling workload pulls
 from apscheduler.schedulers.background import BackgroundScheduler
+import logging
 logging.basicConfig()
 logging.getLogger('apscheduler').setLevel(logging.DEBUG)
 
