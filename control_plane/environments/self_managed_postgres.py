@@ -179,7 +179,7 @@ class SelfManagedPostgresEnvironment(BaseEnvironment):
 
     def collect_workload(self, num_chunks, callback_url):
         # Gets a workload and archives it
-        print ("self managed postgres collecting workoad", num_chunks, resource_id)
+        print ("self managed postgres collecting workoad", num_chunks)
 
         url = "http://%s:%s/collect_workload/" % (
             self.config.primary_host,

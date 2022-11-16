@@ -7,7 +7,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 from django.conf import settings
 
-from resource_manager.views import initialise_resource, save_resource, get_resource_filepath
+from resource_manager.views import initialise_resource, save_resource, get_resource_filepath, does_resource_exist
 from resource_manager.resource_type import ResourceType
 
 from environments.environment import init_environment
@@ -37,10 +37,6 @@ def collect_workload(request, database_id, num_chunks):
     database = Database.objects.get(database_id = database_id)
     env = init_environment(database)
 
-    # Init a new resource id
-    resource_id = str(uuid.uuid4())
-    print ("New resource", resource_id)
-
     callback_url = f"{settings.CONTROL_PLANE_CALLBACK_BASE_URL}/database_manager/workload/collect_workload_callback/"
     env.collect_workload(num_chunks, callback_url)
 
@@ -58,17 +54,23 @@ def collect_workload_callback(request):
     # Hack, we should only request for num_chunks = 1 in collect workload
     # Needs to be redesigned in the future, don't have the time now
 
-    chunk = meta_data[0]
+    meta_data = data["meta_data"][0]
     file_name = meta_data["file_name"]
-    start_time = datetime.datetime.strptime(f, "postgresql-%Y-%m-%d_%H%M%S.csv")
+    collected_at = datetime.datetime.strptime(file_name, "postgresql-%Y-%m-%d_%H%M%S.csv")
     friendly_name = "%s_%s" % (database_id, file_name)
 
-    print("Received collected data. Resource id: %s" % (friendly_name))
+    print("Received collected data. friendly_name: %s" % (friendly_name))
 
+    # If resource exists do not save it again
+    if does_resource_exist(friendly_name):
+        return HttpResponse("OK")
+    
+    print ("Creating new resource")
+    
+    resource_id = initialise_resource(database_id, ResourceType.WORKLOAD, friendly_name, meta_data = meta_data)
     captured_workload_tar = request.FILES["workload"].read()
     captured_workload_filename = request.FILES["workload"].name
-
-    # save_resource(resource_id, captured_workload_tar, captured_workload_filename)
+    save_resource(resource_id, captured_workload_tar, captured_workload_filename, collected_at)
 
     return HttpResponse("OK")
 

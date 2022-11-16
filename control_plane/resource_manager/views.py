@@ -19,7 +19,7 @@ def initialise_resource_dir(database_id):
         % (database_id)
     )
 
-def initialise_resource(database_id, resource_type, friendly_name, metadata = {}, resource_id = None):
+def initialise_resource(database_id, resource_type, friendly_name, metadata = {}):
     """
     Creates a resource entry which tracks the workload
     to be collected. This entry would be updated
@@ -30,9 +30,6 @@ def initialise_resource(database_id, resource_type, friendly_name, metadata = {}
     """
 
     from .models import Resource
-
-    if resource_id is None:
-        resource_id = str(uuid.uuid4())
 
     resource = Resource(
         resource_id=resource_id,
@@ -52,7 +49,7 @@ def initialise_resource(database_id, resource_type, friendly_name, metadata = {}
     return resource.resource_id
 
 
-def save_resource(resource_id, resource_file, resource_filename):
+def save_resource(resource_id, resource_file, resource_filename, collected_at = None):
 
     # Fetch resource entry
     from .models import Resource
@@ -76,6 +73,9 @@ def save_resource(resource_id, resource_file, resource_filename):
         os.chmod(resource_dir / resource_filename, 0o400)
 
     # Update resource entry
+    if collected_at is not None:
+        resource.collected_at = collected_at
+
     resource.available = True
     resource.resource_name = resource_filename
     resource.available_at = datetime.now()
@@ -85,3 +85,13 @@ def save_resource(resource_id, resource_file, resource_filename):
 
 def get_resource_filepath(resource):
     return str(settings.RESOURCE_DIR / resource.database_id / resource.resource_id / resource.resource_name)
+
+def does_resource_exist(friendly_name):
+
+    from .models import Resource
+
+    try:
+        Resource.objects.get(friendly_name=friendly_name)
+        return True
+    except:
+        return False
