@@ -54,23 +54,27 @@ def collect_workload_callback(request):
     # Hack, we should only request for num_chunks = 1 in collect workload
     # Needs to be redesigned in the future, don't have the time now
 
-    meta_data = data["meta_data"][0]
-    file_name = meta_data["file_name"]
-    collected_at = datetime.datetime.strptime(file_name, "postgresql-%Y-%m-%d_%H%M%S.csv")
-    friendly_name = "%s_%s" % (database_id, file_name)
 
-    print("Received collected data. friendly_name: %s" % (friendly_name))
+    with open("temp.tar.gz", 'wb') as fp:
+        fp.write(request.FILES["workload"].read())
 
-    # If resource exists do not save it again
-    if does_resource_exist(friendly_name):
-        return HttpResponse("OK")
+    tar = tarfile.open("temp.tar.gz")
+
+    for chunk in data["meta_data"]:
+        file_name = chunk["file_name"]
+        collected_at = datetime.datetime.strptime(file_name, "postgresql-%Y-%m-%d_%H%M%S.csv")
+        friendly_name = "%s_%s" % (database_id, file_name)
+
+        print("Received collected data. friendly_name: %s" % (friendly_name))
+
+        # If resource exists do not save it again
+        if does_resource_exist(friendly_name):
+            return HttpResponse("OK")
     
-    print ("Creating new resource")
-    
-    resource_id = initialise_resource(database_id, ResourceType.WORKLOAD, friendly_name, meta_data = meta_data)
-    captured_workload_tar = request.FILES["workload"].read()
-    captured_workload_filename = request.FILES["workload"].name
-    save_resource(resource_id, captured_workload_tar, captured_workload_filename, collected_at)
+        print ("Creating new resource")
+        resource_id = initialise_resource(database_id, ResourceType.WORKLOAD, friendly_name, meta_data = meta_data)
+        resource = save_resource(resource_id, tar.extractfile("file_name"), friendly_name, collected_at)
+        print ("created", get_resource_filepath(resource))
 
     return HttpResponse("OK")
 
