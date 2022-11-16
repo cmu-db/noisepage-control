@@ -1,5 +1,7 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import useInterval from 'react-useinterval';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -27,30 +29,49 @@ import parseDateTime from '../../util/parseDateTime';
 function TuningInstanceRow({ databaseId, tuningInstance, getWorkloadName, getStateName, parseDateTime }) {
   const [actions, setActions] = useState();
   const [open, setOpen] = useState(false);
+  const [actionSent, setActionSent] = useState({});
 
-  useEffect(() => {
-    async function fetchActions() {
-      try {
-        const res = await axios.get(
-          `/database_manager/databases/${databaseId}/actions?tuning_instance_id=${tuningInstance.tuning_instance_id}`
-        );
-        console.log(res);
-        setActions(res.data);  
-      } catch (error) {
-        console.error(error)
-      }
+  async function fetchActions() {
+    try {
+      const res = await axios.get(
+        `/database_manager/databases/${databaseId}/actions?tuning_instance_id=${tuningInstance.tuning_instance_id}`
+      );
+      console.log(res);
+      setActions(res.data);
+
+      // Reset actionSent
+      const newActionSent = {};
+      res.data.forEach(action => {
+        newActionSent[action.tuning_action_id] = false;
+      });
+      setActionSent(newActionSent);
+    } catch (error) {
+      console.error(error)
     }
-    fetchActions();
-  }, [databaseId, tuningInstance.tuning_instance_id]);
+  }
+
+  useInterval(fetchActions, 2000);
+
+  const handleApplyAction = async (event, tuningActionId) => {
+    event.preventDefault();
+    setActionSent({ ...actionSent, [tuningActionId]: true });
+
+    console.log("Submit apply action", tuningActionId);
+    try {
+      const res = await axios.post(
+        `/database_manager/action/apply/${tuningActionId}`
+      );
+      console.log(res);
+    } catch (error) {
+      console.error(error)
+    }
+  }
 
   const notApplied = (action) => action.status === 'NOT_APPLIED';
 
   return (
     <React.Fragment>
-      <TableRow
-        // sx={{ '& > *': { border: 0 } }}
-      >
-        {/* <TableCell component="th" scope="row">{tuningInstance.tuning_instance_id}</TableCell> */}
+      <TableRow>
         <TableCell>{tuningInstance.friendly_name}</TableCell>
         <TableCell>{getWorkloadName(tuningInstance.workload_id)}</TableCell>
         <TableCell>{getStateName(tuningInstance.state_id)}</TableCell>
@@ -68,9 +89,7 @@ function TuningInstanceRow({ databaseId, tuningInstance, getWorkloadName, getSta
           }
         </TableCell>
       </TableRow>
-      <TableRow
-        // sx={{ '& > td': {borderBottom: 'unset'} }}
-      >
+      <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box sx={{ margin: 1 }}>
@@ -99,8 +118,8 @@ function TuningInstanceRow({ databaseId, tuningInstance, getWorkloadName, getSta
                           variant="contained"
                           startIcon={notApplied(action) ? <LibraryAdd /> : <DoneOutlineIcon />}
                           sx={{ my: 2, '&.Mui-disabled': { bgcolor: '#f6685e' }, backgroundColor: '#f44336' }}
-                          // onClick={handleApplyAction}
-                          disabled={!notApplied(action)}
+                          onClick={e => handleApplyAction(e, action.tuning_action_id)}
+                          disabled={!notApplied(action) || actionSent[action.tuning_action_id]}
                         >
                           {notApplied(action) ? 'Apply!' : action.status}
                         </Button>
@@ -118,13 +137,14 @@ function TuningInstanceRow({ databaseId, tuningInstance, getWorkloadName, getSta
   )
 }
 
-export default function TuneDatabaseContent({ databaseId }) {
+export default function TuneDatabaseContent() {
+  const { id: databaseId } = useParams();
   const [tuningInstances, setTuningInstances] = useState();
   const [workloads, setWorkloads] = useState();
   const [states, setStates] = useState();
   const [selectedWorkloadId, setSelectedWorkloadId] = useState('');
   const [selectedStateId, setSelectedStateId] = useState('');
-  const [friendlyName, setFriendlyName] = useState('');
+  const [name, setName] = useState('');
   
   const [submitLoading, setSubmitLoading] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
@@ -177,7 +197,7 @@ export default function TuneDatabaseContent({ databaseId }) {
       const body = {
         workload_id: selectedWorkloadId,
         state_id: selectedStateId,
-        friendly_name: friendlyName,
+        friendly_name: name,
       }
       const res = await axios.post(
         `/database_manager/databases/${databaseId}/tune`,
@@ -201,8 +221,8 @@ export default function TuneDatabaseContent({ databaseId }) {
     setSelectedStateId(event.target.value);
   };
 
-  const handleFriendlyNameInputChange = (event) => {
-    setFriendlyName(event.target.value);
+  const handleNameInputChange = (event) => {
+    setName(event.target.value);
   };
 
   const getWorkloadName = (workloadId) => {
@@ -220,9 +240,9 @@ export default function TuneDatabaseContent({ databaseId }) {
         <Table aria-label="simple table">
           <TableHead>
             <TableRow>
-              <TableCell>Friendly Name</TableCell>
-              <TableCell>Workload Name</TableCell>
-              <TableCell>State Name</TableCell>
+              <TableCell>Name</TableCell>
+              <TableCell>Workload</TableCell>
+              <TableCell>State</TableCell>
               <TableCell>Status</TableCell>
               <TableCell>Started At</TableCell>
               <TableCell></TableCell>
@@ -284,13 +304,13 @@ export default function TuneDatabaseContent({ databaseId }) {
         }
         <Box sx={{ display: 'flex', mt: 3 }}>
           <Typography sx={{ mr: 1, mt: 0.4 }}>
-            Friendly Name:
+            Name:
           </Typography>
           <TextField
             required
-            id="tune-friendly-name"
+            id="tune-name"
             variant="standard"
-            onChange={handleFriendlyNameInputChange}
+            onChange={handleNameInputChange}
           />
         </Box>
         <LoadingButton

@@ -33,6 +33,7 @@ def tune_database(tuning_instance_id, db_name, callback_url):
     shutil.copy(data_dump_filepath, "data/data_dump.tar")
 
     # Generate garbage config
+    print("Generating garbage config")
     with open("base_configs/garbage_config.yaml", "r") as fp:
         garabage_config = fp.read()
     garabage_config = garabage_config.replace('{{{db_name}}}', db_name)
@@ -40,6 +41,7 @@ def tune_database(tuning_instance_id, db_name, callback_url):
         fp.write(garabage_config)
 
     # Generate index selection config
+    print("Generating index selection config")
     with open("base_configs/index_config.json", "r") as fp:
         index_config = fp.read()
     index_config = index_config.replace('{{{db_name}}}', db_name)
@@ -47,6 +49,7 @@ def tune_database(tuning_instance_id, db_name, callback_url):
         fp.write(index_config)
 
     # Execute image
+    print("Executing image")
     parent_dir_path = Path(__file__).parent.resolve()
     client = docker.from_env()
     exec_logs = client.containers.run(
@@ -60,9 +63,11 @@ def tune_database(tuning_instance_id, db_name, callback_url):
                 'bind': '/data', 'mode': 'rw'
                 }
             }, 
-        detach = False)
+        detach = False).decode("utf-8")
+    print(exec_logs)
 
     # Parse generated file for actions
+    print("Parsing generated file for actions")
     results_dir_path = parent_dir_path / "data" /  "benchmark_results/"
 
     actions = []
@@ -80,6 +85,7 @@ def tune_database(tuning_instance_id, db_name, callback_url):
 
 
     # Clean up
+    print("Cleaning up")
     os.remove("workload.tar.gz")
     shutil.rmtree(workload_dir_name)
     os.remove("state.tar.gz")
@@ -89,7 +95,7 @@ def tune_database(tuning_instance_id, db_name, callback_url):
     data = {
         "actions": actions,
         "tuning_instance_id": tuning_instance_id,
-        "exec_logs": exec_logs
+        "exec_logs": exec_logs,
     }
 
     headers = {"Content-type": "application/json"}

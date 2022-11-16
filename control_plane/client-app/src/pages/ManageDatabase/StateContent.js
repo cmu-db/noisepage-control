@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -17,9 +18,10 @@ import Done from '@mui/icons-material/Done';
 import axios from '../../util/axios';
 import parseDateTime from '../../util/parseDateTime';
 
-export default function StateContent({ databaseId }) {
+export default function StateContent() {
+  const { id: databaseId } = useParams();
   const [states, setStates] = useState();
-  const [friendlyName, setFriendlyName] = useState('');
+  const [name, setName] = useState('');
   const [stateSubmitLoading, setStateSubmitLoading] = useState(false);
   const [stateSubmitSuccess, setStateSubmitSuccess] = useState(false);
   
@@ -36,8 +38,8 @@ export default function StateContent({ databaseId }) {
     fetchStates();
   }, [databaseId]);
 
-  const handleFriendlyNameInputChange = (event) => {
-    setFriendlyName(event.target.value);
+  const handleNameInputChange = (event) => {
+    setName(event.target.value);
   };
 
   const handleCollectState = async (event) => {
@@ -46,7 +48,7 @@ export default function StateContent({ databaseId }) {
     setStateSubmitLoading(true);
 
     try {
-      const body = { friendly_name: friendlyName };
+      const body = { friendly_name: name };
       const res = await axios.post(`/database_manager/databases/${databaseId}/states`, body);
       console.log(res);
       setStateSubmitSuccess(true);
@@ -64,7 +66,7 @@ export default function StateContent({ databaseId }) {
         <Table aria-label="simple table">
           <TableHead>
             <TableRow>
-              <TableCell>Friendly Name</TableCell>
+              <TableCell>Name</TableCell>
               <TableCell>Status</TableCell>
               <TableCell>Collected At</TableCell>
             </TableRow>
@@ -95,13 +97,13 @@ export default function StateContent({ databaseId }) {
         <Typography variant="h6">Collect a New State</Typography>
         <Box sx={{ display: 'flex', mt: 3 }}>
           <Typography sx={{ mr: 1, mt: 0.4 }}>
-            Friendly Name:
+            Name:
           </Typography>
           <TextField
             required
-            id="state-friendly-name"
+            id="state-name"
             variant="standard"
-            onChange={handleFriendlyNameInputChange}
+            onChange={handleNameInputChange}
           />
         </Box>
         <LoadingButton
