@@ -2,6 +2,7 @@ import json
 import datetime
 import tarfile
 import os 
+import uuid
 
 from django.http import HttpResponse, FileResponse
 
@@ -71,7 +72,7 @@ def collect_workload_callback(request):
 
         # If resource exists do not save it again
         if does_resource_exist(friendly_name):
-            return HttpResponse("OK")
+            continue
     
         print ("Creating new resource")
         resource_id = initialise_resource(database_id, ResourceType.WORKLOAD, friendly_name, meta_data = chunk)
@@ -80,6 +81,7 @@ def collect_workload_callback(request):
 
     tar.close()
     os.remove(temp_file_name)
+
     return HttpResponse("OK")
 
 
