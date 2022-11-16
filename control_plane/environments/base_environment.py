@@ -28,7 +28,7 @@ class BaseEnvironment(ABC):
         pass
 
     @abstractmethod
-    def collect_state(self, resource_id, callback_url):
+    def collect_state(self, callback_url):
         # Gets state and archives it
         pass
 

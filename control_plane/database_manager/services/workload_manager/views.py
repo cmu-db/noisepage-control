@@ -132,4 +132,3 @@ logging.getLogger('apscheduler').setLevel(logging.DEBUG)
 scheduler = BackgroundScheduler()
 scheduler.add_job(pull_workload_for_all_databases, 'interval', minutes = 1)
 scheduler.start()
-

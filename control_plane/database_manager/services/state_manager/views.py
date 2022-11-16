@@ -24,7 +24,9 @@ def index(request):
 def states(request, database_id):
     if request.method == "POST":
         data = json.loads(request.body.decode("utf-8"))
-        return collect_state(request, database_id, data["friendly_name"])
+        collect_state(database_id)
+        return HttpResponse("OK")
+
     elif request.method == "GET":
         return get_states(request, database_id)
 
@@ -39,24 +41,16 @@ def get_states(request, database_id):
     )
 
 
-def collect_state(request, database_id, friendly_name):
+def collect_state(database_id):
 
     from database_manager.models import Database
 
     # Fetch database and init environment
     database = Database.objects.get(database_id = database_id)
     env = init_environment(database)
-    print (database)
 
-    # Init a new resource
-    resource_id = initialise_resource(database_id, ResourceType.STATE, friendly_name)
-    print ("New resource", resource_id)
-
-    # Send request to remote executor
     callback_url = f"{settings.CONTROL_PLANE_CALLBACK_BASE_URL}/database_manager/state/collect_state_callback/"
-    env.collect_state(resource_id, callback_url)
-
-    return HttpResponse("OK")
+    env.collect_state(callback_url)
     
 
 @csrf_exempt
@@ -64,13 +58,20 @@ def collect_state(request, database_id, friendly_name):
 def collect_state_callback(request):
 
     data = json.loads(request.FILES["data"].read().decode("utf-8"))
-    resource_id = data["resource_id"]
-    print("Received collected state data. Resource id: %s" % (resource_id))
+    database_id = data["database_id"]
+    collected_at = data["collected_at"]
+    print("Received collected state data. Database id: %s" % (database_id))
 
     # Save
     captured_tar = request.FILES["state"].read()
-    filename = request.FILES["state"].name
-    save_resource(resource_id, captured_tar, filename)
+    file_name = "%s_%s.tar.gz" % (database_id, collected_at)
+    friendly_name = file_name
+    
+    resource_id = initialise_resource(
+        database_id, ResourceType.STATE, friendly_name)
+    save_resource(
+        resource_id, captured_tar, file_name, 
+        collected_at = datetime.datetime.strptime(collected_at, "%Y-%m-%d_%H%M%S"))
 
     return HttpResponse("OK")
 

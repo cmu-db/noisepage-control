@@ -72,10 +72,11 @@ def transfer_archive(archive_path, database_id, meta_data, callback_url):
         requests.post(callback_url, files=files)
 
 # Transfer archive to control plane
-def transfer_state_archive(archive_path, resource_id, callback_url):
+def transfer_state_archive(archive_path, database_id, collected_at, callback_url):
 
     data = {
-        "resource_id": resource_id,
+        "database_id": database_id,
+        "collected_at": collected_at,
     }
 
     with StringIO(json.dumps(data)) as data_file, open(archive_path, "rb") as fp:

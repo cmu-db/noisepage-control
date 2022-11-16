@@ -199,7 +199,7 @@ class SelfManagedPostgresEnvironment(BaseEnvironment):
         requests.post(url, data=json.dumps(data), headers=headers, timeout=3)
 
 
-    def collect_state(self, resource_id, callback_url):
+    def collect_state(self, callback_url):
         # Gets state and archives it
         print ("self managed postgres collecting state", resource_id)
 
@@ -210,7 +210,7 @@ class SelfManagedPostgresEnvironment(BaseEnvironment):
 
         data = {
             "db_name": self.config.db_name,
-            "resource_id": resource_id,
+            "database_id": self.database.database_id,
             "callback_url": callback_url,
         }
 

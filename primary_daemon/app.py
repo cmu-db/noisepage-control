@@ -1,6 +1,8 @@
 import os
 import uuid
 import json
+import tarfile
+import datetime
 
 from flask import Flask, request
 import requests
@@ -23,6 +25,7 @@ database_executor = PrimaryExecutor(SCRIPTS_DIR, "postgres", "10000")
 
 print (database_executor.get_database_catalog("postgres"))
 print (database_executor.get_database_index("postgres"))
+database_executor.enable_logging()
 
 @app.route('/')
 def index():
@@ -84,50 +87,52 @@ def collect_state():
 
     data = request.get_json()
     db_name = data["db_name"]
-    resource_id = data["resource_id"]
+    database_id = data["database_id"]
     callback_url = data["callback_url"]
 
     print ("Starting thread with", data)
 
     thread = Thread(
         target=capture_and_transfer_state, 
-        args=(db_name, resource_id, callback_url)
+        args=(db_name, database_id, callback_url)
     )
     thread.start()
 
     return 'OK'
 
-def capture_and_transfer_state(database_name, resource_id, callback_url):
+def capture_and_transfer_state(database_name, database_id, callback_url):
 
-    # Create a new dir for collected states
-    identifier = str(uuid.uuid4())
-    state_dir = RESOURCE_DIR / identifier
-    os.mkdir(state_dir)
+    archive_path = RESOURCE_DIR / (database_id + "_state.tar.gz")
+    tar = tarfile.open(archive_path, 'w:gz')
 
+    collected_at = datetime.datetime.now().strftime("%Y-%m-%d_%H%M%S")
 
     # Write current catalog
     catalog = database_executor.get_database_catalog(database_name)
-    with open(state_dir / "catalog.txt", "w") as fp:
+    with open(RESOURCE_DIR / "catalog.txt", "w") as fp:
         fp.write(catalog)
+    tar.add(RESOURCE_DIR / "catalog.txt")
 
     # Write current indexes
     index_info = database_executor.get_database_index(database_name)
-    with open(state_dir / "index.txt", "w") as fp:
+    with open(RESOURCE_DIR / "index.txt", "w") as fp:
         fp.write(index_info)
+    tar.add(RESOURCE_DIR / "index.txt")
 
     # Write ddl dump
     ddl_dump = database_executor.get_database_ddl_dump(database_name)
-    with open(state_dir / "ddl_dump.sql", "w") as fp:
+    with open(RESOURCE_DIR / "ddl_dump.sql", "w") as fp:
         fp.write(ddl_dump)
+    tar.add(RESOURCE_DIR / "ddl_dump.sql")
 
     # Write ddl dump
     dump_tar = database_executor.get_database_data_dump_tar(database_name)
-    with open(state_dir / "data_dump.tar", "wb") as fp:
+    with open(RESOURCE_DIR / "data_dump.tar", "wb") as fp:
         fp.write(dump_tar)
+    tar.add(RESOURCE_DIR / "data_dump.tar")
+    tar.close()
 
-    archive_path = create_state_archive(RESOURCE_DIR, identifier, state_dir)
-    transfer_state_archive(archive_path, resource_id, callback_url)
-
+    transfer_state_archive(archive_path, database_id, collected_at, callback_url)
 
 def apply_action(database_name, command, reboot_required, action_id, callback_url):
 
