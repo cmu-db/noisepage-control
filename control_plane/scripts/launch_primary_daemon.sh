@@ -23,4 +23,4 @@ if sudo lsof -t -i:9000 > /dev/null; then
 fi
 # Start primary daemon
 nohup sudo venv/bin/flask run -h 0.0.0.0 -p 9000 > ~/.primary_daemon.log 2>&1 &
-sleep 5
+sleep 10

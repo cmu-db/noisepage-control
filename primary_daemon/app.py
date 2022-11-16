@@ -21,7 +21,6 @@ RESOURCE_DIR = ROOT_DIR / "resources"
 # TODO: Load postgres user from config
 database_executor = PrimaryExecutor(SCRIPTS_DIR, "postgres", "10000")
 
-
 print (database_executor.get_database_catalog("postgres"))
 print (database_executor.get_database_index("postgres"))
 
@@ -38,14 +37,14 @@ def collect_workload():
 
     data = request.get_json()
     resource_id = data["resource_id"]
-    time_period = data["time_period"]
     callback_url = data["callback_url"]
+    num_chunks = data["num_chunks"] # Previously completed chunks
 
     print ("Starting thread with", data)
 
     thread = Thread(
         target=capture_and_transfer_workload, 
-        args=(resource_id, int(time_period), callback_url)
+        args=(resource_id, callback_url, int(num_chunks))
     )
     thread.start()
 
@@ -74,10 +73,10 @@ def apply():
     return 'OK'
 
 
-def capture_and_transfer_workload(resource_id, time_period, callback_url):
-    log_dir, start_time, end_time = database_executor.capture_workload(time_period)
-    archive_path = create_workload_archive(start_time, end_time, RESOURCE_DIR, log_dir)
-    transfer_archive(archive_path, resource_id, callback_url)
+def capture_and_transfer_workload(resource_id, callback_url, num_chunks):
+    log_dir = database_executor.get_logging_dir()
+    meta_data, archive_path = create_workload_archive(RESOURCE_DIR, log_dir, resource_id, num_chunks)
+    transfer_archive(archive_path, resource_id, meta_data, callback_url)
 
 
 @app.route('/collect_state/', methods = ['POST'])

@@ -28,8 +28,6 @@ class PrimaryExecutor():
         self.postgres_username = postgres_username
         self.postgres_port = posrgres_port
         
-        self.WORKLOAD_CAPTURE_MUTEX = Lock()
-
         # Figure out data dir on start up
         self.data_dir = self.get_data_dir()
 
@@ -219,11 +217,12 @@ class PrimaryExecutor():
     """
     def enable_logging(self):
 
-        command = '"%s" "%s" "%s" "%s"' % (
+        command = '"%s" "%s" "%s" "%s" "%s"' % (
             self.SCRIPTS_DIR / ENABLE_DATABASE_LOGGING_SCRIPT_NAME,
             self.data_dir,
             self.postgres_port,
             self.postgres_username,
+            str(5) # log rotation age in minutes
         )
 
         subprocess.call(command, shell=True)
@@ -248,44 +247,6 @@ class PrimaryExecutor():
         time.sleep(5)
 
 
-
-
-    """
-    This method captures the workload on a primary instance.
-    Only allow one concurrent capture;
-    synchronised via `WORKLOAD_CAPTURE_MUTEX`
-    """
-    def capture_workload(self, time_period):
-
-        self.WORKLOAD_CAPTURE_MUTEX.acquire()
-
-        try:
-            # Enable logging
-            self.enable_logging()
-            print ("Enabled logging")
-
-            # Wait for time_period seconds
-            capture_start_time = datetime.now()
-            for it in range(0, time_period, 5):
-                time.sleep(5)
-                print ("Captured %d seconds" % (it + 5))
-            capture_end_time = datetime.now()
-
-            # Disable logging
-            self.disable_logging()
-            print ("Disabled logging")
-
-            # Create workload archive
-            # archive_path = create_workload_archive(capture_start_time, capture_end_time)
-
-            # Transfer archive to control plane
-            # transfer_workload(archive_path, command_name, resource_id)
-
-        finally:
-            self.WORKLOAD_CAPTURE_MUTEX.release()
-
-
-        return self.get_logging_dir(), capture_start_time, capture_end_time
 
 
     """
