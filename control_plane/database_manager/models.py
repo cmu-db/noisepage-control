@@ -6,7 +6,7 @@ from django.core.exceptions import ValidationError
 from environments.environment_types import EnvironmentType
 from django.contrib.postgres.fields import ArrayField
 
-from .database_state_types import DatabaseStateType
+from .types.database_state_types import DatabaseStateType
 
 from .services.command_queue.models import Command
 from resource_manager.models import Resource

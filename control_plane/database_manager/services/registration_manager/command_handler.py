@@ -5,7 +5,7 @@ logger = logging.getLogger("control_plane")
 
 from database_manager.services.command_queue.command_types import CommandType
 from database_manager.services.command_queue.producer import publish_command
-from database_manager.database_state_types import DatabaseStateType
+from database_manager.types.database_state_types import DatabaseStateType
 
 from environments.environment import init_environment
 from environments.environment_types import EnvironmentType

@@ -11,7 +11,7 @@ from django.shortcuts import render
 from environments.environment_types import EnvironmentType
 
 from .models import Database, SelfManagedPostgresConfig
-from .database_state_types import DatabaseStateType
+from .types.database_state_types import DatabaseStateType
 
 from .services.command_queue.producer import publish_command
 from .services.command_queue.models import Command

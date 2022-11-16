@@ -14,7 +14,15 @@ from resource_manager.views import initialise_resource, save_resource, get_resou
 from resource_manager.resource_type import ResourceType
 
 from environments.environment import init_environment
+from database_manager.types.database_state_types import DatabaseStateType
 
+# For scheduling workload pulls
+from apscheduler.schedulers.background import BackgroundScheduler
+logging.basicConfig()
+logging.getLogger('apscheduler').setLevel(logging.DEBUG)
+scheduler = BackgroundScheduler()
+scheduler.add_job(pull_workload_for_all_databases, 'interval', minutes = 1)
+scheduler.start()
 
 @csrf_exempt
 @require_http_methods(["GET"])
@@ -27,12 +35,23 @@ def index(request):
 def workloads(request, database_id):
     if request.method == "POST":
         data = json.loads(request.body.decode("utf-8"))
-        return collect_workload(request, database_id, data["num_chunks"])
+        collect_workload(database_id, data["num_chunks"])
+        return HttpResponse("OK")
     elif request.method == "GET":
         return get_workloads(request, database_id)
 
 
-def collect_workload(request, database_id, num_chunks):
+def pull_workload_for_all_databases():
+
+    from database_manager.models import Database
+
+    for database in Database.objects.filter(
+        active = True, state = DatabaseStateType.HEALTHY):
+
+        collect_workload(database.database_id, 3)
+
+
+def collect_workload(database_id, num_chunks):
 
     from database_manager.models import Database
 
@@ -42,9 +61,7 @@ def collect_workload(request, database_id, num_chunks):
 
     callback_url = f"{settings.CONTROL_PLANE_CALLBACK_BASE_URL}/database_manager/workload/collect_workload_callback/"
     env.collect_workload(num_chunks, callback_url)
-
-    # Send request to remote executor
-    return HttpResponse("OK")
+    
 
 
 @csrf_exempt
@@ -114,3 +131,4 @@ def download_workload(request, workload_id):
 
     response['Content-Type'] = "application/gzip"
     return response
+
