@@ -1,5 +1,7 @@
 import json 
 import datetime
+import tarfile
+import os 
 
 from django.http import HttpResponse, FileResponse
 
@@ -55,10 +57,10 @@ def collect_workload_callback(request):
     # Needs to be redesigned in the future, don't have the time now
 
 
-    with open("temp.tar.gz", 'wb') as fp:
+    temp_file_name = str(uuid.uuid4())
+    with open(temp_file_name, 'wb') as fp:
         fp.write(request.FILES["workload"].read())
-
-    tar = tarfile.open("temp.tar.gz")
+    tar = tarfile.open(temp_file_name)
 
     for chunk in data["meta_data"]:
         file_name = chunk["file_name"]
@@ -72,10 +74,12 @@ def collect_workload_callback(request):
             return HttpResponse("OK")
     
         print ("Creating new resource")
-        resource_id = initialise_resource(database_id, ResourceType.WORKLOAD, friendly_name, meta_data = meta_data)
-        resource = save_resource(resource_id, tar.extractfile("file_name"), friendly_name, collected_at)
+        resource_id = initialise_resource(database_id, ResourceType.WORKLOAD, friendly_name, meta_data = chunk)
+        resource = save_resource(resource_id, tar.extractfile(file_name).read(), friendly_name, collected_at)
         print ("created", get_resource_filepath(resource))
 
+    tar.close()
+    os.remove(temp_file_name)
     return HttpResponse("OK")
 
 
