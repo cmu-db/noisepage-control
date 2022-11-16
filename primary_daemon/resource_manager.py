@@ -9,7 +9,7 @@ import random
 
 import tarfile
 
-def create_workload_archive(resource_dir, log_dir, resource_id, num_chunks):
+def create_workload_archive(resource_dir, log_dir, database_id, num_chunks):
 
     # Get log files (.csv) from logging dir
     log_files = list(filter(lambda x: x.endswith(".csv"), os.listdir(log_dir)))
@@ -19,7 +19,7 @@ def create_workload_archive(resource_dir, log_dir, resource_id, num_chunks):
     files_to_process = log_files[1:num_chunks + 1]
 
     # Process files and create archive
-    archive_path = resource_dir / (resource_id + ".tar.gz")
+    archive_path = resource_dir / (database_id + ".tar.gz")
     tar = tarfile.open(archive_path, 'w:gz')
     meta_data = []
     for file_name in files_to_process:
@@ -55,10 +55,10 @@ def create_state_archive(resource_dir, identifier, state_dir):
 
 
 # Transfer archive to control plane
-def transfer_archive(archive_path, resource_id, meta_data, callback_url):
+def transfer_archive(archive_path, database_id, meta_data, callback_url):
 
     data = {
-        "resource_id": resource_id,
+        "database_id": database_id,
         "meta_data": meta_data,
     }
 

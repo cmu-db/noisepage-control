@@ -8,7 +8,7 @@ class AWSRDSPostgresEnvironment(BaseEnvironment):
         print ("testing connectivity aws rds", self.database)
         pass
 
-    def collect_workload(self, num_chunks, resource_id, callback_url):
+    def collect_workload(self, num_chunks, callback_url):
         # Gets a workload and archives it
         pass
 

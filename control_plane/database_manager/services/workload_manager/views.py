@@ -1,4 +1,5 @@
 import json 
+import datetime
 
 from django.http import HttpResponse, FileResponse
 
@@ -23,12 +24,12 @@ def index(request):
 def workloads(request, database_id):
     if request.method == "POST":
         data = json.loads(request.body.decode("utf-8"))
-        return collect_workload(request, database_id, data["num_chunks"], data["friendly_name"])
+        return collect_workload(request, database_id, data["num_chunks"])
     elif request.method == "GET":
         return get_workloads(request, database_id)
 
 
-def collect_workload(request, database_id, num_chunks, friendly_name):
+def collect_workload(request, database_id, num_chunks):
 
     from database_manager.models import Database
 
@@ -36,17 +37,12 @@ def collect_workload(request, database_id, num_chunks, friendly_name):
     database = Database.objects.get(database_id = database_id)
     env = init_environment(database)
 
-    # Init a new resource
-    resource_id = initialise_resource(
-        database_id, 
-        ResourceType.WORKLOAD, 
-        friendly_name, 
-        {"num_chunks": num_chunks}
-    )
+    # Init a new resource id
+    resource_id = str(uuid.uuid4())
     print ("New resource", resource_id)
 
     callback_url = f"{settings.CONTROL_PLANE_CALLBACK_BASE_URL}/database_manager/workload/collect_workload_callback/"
-    env.collect_workload(num_chunks, resource_id, callback_url)
+    env.collect_workload(num_chunks, callback_url)
 
     # Send request to remote executor
     return HttpResponse("OK")
@@ -58,14 +54,21 @@ def collect_workload_callback(request):
 
     data = json.loads(request.FILES["data"].read().decode("utf-8"))
 
-    resource_id = data["resource_id"]
-    
-    print("Received collected data. Resource id: %s" % (resource_id))
+    database_id = data["database_id"]
+    # Hack, we should only request for num_chunks = 1 in collect workload
+    # Needs to be redesigned in the future, don't have the time now
+
+    chunk = meta_data[0]
+    file_name = meta_data["file_name"]
+    start_time = datetime.datetime.strptime(f, "postgresql-%Y-%m-%d_%H%M%S.csv")
+    friendly_name = "%s_%s" % (database_id, file_name)
+
+    print("Received collected data. Resource id: %s" % (friendly_name))
 
     captured_workload_tar = request.FILES["workload"].read()
     captured_workload_filename = request.FILES["workload"].name
 
-    save_resource(resource_id, captured_workload_tar, captured_workload_filename)
+    # save_resource(resource_id, captured_workload_tar, captured_workload_filename)
 
     return HttpResponse("OK")
 

@@ -9,14 +9,6 @@ from .resource_type import ResourceType
 logger = logging.getLogger("control_plane")
 
 def initialise_resource_dir(database_id):
-    """
-    Creates a resource entry which tracks the workload
-    to be collected. This entry would be updated
-    in the future when the workload arrives
-
-    Returns: resource_id
-    Unique identifier for the inited resource
-    """
 
     # Init new resource dir for database
     resource_dir = settings.RESOURCE_DIR / database_id
@@ -27,7 +19,7 @@ def initialise_resource_dir(database_id):
         % (database_id)
     )
 
-def initialise_resource(database_id, resource_type, friendly_name, metadata = {}):
+def initialise_resource(database_id, resource_type, friendly_name, metadata = {}, resource_id = None):
     """
     Creates a resource entry which tracks the workload
     to be collected. This entry would be updated
@@ -39,7 +31,11 @@ def initialise_resource(database_id, resource_type, friendly_name, metadata = {}
 
     from .models import Resource
 
+    if resource_id is None:
+        resource_id = str(uuid.uuid4())
+
     resource = Resource(
+        resource_id=resource_id,
         database_id=database_id,
         resource_type=resource_type,
         friendly_name=friendly_name,

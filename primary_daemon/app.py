@@ -36,7 +36,7 @@ def healthcheck():
 def collect_workload():
 
     data = request.get_json()
-    resource_id = data["resource_id"]
+    database_id = data["database_id"]
     callback_url = data["callback_url"]
     num_chunks = data["num_chunks"] # Previously completed chunks
 
@@ -44,7 +44,7 @@ def collect_workload():
 
     thread = Thread(
         target=capture_and_transfer_workload, 
-        args=(resource_id, callback_url, int(num_chunks))
+        args=(database_id, callback_url, int(num_chunks))
     )
     thread.start()
 
@@ -73,10 +73,10 @@ def apply():
     return 'OK'
 
 
-def capture_and_transfer_workload(resource_id, callback_url, num_chunks):
+def capture_and_transfer_workload(database_id, callback_url, num_chunks):
     log_dir = database_executor.get_logging_dir()
-    meta_data, archive_path = create_workload_archive(RESOURCE_DIR, log_dir, resource_id, num_chunks)
-    transfer_archive(archive_path, resource_id, meta_data, callback_url)
+    meta_data, archive_path = create_workload_archive(RESOURCE_DIR, log_dir, database_id, num_chunks)
+    transfer_archive(archive_path, database_id, meta_data, callback_url)
 
 
 @app.route('/collect_state/', methods = ['POST'])
