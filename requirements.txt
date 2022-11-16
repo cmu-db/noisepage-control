@@ -18,3 +18,4 @@ six==1.16.0
 sqlparse==0.4.3
 urllib3==1.26.12
 vine==5.0.0
+apscheduler==3.9.1.post1

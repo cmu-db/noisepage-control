@@ -16,14 +16,6 @@ from resource_manager.resource_type import ResourceType
 from environments.environment import init_environment
 from database_manager.types.database_state_types import DatabaseStateType
 
-# For scheduling workload pulls
-from apscheduler.schedulers.background import BackgroundScheduler
-logging.basicConfig()
-logging.getLogger('apscheduler').setLevel(logging.DEBUG)
-scheduler = BackgroundScheduler()
-scheduler.add_job(pull_workload_for_all_databases, 'interval', minutes = 1)
-scheduler.start()
-
 @csrf_exempt
 @require_http_methods(["GET"])
 def index(request):
@@ -41,14 +33,13 @@ def workloads(request, database_id):
         return get_workloads(request, database_id)
 
 
+# Collects workload for all active and healthy dbs
 def pull_workload_for_all_databases():
-
     from database_manager.models import Database
-
+    NUM_CHUNKS = 2
     for database in Database.objects.filter(
         active = True, state = DatabaseStateType.HEALTHY):
-
-        collect_workload(database.database_id, 3)
+        collect_workload(database.database_id, NUM_CHUNKS)
 
 
 def collect_workload(database_id, num_chunks):
@@ -131,4 +122,14 @@ def download_workload(request, workload_id):
 
     response['Content-Type'] = "application/gzip"
     return response
+
+
+# For scheduling workload pulls
+from apscheduler.schedulers.background import BackgroundScheduler
+logging.basicConfig()
+logging.getLogger('apscheduler').setLevel(logging.DEBUG)
+
+scheduler = BackgroundScheduler()
+scheduler.add_job(pull_workload_for_all_databases, 'interval', minutes = 1)
+scheduler.start()
 
