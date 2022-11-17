@@ -9,6 +9,7 @@ from django.http import HttpResponse, FileResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 from django.conf import settings
+from django.db.models import Q
 
 from resource_manager.views import initialise_resource, save_resource, get_resource_filepath, does_resource_exist
 from resource_manager.resource_type import ResourceType
@@ -124,3 +125,16 @@ def download_workload(request, workload_id):
     return response
 
 
+
+def get_workloads_in_time_range(database_id, workload_start_time, workload_end_time):
+
+    from resource_manager.models import Resource
+
+    c1 = Q(database_id=database_id)
+    c2 = Q(collected_at__gte=workload_start_time)
+    c3 = Q(collected_at__lte=workload_end_time)
+
+    q = Question.objects.filter(criterion1 & criterion2)
+
+
+    return list(Resource.objects.filter(c1 & c2 & c3))

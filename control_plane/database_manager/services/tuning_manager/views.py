@@ -11,7 +11,7 @@ from environments.environment import init_environment
 from resource_manager.views import get_resource_filepath
 from database_manager.types.tuningstatus import TuningStatusType
 from database_manager.types.action_status import ActionStatusType
-
+from database_manager.services.workload_manager.views import get_workloads_in_time_range
 
 logger = logging.getLogger("control_plane")
 
@@ -44,9 +44,13 @@ def tune_database(request, database_id, workload_start_time, workload_end_time):
     )
     tuning_instance.save()
 
+    # Get all workloads
+    workloads = get_workloads_in_time_range(database_id, workload_start_time, workload_end_time)
+    print (workloads)
+
     # Fetch database and init environment
-    database = Database.objects.get(database_id = database_id)
-    env = init_environment(database)
+    # database = Database.objects.get(database_id = database_id)
+    # env = init_environment(database)
 
     # workload = Resource.objects.get(resource_id = workload_id)
     # workload_file_path = get_resource_filepath(workload)
@@ -58,7 +62,7 @@ def tune_database(request, database_id, workload_start_time, workload_end_time):
     # callback_url = f"{settings.CONTROL_PLANE_CALLBACK_BASE_URL}/database_manager/tune/tune_database_callback/"
     # env.tune(tuning_instance.tuning_instance_id, workload_file_path, state_file_path, callback_url)
 
-    # return HttpResponse("OK")
+    return HttpResponse("OK")
 
 
 def get_tuning_history(request, database_id):
