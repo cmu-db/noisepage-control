@@ -46,34 +46,33 @@ def tune_database(request, database_id, workload_start_time, workload_end_time):
     )
     tuning_instance.save()
 
+    # Get latest state before workload_start_time
+    # TODO: Possible that state does not exist; figure this out
+
     state = get_latest_state_before_datetime(database_id, workload_start_time)
+    state_file_path = get_resource_filepath(state)
+
     print (state)
 
     # Get all workload chunks
     workloads = get_workloads_in_time_range(database_id, workload_start_time, workload_end_time)
     print (workloads)
 
-    # Create new tar for workload
-    tar = tarfile.open("temp.tar.gz", "w:gz")
-
+    # Create new tar for workload which has all the chunks
+    workload_tar_file_name = tuning_instance.tuning_id + "tar.gz"
+    workload_tar = tarfile.open(workload_tar_file_name, "w:gz")
     for workload in workloads:
-        workload_filepath = get_resource_filepath(workload)
-        print (workload_file_path)
-    tar.close()
-    # Get latest state before workload_start_time
-    # TODO: Possible that state does not exist; figure this out
-
+        workload_file_path = get_resource_filepath(workload)
+        workload_tar.add(workload_file_path, arcname = workload.file_name)
+    workload_tar.close()
 
     # Fetch database and init environment
     database = Database.objects.get(database_id = database_id)
     env = init_environment(database)
 
-    # state = Resource.objects.get(resource_id = state_id)
-    # state_file_path = get_resource_filepath(state)
-
-    # # TODO: Move this to async flow; file transfer can take time
-    # callback_url = f"{settings.CONTROL_PLANE_CALLBACK_BASE_URL}/database_manager/tune/tune_database_callback/"
-    # env.tune(tuning_instance.tuning_instance_id, workload_file_path, state_file_path, callback_url)
+    # TODO: Move this to async flow; file transfer can take time
+    callback_url = f"{settings.CONTROL_PLANE_CALLBACK_BASE_URL}/database_manager/tune/tune_database_callback/"
+    env.tune(tuning_instance.tuning_instance_id, workload_tar_file_name, state_file_path, callback_url)
 
     return HttpResponse("OK")
 
