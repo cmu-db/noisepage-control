@@ -33,8 +33,8 @@ def tune_database(request, database_id, workload_start_time, workload_end_time):
     from database_manager.models import Database, TuningInstance
     from resource_manager.models import Resource
 
-    workload_start_time = datetime.datetime.strptime(workload_start_time, "%Y-%m-%d_%H%M%S")
-    workload_end_time = datetime.datetime.strptime(workload_end_time, "%Y-%m-%d_%H%M%S")
+    workload_start_time = datetime.strptime(workload_start_time, "%Y-%m-%d_%H%M%S")
+    workload_end_time = datetime.strptime(workload_end_time, "%Y-%m-%d_%H%M%S")
 
     tuning_instance = TuningInstance(
         database_id = database_id,
