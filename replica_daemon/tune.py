@@ -18,23 +18,28 @@ def tune_database(tuning_instance_id, db_name, callback_url):
     os.mkdir("data", 0o777)
     os.mkdir("data/workloads", 0o777)
 
+    print ("Extracting workloads")
     # Extract all workload chunks to data dir
     with tarfile.open("workload.tar.gz") as w:
         w.extractall("data/workloads")
+    
+    print ("Merging workloads")
     # Merge all workload chunks into one
     workload_chunks = glob.glob("data/workload/*")
     with open('data/workload.csv', 'w') as wf:
         workload_lines = fileinput.input(workload_chunks)
-        wf.writelines(input_lines)
+        wf.writelines(workload_lines)
+    
     # Delete chunks
+    print ("Deleting chunks")
     shutil.rmtree("data/workloads")
     os.remove("workload.tar.gz")
 
     # Extrac all state files
+    print ("Extracting state")
     with tarfile.open("state.tar.gz") as w:
         w.extractall("data")
     os.remove("state.tar.gz")
-
 
     # Generate garbage config
     print("Generating garbage config")
