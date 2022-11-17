@@ -130,10 +130,6 @@ def get_workloads_in_time_range(database_id, workload_start_time, workload_end_t
 
     from resource_manager.models import Resource
 
-    c1 = Q(database_id=database_id)
-    c2 = Q(collected_at__gte=workload_start_time)
-    c3 = Q(collected_at__lte=workload_end_time)
-
     return list(Resource.objects.filter(
         database_id=database_id,
         resource_type=ResourceType.WORKLOAD,

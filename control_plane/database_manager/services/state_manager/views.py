@@ -102,3 +102,11 @@ def download_state(request, state_id):
     response['Content-Type'] = "application/gzip"
     return response
 
+def get_latest_state_before_datetime(database_id, datatime_obj):
+
+    from resource_manager.models import Resource
+    
+    return list(Resource.objects.filter(
+        database_id=database_id,
+        resource_type=ResourceType.STATE,
+        collected_at__lte=datatime_obj)[:1])[0]

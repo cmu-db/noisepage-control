@@ -12,6 +12,7 @@ from resource_manager.views import get_resource_filepath
 from database_manager.types.tuningstatus import TuningStatusType
 from database_manager.types.action_status import ActionStatusType
 from database_manager.services.workload_manager.views import get_workloads_in_time_range
+from database_manager.services.state_manager.views import get_latest_state_before_datetime
 
 logger = logging.getLogger("control_plane")
 
@@ -44,9 +45,15 @@ def tune_database(request, database_id, workload_start_time, workload_end_time):
     )
     tuning_instance.save()
 
-    # Get all workloads
+    # Get all workload chunks
     workloads = get_workloads_in_time_range(database_id, workload_start_time, workload_end_time)
     print (workloads)
+
+    # Get latest state before workload_start_time
+    # TODO: Possible that state does not exist; figure this out
+
+    state = get_latest_state_before_datetime(database_id, workload_start_time)
+    print (state)
 
     # Fetch database and init environment
     # database = Database.objects.get(database_id = database_id)
