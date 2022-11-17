@@ -134,4 +134,8 @@ def get_workloads_in_time_range(database_id, workload_start_time, workload_end_t
     c2 = Q(collected_at__gte=workload_start_time)
     c3 = Q(collected_at__lte=workload_end_time)
 
-    return list(Resource.objects.filter(c1 & c2 & c3))
+    return list(Resource.objects.filter(
+        database_id=database_id,
+        resource_type=ResourceType.WORKLOAD,
+        collected_at__gte=workload_start_time,
+        collected_at__lte=workload_end_time).order_by('collected_at')
