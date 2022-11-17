@@ -9,6 +9,7 @@ from django.conf import settings
 
 from resource_manager.views import initialise_resource, save_resource, get_resource_filepath
 from resource_manager.resource_type import ResourceType
+from database_manager.types.database_state_types import DatabaseStateType
 
 from environments.environment import init_environment
 
