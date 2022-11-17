@@ -20,24 +20,27 @@ logger = logging.getLogger("control_plane")
 def tune(request, database_id):
     if request.method == "POST":
         body = json.loads(request.body.decode("utf-8"))
-        return tune_database(request, database_id, body["workload_id"], body["state_id"], body["friendly_name"])
+        return tune_database(request, database_id, body["workload_start_time"], body["workload_end_time"])
     elif request.method == "GET":
         return get_tuning_history(request, database_id)
 
 
-def tune_database(request, database_id, workload_id, state_id, friendly_name):
-    logger.debug("tune_database for database %s, workload %s, state %s, friendly_name %s", database_id, workload_id, state_id, friendly_name)
-    # TODO: Implement this
+def tune_database(request, database_id, workload_start_time, workload_end_time):
+    logger.debug(
+        "tune_database for database %s, workload_start_time %s, workload_end_time %s", 
+        database_id, workload_start_time, workload_end_time)
 
     from database_manager.models import Database, TuningInstance
     from resource_manager.models import Resource
 
+    workload_start_time = datetime.datetime.strptime(workload_start_time, "%Y-%m-%d_%H%M%S")
+    workload_end_time = datetime.datetime.strptime(workload_end_time, "%Y-%m-%d_%H%M%S")
+
     tuning_instance = TuningInstance(
         database_id = database_id,
-        workload_id = workload_id,
-        state_id = state_id,
+        workload_start_time = workload_start_time,
+        workload_end_time = workload_end_time,
         status = TuningStatusType.RUNNING,
-        friendly_name = friendly_name
     )
     tuning_instance.save()
 
@@ -45,17 +48,17 @@ def tune_database(request, database_id, workload_id, state_id, friendly_name):
     database = Database.objects.get(database_id = database_id)
     env = init_environment(database)
 
-    workload = Resource.objects.get(resource_id = workload_id)
-    workload_file_path = get_resource_filepath(workload)
+    # workload = Resource.objects.get(resource_id = workload_id)
+    # workload_file_path = get_resource_filepath(workload)
 
-    state = Resource.objects.get(resource_id = state_id)
-    state_file_path = get_resource_filepath(state)
+    # state = Resource.objects.get(resource_id = state_id)
+    # state_file_path = get_resource_filepath(state)
 
-    # TODO: Move this to async flow; file transfer can take time
-    callback_url = f"{settings.CONTROL_PLANE_CALLBACK_BASE_URL}/database_manager/tune/tune_database_callback/"
-    env.tune(tuning_instance.tuning_instance_id, workload_file_path, state_file_path, callback_url)
+    # # TODO: Move this to async flow; file transfer can take time
+    # callback_url = f"{settings.CONTROL_PLANE_CALLBACK_BASE_URL}/database_manager/tune/tune_database_callback/"
+    # env.tune(tuning_instance.tuning_instance_id, workload_file_path, state_file_path, callback_url)
 
-    return HttpResponse("OK")
+    # return HttpResponse("OK")
 
 
 def get_tuning_history(request, database_id):
