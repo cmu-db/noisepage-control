@@ -6,6 +6,7 @@ import docker
 import json
 import glob
 import requests
+import fileinput
 
 # IMAGE_NAME = "kushagr2/garbage:v2" # Only garbage
 IMAGE_NAME = "kushagr2/garbage:v4" # Garbage + Index
@@ -20,9 +21,20 @@ def tune_database(tuning_instance_id, db_name, callback_url):
     # Extract all workload chunks to data dir
     with tarfile.open("workload.tar.gz") as w:
         w.extractall("data/workloads")
+    # Merge all workload chunks into one
+    workload_chunks = glob.glob("data/workload/*")
+    with open('data/workload.csv', 'w') as wf:
+        workload_lines = fileinput.input(workload_chunks)
+        wf.writelines(input_lines)
+    # Delete chunks
+    shutil.rmtree("data/workloads")
+    os.remove("workload.tar.gz")
 
+    # Extrac all state files
     with tarfile.open("state.tar.gz") as w:
         w.extractall("data")
+    os.remove("state.tar.gz")
+
 
     # Generate garbage config
     print("Generating garbage config")
@@ -40,57 +52,50 @@ def tune_database(tuning_instance_id, db_name, callback_url):
     with open("data/index_config.json", "w") as fp:
         fp.write(index_config)
 
-    print ("done")
+    print("Executing image")
+    parent_dir_path = Path(__file__).parent.resolve()
+    client = docker.from_env()
+    exec_logs = client.containers.run(
+        IMAGE_NAME,
+        environment = {
+            "PG_USERNAME" : "cmudb",
+        },
+        user = "postgres",
+        volumes = {
+            str(parent_dir_path / "data"): {
+                'bind': '/data', 'mode': 'rw'
+                }
+            }, 
+        detach = False).decode("utf-8")
+    print(exec_logs)
 
-    # Execute image
-    # print("Executing image")
-    # parent_dir_path = Path(__file__).parent.resolve()
-    # client = docker.from_env()
-    # exec_logs = client.containers.run(
-    #     IMAGE_NAME,
-    #     environment = {
-    #         "PG_USERNAME" : "cmudb",
-    #     },
-    #     user = "postgres",
-    #     volumes = {
-    #         str(parent_dir_path / "data"): {
-    #             'bind': '/data', 'mode': 'rw'
-    #             }
-    #         }, 
-    #     detach = False).decode("utf-8")
-    # print(exec_logs)
+    # Parse generated file for actions
+    print("Parsing generated file for actions")
+    results_dir_path = parent_dir_path / "data" /  "benchmark_results/"
 
-    # # Parse generated file for actions
-    # print("Parsing generated file for actions")
-    # results_dir_path = parent_dir_path / "data" /  "benchmark_results/"
+    actions = []
+    for file in os.listdir(results_dir_path):
+        if not file.endswith(".sql"): # Ignore non SQL files
+            continue
 
-    # actions = []
-    # for file in os.listdir(results_dir_path):
-    #     if not file.endswith(".sql"): # Ignore non SQL files
-    #         continue
-
-    #     with open(results_dir_path / file, "r") as fp:
-    #         for action in fp.readlines():
-    #             actions.append({
-    #                 "command": action.strip("\n"),
-    #                 "benefit": 100.0,
-    #                 "reboot_required": False if action.startswith("create index") else True,
-    #             })
+        with open(results_dir_path / file, "r") as fp:
+            for action in fp.readlines():
+                actions.append({
+                    "command": action.strip("\n"),
+                    "benefit": 100.0,
+                    "reboot_required": False if action.startswith("create index") else True,
+                })
 
 
-    # # Clean up
-    # print("Cleaning up")
-    # os.remove("workload.tar.gz")
-    # shutil.rmtree(workload_dir_name)
-    # os.remove("state.tar.gz")
-    # shutil.rmtree(state_dir_name)
-    # shutil.rmtree("data")
+    # Clean up
+    print("Cleaning up")
+    shutil.rmtree("data")
 
-    # data = {
-    #     "actions": actions,
-    #     "tuning_instance_id": tuning_instance_id,
-    #     "exec_logs": exec_logs,
-    # }
+    data = {
+        "actions": actions,
+        "tuning_instance_id": tuning_instance_id,
+        "exec_logs": exec_logs,
+    }
 
-    # headers = {"Content-type": "application/json"}
-    # requests.post(callback_url, data=json.dumps(data), headers=headers, timeout=3)
+    headers = {"Content-type": "application/json"}
+    requests.post(callback_url, data=json.dumps(data), headers=headers, timeout=3)

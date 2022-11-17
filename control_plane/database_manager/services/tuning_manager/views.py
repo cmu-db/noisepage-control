@@ -59,11 +59,11 @@ def tune_database(request, database_id, workload_start_time, workload_end_time):
     print (workloads)
 
     # Create new tar for workload which has all the chunks
-    workload_tar_file_name = tuning_instance.tuning_id + "tar.gz"
+    workload_tar_file_name = tuning_instance.tuning_instance_id + "tar.gz"
     workload_tar = tarfile.open(workload_tar_file_name, "w:gz")
     for workload in workloads:
         workload_file_path = get_resource_filepath(workload)
-        workload_tar.add(workload_file_path, arcname = workload.file_name)
+        workload_tar.add(workload_file_path, arcname = workload.resource_name)
     workload_tar.close()
 
     # Fetch database and init environment
