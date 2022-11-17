@@ -29,8 +29,8 @@ class DatabaseManagerConfig(AppConfig):
 
         scheduler = BackgroundScheduler()
 
-        # Workloads are chunked at 5 minutes on primary db; we fetch every minute but discard dups
-        scheduler.add_job(pull_workload_for_all_databases, 'interval', minutes = 1)
+        # Workloads are chunked at 5 minutes on primary db;
+        scheduler.add_job(pull_workload_for_all_databases, trigger='cron', minute = "*/5")
 
         # Collect state every 5 minutes
         scheduler.add_job(collect_state_for_all_databases, trigger='cron', minute = "4/5")
