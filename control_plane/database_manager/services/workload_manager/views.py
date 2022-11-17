@@ -124,12 +124,3 @@ def download_workload(request, workload_id):
     return response
 
 
-# For scheduling workload pulls
-from apscheduler.schedulers.background import BackgroundScheduler
-import logging
-logging.basicConfig()
-logging.getLogger('apscheduler').setLevel(logging.DEBUG)
-
-scheduler = BackgroundScheduler()
-scheduler.add_job(pull_workload_for_all_databases, 'interval', minutes = 1)
-scheduler.start()

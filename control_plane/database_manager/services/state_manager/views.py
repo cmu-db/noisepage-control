@@ -30,6 +30,13 @@ def states(request, database_id):
     elif request.method == "GET":
         return get_states(request, database_id)
 
+# Collects state for all active and healthy dbs
+def collect_state_for_all_databases():
+    from database_manager.models import Database
+    for database in Database.objects.filter(
+        active = True, state = DatabaseStateType.HEALTHY):
+        collect_state(database.database_id)
+
 
 def get_states(request, database_id):
     # get states with database_id
