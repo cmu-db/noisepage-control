@@ -4,6 +4,7 @@ from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 from django.conf import settings
+import tarfile
 
 from datetime import datetime
 
@@ -45,22 +46,27 @@ def tune_database(request, database_id, workload_start_time, workload_end_time):
     )
     tuning_instance.save()
 
+    state = get_latest_state_before_datetime(database_id, workload_start_time)
+    print (state)
+
     # Get all workload chunks
     workloads = get_workloads_in_time_range(database_id, workload_start_time, workload_end_time)
     print (workloads)
 
+    # Create new tar for workload
+    tar = tarfile.open("temp.tar.gz", "w:gz")
+
+    for workload in workloads:
+        workload_filepath = get_resource_filepath(workload)
+        print (workload_file_path)
+    tar.close()
     # Get latest state before workload_start_time
     # TODO: Possible that state does not exist; figure this out
 
-    state = get_latest_state_before_datetime(database_id, workload_start_time)
-    print (state)
 
     # Fetch database and init environment
-    # database = Database.objects.get(database_id = database_id)
-    # env = init_environment(database)
-
-    # workload = Resource.objects.get(resource_id = workload_id)
-    # workload_file_path = get_resource_filepath(workload)
+    database = Database.objects.get(database_id = database_id)
+    env = init_environment(database)
 
     # state = Resource.objects.get(resource_id = state_id)
     # state_file_path = get_resource_filepath(state)
