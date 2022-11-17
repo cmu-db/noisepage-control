@@ -33,6 +33,6 @@ class DatabaseManagerConfig(AppConfig):
         scheduler.add_job(pull_workload_for_all_databases, 'interval', minutes = 1)
 
         # Collect state every 5 minutes
-        scheduler.add_job(collect_state_for_all_databases, 'interval', minutes = 5)
+        scheduler.add_job(collect_state_for_all_databases, trigger='cron', minute = "4/5")
 
         scheduler.start()

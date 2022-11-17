@@ -25,7 +25,7 @@ def tune_database(tuning_instance_id, db_name, callback_url):
     
     print ("Merging workloads")
     # Merge all workload chunks into one
-    workload_chunks = glob.glob("data/workload/*")
+    workload_chunks = glob.glob("data/workloads/*")
     with open('data/workload.csv', 'w') as wf:
         workload_lines = fileinput.input(workload_chunks)
         wf.writelines(workload_lines)
