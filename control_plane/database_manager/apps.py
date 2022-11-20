@@ -1,3 +1,4 @@
+import sys
 from django.apps import AppConfig
 from threading import Thread
 
@@ -17,6 +18,11 @@ class DatabaseManagerConfig(AppConfig):
         TODO: Add robustness to the consumer thread.
         What happens if it fails?
         """
+        # Do not start the consumer thread or the cron jobs when running "manage.py migrate" etc.
+        is_manage_py = any(arg.casefold().endswith("manage.py") for arg in sys.argv)
+        is_runserver = any(arg.casefold() == "runserver" for arg in sys.argv)
+        if is_manage_py and not is_runserver:
+            return
 
         thread = Thread(target=init_command_consumer)
         thread.start()
