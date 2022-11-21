@@ -11,6 +11,8 @@ import numpy as np
 
 import tarfile
 
+SAMPLE_SIZE = 10
+
 def create_workload_archive(resource_dir, log_dir, database_id, num_chunks):
 
     # Get log files (.csv) from logging dir
@@ -50,7 +52,8 @@ def create_workload_archive(resource_dir, log_dir, database_id, num_chunks):
                 elif query[13].startswith("statement: "): # Write to log file
                     num_queries += 1
                     writer.writerow(query)
-                    if len(sample) < 5:
+
+                    if len(sample) < SAMPLE_SIZE:
                         sample.append(query[13])
 
             meta_data.append({

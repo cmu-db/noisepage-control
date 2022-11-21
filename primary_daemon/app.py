@@ -23,8 +23,7 @@ RESOURCE_DIR = ROOT_DIR / "resources"
 # TODO: Load postgres user from config
 database_executor = PrimaryExecutor(SCRIPTS_DIR, "postgres", "10000")
 
-print (database_executor.get_database_catalog("postgres"))
-print (database_executor.get_database_index("postgres"))
+# Enable logging
 database_executor.enable_logging()
 
 @app.route('/')
