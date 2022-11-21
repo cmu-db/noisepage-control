@@ -35,7 +35,7 @@ def create_workload_archive(resource_dir, log_dir, database_id, num_chunks):
 
         with open(log_dir / file_name, 'r') as infile, open(file_name, 'w') as outfile:
             
-            queries = csv.reader(fp)
+            queries = csv.reader(infile)
             writer = csv.writer(outfile)
             
 
@@ -47,7 +47,7 @@ def create_workload_archive(resource_dir, log_dir, database_id, num_chunks):
                 # Duration, push the value to collected times
                 if query[13].startswith("duration: "):
                     query_times.append(float(query[13][10:-3]))
-                else: # Write to log file
+                elif query[13].startswith("statement: "): # Write to log file
                     num_queries += 1
                     writer.writerow(query)
                     if len(sample) < 5:

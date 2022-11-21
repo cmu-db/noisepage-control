@@ -13,6 +13,7 @@ virtualenv venv
 source venv/bin/activate
 pip install flask
 pip install requests
+pip install numpy
 
 mkdir -p resources
 chmod +x scripts/*.sh
