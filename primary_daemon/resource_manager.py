@@ -6,6 +6,8 @@ import uuid
 from datetime import datetime
 from io import StringIO
 import random
+import csv
+import numpy as np
 
 import tarfile
 
@@ -22,23 +24,49 @@ def create_workload_archive(resource_dir, log_dir, database_id, num_chunks):
     archive_path = resource_dir / (database_id + ".tar.gz")
     tar = tarfile.open(archive_path, 'w:gz')
     meta_data = []
+    
+
     for file_name in files_to_process:
-        with open(log_dir / file_name, 'r') as fp:
-            queries = fp.readlines()
-            num_queries = len(queries)
-            if num_queries < 5:
-                sample = queries
-            else:
-                sample = random.choices(queries, k = 5)
+
+        # Preprocess and malke a copy  
+        query_times = []
+        num_queries = 0
+        sample = []
+
+        with open(log_dir / file_name, 'r') as infile, open(file_name, 'w') as outfile:
+            
+            queries = csv.reader(fp)
+            writer = csv.writer(outfile)
+            
+
+            for query in queries:
+                # Not a log, continue
+                if query[11] != "LOG":
+                    continue
+
+                # Duration, push the value to collected times
+                if query[13].startswith("duration: "):
+                    query_times.append(float(query[13][10:-3]))
+                else: # Write to log file
+                    num_queries += 1
+                    writer.writerow(query)
+                    if len(sample) < 5:
+                        sample.append(query[13])
 
             meta_data.append({
                 'file_name': file_name,
                 'num_queries': num_queries,
-                'sample': sample
+                'sample': sample,
+                'p99': np.percentile(query_times, 99),
+                'p90': np.percentile(query_times, 90),
+                'p75': np.percentile(query_times, 75),
+                'p50': np.percentile(query_times, 50),
             })
 
-        # Add file to archive
-        tar.add(log_dir / file_name, arcname = file_name)
+            # Add file to archive
+            tar.add(file_name, arcname = file_name)
+            # Delete the temp file
+            os.remove(file_name)
 
     tar.close()
 

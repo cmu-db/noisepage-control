@@ -25,6 +25,7 @@ sudo -u postgres bash -c "echo \"ALTER SYSTEM SET log_rotation_age=${LOG_ROTATIO
 sudo -u postgres bash -c "echo \"ALTER SYSTEM SET log_destination='csvlog';\" | psql -p ${DATABASE_PORT}"
 sudo -u postgres bash -c "echo \"ALTER SYSTEM SET log_statement='all';\" | psql -p ${DATABASE_PORT}"
 sudo -u postgres bash -c "echo \"ALTER SYSTEM SET logging_collector=on;\" | psql -p ${DATABASE_PORT}"
+sudo -u postgres bash -c "echo \"ALTER SYSTEM SET log_duration=on;\" | psql -p ${DATABASE_PORT}"
 
 # Restart postgres
 sudo -u postgres bash -c "${POSTGRES_BIN_DIR}/pg_ctl restart -D '${DATA_DIR}'"
