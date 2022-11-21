@@ -17,6 +17,7 @@ import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
 import LibraryAdd from '@mui/icons-material/LibraryAdd';
 import Done from '@mui/icons-material/Done';
+import WorkloadChart from './WorkloadChart';
 import axios from '../../util/axios';
 import parseDateTime from '../../util/parseDateTime';
 
@@ -33,7 +34,7 @@ export default function WorkloadContent() {
       try {
         const res = await axios.get(`/database_manager/databases/${databaseId}/workloads`);
         console.log(res);
-        setWorkloads(res.data);  
+        setWorkloads(res.data.sort((a, b) => new Date(a.collected_at) - new Date(b.collected_at)));  
       } catch (error) {
         console.error(error)
       }
@@ -73,7 +74,11 @@ export default function WorkloadContent() {
 
   return workloads && (
     <React.Fragment>
-      <TableContainer component={Paper}>
+      <Typography variant="h6" sx={{ mb: 3 }} align="center">Select a Target Workload Range</Typography>
+      <WorkloadChart workloads={workloads}/>
+
+      {/*
+      <TableContainer component={Paper} sx={{ mt: 3 }}>
         <Table aria-label="simple table">
           <TableHead>
             <TableRow>
@@ -84,7 +89,7 @@ export default function WorkloadContent() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {workloads.sort((a, b) => new Date(b.collected_at) - new Date(a.collected_at)).map((workload) => (
+            {workloads.reverse().map((workload) => (
               <TableRow
                 key={workload.resource_id}
                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -150,6 +155,20 @@ export default function WorkloadContent() {
           </LoadingButton>
         </Grid>
       </Grid>
+      */}
+      <Box sx={{ m: 2 }} align="center">
+        <LoadingButton
+          variant="contained"
+          startIcon={<LibraryAdd />}
+          sx={{ mt: 4, '&.Mui-disabled': { bgcolor: '#a5d6a7' } }}
+          // onClick={handleTuneDatabase}
+          // loading={submitLoading}
+          // loadingPosition="start"
+          // disabled={submitSuccess}
+        >
+          Tune!
+        </LoadingButton>
+      </Box>
     </React.Fragment>
   )
 }
