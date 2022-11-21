@@ -109,4 +109,4 @@ def get_latest_state_before_datetime(database_id, datatime_obj):
     return list(Resource.objects.filter(
         database_id=database_id,
         resource_type=ResourceType.STATE,
-        collected_at__lte=datatime_obj)[:1])[0]
+        collected_at__lte=datatime_obj).order_by('-collected_at')[:1])[0]
