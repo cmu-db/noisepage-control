@@ -17,7 +17,6 @@ import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
 import LibraryAdd from '@mui/icons-material/LibraryAdd';
 import Done from '@mui/icons-material/Done';
-import WorkloadChart from './WorkloadChart';
 import axios from '../../util/axios';
 import parseDateTime from '../../util/parseDateTime';
 
@@ -74,10 +73,6 @@ export default function WorkloadContent() {
 
   return workloads && (
     <React.Fragment>
-      <Typography variant="h6" sx={{ mb: 3 }} align="center">Select a Target Workload Range</Typography>
-      <WorkloadChart workloads={workloads}/>
-
-      {/*
       <TableContainer component={Paper} sx={{ mt: 3 }}>
         <Table aria-label="simple table">
           <TableHead>
@@ -155,20 +150,6 @@ export default function WorkloadContent() {
           </LoadingButton>
         </Grid>
       </Grid>
-      */}
-      <Box sx={{ m: 2 }} align="center">
-        <LoadingButton
-          variant="contained"
-          startIcon={<LibraryAdd />}
-          sx={{ mt: 4, '&.Mui-disabled': { bgcolor: '#a5d6a7' } }}
-          // onClick={handleTuneDatabase}
-          // loading={submitLoading}
-          // loadingPosition="start"
-          // disabled={submitSuccess}
-        >
-          Tune!
-        </LoadingButton>
-      </Box>
     </React.Fragment>
   )
 }

@@ -1,12 +1,14 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import Divider from '@mui/material/Divider';
 import axios from '../../util/axios';
 
-export default function DetailContent({ databaseId }) {
+export default function DetailContent() {
+  const { id: databaseId } = useParams();
   const [databaseDetail, setDatabaseDetail] = useState();
   
   useEffect(() => {
@@ -84,8 +86,5 @@ export default function DetailContent({ databaseId }) {
         <ListItemText primary="Replica SSH User" secondary={databaseDetail.replica_ssh_user} />
       </ListItem>
     </List>
-    // <React.Fragment>
-    //   <h1>Detail Content</h1>
-    // </React.Fragment>
   )
 }
