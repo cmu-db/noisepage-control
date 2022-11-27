@@ -1,5 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
+import Clear from '@mui/icons-material/Clear';
 import Chart from 'chart.js/auto';
 
 const formatDate = (date) => {
@@ -13,15 +16,20 @@ const formatDate = (date) => {
   });
 };
 
-const WorkloadChart = ({ workloads: workloadsProp, metricType }) => {
+const labels = ["11/15, 22:30", "11/15, 22:35", "11/15, 22:40", "11/15, 22:45", "11/15, 22:50",
+"11/15, 22:55", "11/15, 23:00", "11/15, 23:05", "11/15, 23:10", "11/15, 23:15"];
+
+const WorkloadChart = ({ workloads: workloadsProp, metricType, setSelectedWorkloadRange }) => {
   const [workloads, setWorkloads] = useState([]);
   const canvasRef = useRef(null);
   const overlayRef = useRef(null);
   const chart = useRef(null);
-  const selectStartIndex = useRef(0);
+  const selectStartIndex = useRef(null);
   const selectStartX = useRef(0);
+  const selectEndIndex = useRef(null);
   const selectionContext = useRef(null);
   const drag = useRef(false);
+  const [selected, setSelected] = useState(false);
 
   useEffect(() => {
     setWorkloads(workloadsProp.sort(
@@ -34,10 +42,8 @@ const WorkloadChart = ({ workloads: workloadsProp, metricType }) => {
     // const p99s = workloads.map(workload => workload.metadata.p99);
     const chartData = {
       // labels: labels,
-      labels: ["11/15, 22:30", "11/15, 22:35", "11/15, 22:40", "11/15, 22:45", "11/15, 22:50",
-               "11/15, 22:55", "11/15, 23:00", "11/15, 23:05", "11/15, 23:10", "11/15, 23:15"]
+      labels: labels
     }
-    console.log(metricType)
     if (metricType === 'num_queries') {
       chartData.datasets = [{
         type: "bar",
@@ -87,6 +93,7 @@ const WorkloadChart = ({ workloads: workloadsProp, metricType }) => {
     overlay.width = canvas.width;
     overlay.height = canvas.height;
     selectionContext.current = overlay.getContext('2d');
+    selectionContext.current.globalAlpha = 0.3;
 
     return () => {
       chart.current.destroy();
@@ -102,12 +109,16 @@ const WorkloadChart = ({ workloads: workloadsProp, metricType }) => {
 
     selectStartX.current = event.clientX - rect.left;
     drag.current = true;
+    setSelected(false);
   };
 
   const handlePointerMove = (event) => {
+    if (selected) {
+      return;
+    }
+
     const rect = canvasRef.current.getBoundingClientRect();
     if (drag.current) {
-      selectionContext.current.globalAlpha = 0.5;
       selectionContext.current.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
       const x = (event.clientX - rect.left)
       selectionContext.current.fillRect(selectStartX.current,
@@ -132,10 +143,23 @@ const WorkloadChart = ({ workloads: workloadsProp, metricType }) => {
     const points = chart.current.getElementsAtEventForMode(event, 'index', {
       intersect: false
     });
-    const selectEndIndex = points[0].index;
+    selectEndIndex.current = points[0].index;
     drag.current = false;
 
-    console.log(selectStartIndex.current, selectEndIndex);
+    if (selectStartIndex.current > selectEndIndex.current) {
+      const tmp = selectStartIndex.current;
+      selectStartIndex.current = selectEndIndex.current;
+      selectEndIndex.current = tmp;
+    }
+    console.log(selectStartIndex.current, selectEndIndex.current);
+    setSelectedWorkloadRange([labels[selectStartIndex.current], labels[selectEndIndex.current]]);
+    setSelected(true);
+  };
+
+  const handleClearSelection = () => {
+    setSelected(false);
+    setSelectedWorkloadRange(null);
+    selectionContext.current.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
   };
 
   return (
@@ -153,6 +177,24 @@ const WorkloadChart = ({ workloads: workloadsProp, metricType }) => {
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerUp}
       ></canvas>
+      {selected &&
+        <Typography
+          color={'error.main'}
+          component="div"
+          sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mt: 3 }}
+        >
+          Selected Range: {`${labels[selectStartIndex.current]} ~ ${labels[selectEndIndex.current]}`}
+          <Button
+            startIcon={<Clear sx={{ m: 0 }}/>}
+            variant='outlined'
+            color='error'
+            sx={{ ml: 2 }}
+            onClick={handleClearSelection}
+          >
+            Clear
+          </Button>
+        </Typography>
+      }
     </Box>
   );
 };
