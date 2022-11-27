@@ -33,7 +33,7 @@ export default function WorkloadContent() {
       try {
         const res = await axios.get(`/database_manager/databases/${databaseId}/workloads`);
         console.log(res);
-        setWorkloads(res.data);  
+        setWorkloads(res.data.sort((a, b) => new Date(a.collected_at) - new Date(b.collected_at)));  
       } catch (error) {
         console.error(error)
       }
@@ -73,7 +73,7 @@ export default function WorkloadContent() {
 
   return workloads && (
     <React.Fragment>
-      <TableContainer component={Paper}>
+      <TableContainer component={Paper} sx={{ mt: 3 }}>
         <Table aria-label="simple table">
           <TableHead>
             <TableRow>
@@ -84,7 +84,7 @@ export default function WorkloadContent() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {workloads.sort((a, b) => new Date(b.collected_at) - new Date(a.collected_at)).map((workload) => (
+            {workloads.reverse().map((workload) => (
               <TableRow
                 key={workload.resource_id}
                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}

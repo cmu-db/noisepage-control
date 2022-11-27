@@ -9,9 +9,11 @@ import Navigator from './components/Navigator';
 import RegisterDatabase from './pages/RegisterDatabases';
 import MyDatabases from './pages/MyDatabases';
 import ManageDatabase from './pages/ManageDatabase';
+import DetailContent from './pages/ManageDatabase/DetailContent';
 import WorkloadContent from './pages/ManageDatabase/WorkloadContent';
 import StateContent from './pages/ManageDatabase/StateContent';
 import TuneDatabaseContent from './pages/ManageDatabase/TuneDatabaseContent';
+import TuningHistoryContent from './pages/ManageDatabase/TuningHistoryContent';
 import theme from './theme';
 
 function Copyright() {
@@ -64,10 +66,12 @@ export default function App() {
               <Route path="/register" element={<RegisterDatabase />} />
               <Route path="/databases" element={<MyDatabases />} />
               <Route path="/databases/:id" element={<ManageDatabase />} >
-                <Route index element={<Navigate to="workloads" />} />
+                <Route index element={<Navigate to="detail" />} />
+                <Route path="detail" element={<DetailContent />} />
+                <Route path="tune" element={<TuneDatabaseContent />} />
+                <Route path="tuning-history" element={<TuningHistoryContent />} />
                 <Route path="workloads" element={<WorkloadContent />} />
                 <Route path="states" element={<StateContent />} />
-                <Route path="tunes" element={<TuneDatabaseContent />} />
               </Route>
             </Routes>
             <Box component="footer" sx={{ p: 2, bgcolor: '#eaeff1' }}>
