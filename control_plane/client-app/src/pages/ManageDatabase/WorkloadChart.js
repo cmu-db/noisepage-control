@@ -2,22 +2,6 @@ import React, { useState, useEffect, useRef } from "react";
 import Box from '@mui/material/Box';
 import Chart from 'chart.js/auto';
 
-const chartOptions = {
-  scales: {
-    y: {
-      title: {
-        display: true,
-        text: 'Number of Queries'
-      },
-    },
-  },
-  plugins:{
-    legend: {
-      display: false,
-    }
-  }
-};
-
 const formatDate = (date) => {
   date = new Date(date);
   return date.toLocaleString('en-US', {
@@ -29,7 +13,7 @@ const formatDate = (date) => {
   });
 };
 
-const WorkloadChart = ({ workloads: workloads_prop }) => {
+const WorkloadChart = ({ workloads: workloadsProp, metricType }) => {
   const [workloads, setWorkloads] = useState([]);
   const canvasRef = useRef(null);
   const overlayRef = useRef(null);
@@ -40,40 +24,62 @@ const WorkloadChart = ({ workloads: workloads_prop }) => {
   const drag = useRef(false);
 
   useEffect(() => {
-    setWorkloads(workloads_prop.sort(
+    setWorkloads(workloadsProp.sort(
       (a, b) => new Date(a.collected_at) - new Date(b.collected_at)
     ));
 
     // Prepare chart data
-    const labels = workloads.map(workload => formatDate(workload.collected_at));
-    const queries = workloads.map(workload => workload.metadata.num_queries);
+    // const labels = workloads.map(workload => formatDate(workload.collected_at));
+    // const queries = workloads.map(workload => workload.metadata.num_queries);
+    // const p99s = workloads.map(workload => workload.metadata.p99);
     const chartData = {
       // labels: labels,
       labels: ["11/15, 22:30", "11/15, 22:35", "11/15, 22:40", "11/15, 22:45", "11/15, 22:50",
-               "11/15, 22:55", "11/15, 23:00", "11/15, 23:05", "11/15, 23:10", "11/15, 23:15"],
-      datasets: [
-        {
-          // label: "My First dataset",
-          type: "line",
-          backgroundColor: "rgb(255, 99, 132)",
-          borderColor: "rgb(255, 99, 132)",
-          // data: queries,
-          data: [100, 400, 1000, 800, 900, 20, 80, 200, 500, 10]
-        },
-        {
-          type: "bar",
-          // data: queries
-          data: [100, 400, 1000, 800, 900, 20, 80, 200, 500, 10]
-        }
-      ],
-    };
+               "11/15, 22:55", "11/15, 23:00", "11/15, 23:05", "11/15, 23:10", "11/15, 23:15"]
+    }
+    console.log(metricType)
+    if (metricType === 'num_queries') {
+      chartData.datasets = [{
+        type: "bar",
+        // data: queries
+        data: [100, 400, 1000, 800, 900, 20, 80, 200, 500, 10]
+      }, {
+        type: "line",
+        backgroundColor: "rgb(255, 99, 132)",
+        borderColor: "rgb(255, 99, 132)",
+        // data: queries
+        data: [100, 400, 1000, 800, 900, 20, 80, 200, 500, 10]
+      }];
+    } else if (metricType === 'p99') {
+      chartData.datasets = [{
+        type: "line",
+        backgroundColor: "rgb(255, 99, 132)",
+        borderColor: "rgb(255, 99, 132)",
+        // data: p99s
+        data: [60, 80, 100, 120, 90, 40, 200, 300, 70, 30]
+      }];
+    }
 
     // Create chart
     const canvas = canvasRef.current;
     const canvasCtx = canvas.getContext('2d');
     chart.current = new Chart(canvasCtx, {
       data: chartData,
-      options: chartOptions
+      options: {
+        scales: {
+          y: {
+            title: {
+              display: true,
+              text: metricType === 'p99' ? 'P99 Latency (ms)' : 'Number of Queries'
+            },
+          },
+        },
+        plugins:{
+          legend: {
+            display: false,
+          }
+        }
+      }
     });
 
     // Create overlay
@@ -81,12 +87,11 @@ const WorkloadChart = ({ workloads: workloads_prop }) => {
     overlay.width = canvas.width;
     overlay.height = canvas.height;
     selectionContext.current = overlay.getContext('2d');
-    console.log(selectionContext.current);
 
     return () => {
       chart.current.destroy();
     };
-  }, []);
+  }, [workloadsProp, metricType]);
 
   const handlePointerDown = (event) => {
     const points = chart.current.getElementsAtEventForMode(event, 'index', {
