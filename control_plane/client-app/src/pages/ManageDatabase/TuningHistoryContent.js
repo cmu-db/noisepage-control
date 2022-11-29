@@ -21,7 +21,46 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import axios from '../../util/axios';
 import parseDateTime from '../../util/parseDateTime';
 
-function TuningInstanceRow({ databaseId, tuningInstance, getWorkloadName, getStateName, parseDateTime }) {
+const TUNING_INSTANCES = [
+  {
+    "tuning_instance_id": 1,
+    "friendly_name": "My Tuning Session",
+    "status": "RUNNING",
+    "started_at": "2021-11-29T00:00:00.000Z",
+  },
+  {
+    "tuning_instance_id": 2,
+    "friendly_name": "Optimize for 11/11 request spike",
+    "status": "FINISHED",
+    "started_at": "2021-11-12T00:00:00.000Z",
+  }
+]
+
+const ACTIONS = [
+  {
+    "tuning_action_id": 1,
+    "command": "CREATE INDEX idx_review_rating_uid ON review_rating (u_id);",
+    "status": "NOT_APPLIED",
+    "benefit": 100,
+    "reboot_required": false,
+  },
+  {
+    "tuning_action_id": 2,
+    "command": "CREATE INDEX idx_trust_sid ON trust (source_u_id);",
+    "status": "NOT_APPLIED",
+    "benefit": 200,
+    "reboot_required": false,
+  },
+  {
+    "tuning_action_id": 3,
+    "command": "ALTER SYSTEM SET shared_buffers TO '400MB';",
+    "status": "NOT_APPLIED",
+    "benefit": 500,
+    "reboot_required": true,
+  },
+]
+
+function TuningInstanceRow({ databaseId, tuningInstance, parseDateTime }) {
   const [actions, setActions] = useState();
   const [open, setOpen] = useState(false);
   const [actionSent, setActionSent] = useState({});
@@ -45,21 +84,21 @@ function TuningInstanceRow({ databaseId, tuningInstance, getWorkloadName, getSta
     }
   }
 
-  useInterval(fetchActions, 2000);
+  // useInterval(fetchActions, 2000);
 
   const handleApplyAction = async (event, tuningActionId) => {
     event.preventDefault();
-    setActionSent({ ...actionSent, [tuningActionId]: true });
+    // setActionSent({ ...actionSent, [tuningActionId]: true });
 
-    console.log("Submit apply action", tuningActionId);
-    try {
-      const res = await axios.post(
-        `/database_manager/action/apply/${tuningActionId}`
-      );
-      console.log(res);
-    } catch (error) {
-      console.error(error)
-    }
+    // console.log("Submit apply action", tuningActionId);
+    // try {
+    //   const res = await axios.post(
+    //     `/database_manager/action/apply/${tuningActionId}`
+    //   );
+    //   console.log(res);
+    // } catch (error) {
+    //   console.error(error)
+    // }
   }
 
   const notApplied = (action) => action.status === 'NOT_APPLIED';
@@ -68,8 +107,6 @@ function TuningInstanceRow({ databaseId, tuningInstance, getWorkloadName, getSta
     <React.Fragment>
       <TableRow>
         <TableCell>{tuningInstance.friendly_name}</TableCell>
-        <TableCell>{getWorkloadName(tuningInstance.workload_id)}</TableCell>
-        <TableCell>{getStateName(tuningInstance.state_id)}</TableCell>
         <TableCell>{tuningInstance.status}</TableCell>
         <TableCell>{parseDateTime(tuningInstance.started_at)}</TableCell>
         <TableCell>
@@ -101,7 +138,7 @@ function TuningInstanceRow({ databaseId, tuningInstance, getWorkloadName, getSta
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {actions && actions.map((action) => (
+                  {ACTIONS && ACTIONS.map((action) => (
                     <TableRow key={action.tuning_action_id} sx={{ '&:last-child td': {borderBottom: 'unset'}}}>
                       <TableCell>
                         {action.command}
@@ -135,8 +172,6 @@ function TuningInstanceRow({ databaseId, tuningInstance, getWorkloadName, getSta
 export default function TuningHistoryContent() {
   const { id: databaseId } = useParams();
   const [tuningInstances, setTuningInstances] = useState();
-  const [workloads, setWorkloads] = useState();
-  const [states, setStates] = useState();
   
   // TODO: move api calls to a separate file
   useEffect(() => {
@@ -149,39 +184,11 @@ export default function TuningHistoryContent() {
         console.error(error)
       }
     }
-    async function fetchWorkloads() {
-      try {
-        const res = await axios.get(`/database_manager/databases/${databaseId}/workloads`);
-        console.log(res);
-        setWorkloads(res.data);  
-      } catch (error) {
-        console.error(error)
-      }
-    }
-    async function fetchStates() {
-      try {
-        const res = await axios.get(`/database_manager/databases/${databaseId}/states`);
-        console.log(res);
-        setStates(res.data);  
-      } catch (error) {
-        console.error(error)
-      }
-    }
 
-    fetchTuningInstances();
-    fetchWorkloads();
-    fetchStates();
+    // fetchTuningInstances();
   }, [databaseId]);
 
-  const getWorkloadName = (workloadId) => {
-    return workloads && workloads.find(w => w.resource_id === workloadId).friendly_name;
-  };
-
-  const getStateName = (stateId) => {
-    return states && states.find(w => w.resource_id === stateId).friendly_name;
-  };
-
-  return tuningInstances && (
+  return TUNING_INSTANCES && (
     <React.Fragment>
       <Typography variant="h6" sx={{ mx: 1, mb: 2 }}>Tuning History</Typography>
       <TableContainer component={Paper}>
@@ -189,21 +196,17 @@ export default function TuningHistoryContent() {
           <TableHead>
             <TableRow>
               <TableCell>Name</TableCell>
-              <TableCell>Workload</TableCell>
-              <TableCell>State</TableCell>
               <TableCell>Status</TableCell>
               <TableCell>Started At</TableCell>
               <TableCell></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {tuningInstances.sort((a, b) => new Date(b.started_at) - new Date(a.started_at)).map((tuningInstance) => (
+            {TUNING_INSTANCES.sort((a, b) => new Date(b.started_at) - new Date(a.started_at)).map((tuningInstance) => (
               <TuningInstanceRow
                 key={tuningInstance.tuning_instance_id}
                 databaseId={databaseId}
                 tuningInstance={tuningInstance}
-                getWorkloadName={getWorkloadName}
-                getStateName={getStateName}
                 parseDateTime={parseDateTime}
               />
             ))}

@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import Button from '@mui/material/Button';
+import LoadingButton from '@mui/lab/LoadingButton';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
@@ -27,6 +28,7 @@ const PrimaryToggleButton = styled(ToggleButton)({
 
 export default function TuneDatabaseContent() {
   const { id: databaseId } = useParams();
+  const navigate = useNavigate();
   const [workloads, setWorkloads] = useState();
   const [chartMetricType, setChartMetricType] = useState('num_queries');
   const [selectedWorkloadRange, setSelectedWorkloadRange] = useState();
@@ -34,8 +36,7 @@ export default function TuneDatabaseContent() {
   const [allowedActions, setAllowedActions] = useState([]);
   const [tuningTimeout, setTuningTimeout] = useState(60);
   const [tuningName, setTuningName] = useState('My Tuning Session');
-  // const [workloadSubmitLoading, setWorkloadSubmitLoading] = useState(false);
-  // const [workloadSubmitSuccess, setWorkloadSubmitSuccess] = useState(false);
+  const [tuningSubmitLoading, setTuningSubmitLoading] = useState(false);
 
   useEffect(() => {
     async function fetchWorkloads() {
@@ -62,34 +63,35 @@ export default function TuneDatabaseContent() {
     setTuningName(event.target.value);
   };
 
-  // const handleTuneDatabase = async (event) => {
-  //   if (!selectedWorkloadId || !selectedStateId) {
-  //     return;
-  //   }
+  const handleTuneDatabase = async (event) => {
+    event.preventDefault();
+    console.log(`Submit tune database`);
+    setTuningSubmitLoading(true);
 
-  //   event.preventDefault();
-  //   console.log(`Submit tune database`);
-  //   setSubmitLoading(true);
-
-  //   try {
-  //     const body = {
-  //       workload_id: selectedWorkloadId,
-  //       state_id: selectedStateId,
-  //       friendly_name: name,
-  //     }
-  //     const res = await axios.post(
-  //       `/database_manager/databases/${databaseId}/tune`,
-  //       body
-  //     );
-  //     console.log(res);
-  //     setSubmitSuccess(true);
-  //     window.location.reload();
-  //   } catch (error) {
-  //     console.error(error);
-  //   } finally {
-  //     setSubmitLoading(false);
-  //   }
-  // };
+    // try {
+    //   const body = {
+    //     workload_id: selectedWorkloadId,
+    //     state_id: selectedStateId,
+    //     friendly_name: name,
+    //   }
+    //   const res = await axios.post(
+    //     `/database_manager/databases/${databaseId}/tune`,
+    //     body
+    //   );
+    //   console.log(res);
+    //   setSubmitSuccess(true);
+    //   window.location.reload();
+    // } catch (error) {
+    //   console.error(error);
+    // } finally {
+    //   setSubmitLoading(false);
+    // }
+    setTimeout(() => {
+      setTuningSubmitLoading(false);
+      handleModalClose();
+      navigate('../tuning-history');  
+    }, 2000);
+  };
 
   const handleChartMetricToggle = (event, metricType) => {
     if (metricType) {
@@ -205,7 +207,13 @@ export default function TuneDatabaseContent() {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleModalClose}>Cancel</Button>
-          <Button onClick={handleModalClose}>Tune</Button>
+          <LoadingButton
+            loading={tuningSubmitLoading}
+            onClick={handleTuneDatabase}
+            disabled={tuningSubmitLoading}
+          >
+            Tune
+          </LoadingButton>
         </DialogActions>
       </Dialog>
     </React.Fragment>

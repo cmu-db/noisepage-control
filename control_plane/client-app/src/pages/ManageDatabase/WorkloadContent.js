@@ -78,7 +78,6 @@ export default function WorkloadContent() {
           <TableHead>
             <TableRow>
               <TableCell>Name</TableCell>
-              <TableCell>Duration</TableCell>
               <TableCell>Status</TableCell>
               <TableCell>Collected At</TableCell>
             </TableRow>
@@ -90,7 +89,6 @@ export default function WorkloadContent() {
                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
               >
                 <TableCell>{workload.friendly_name}</TableCell>
-                <TableCell>{workload.metadata['time_period']}</TableCell>
                 <TableCell>
                   {workload.available
                     ?
