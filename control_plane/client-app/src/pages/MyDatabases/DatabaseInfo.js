@@ -32,7 +32,7 @@ export default function DatabaseInfo(props) {
         <Grid item xs={12} md={9}>
           <Typography variant="h4" pt={1}>
             {/* TODO: uncoment this Database ID: {info.database_id} */}
-            Database Name: {info.database_id === '62d09efd-3602-483d-8a8d-60445385adec' ? 'Restaurant Orders' : 'Analytics'}
+            Database Name: {info.database_id === '62d09efd-3602-483d-8a8d-60445385adec' ? 'Restaurant Ordering Website' : 'Analytics'}
           </Typography>
         </Grid>
         <Grid item xs={12} md={3}>
