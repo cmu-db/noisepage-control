@@ -14,7 +14,7 @@ function ManageDatabase() {
   const getPathOrDefault = () => {
     const path = location.pathname.split('/').at(-1);
     if (path === id) {
-      return 'detail';
+      return 'tune';
     }
     return path;
   }
@@ -27,11 +27,11 @@ function ManageDatabase() {
         <Paper sx={{ minWidth: 275 }}>
           <Box sx={{ borderBottom: 1, borderColor: 'divider', p: 1 }}>
             <Tabs value={getPathOrDefault()} >
-              <Tab value="detail" component={Link} to="detail" label="Detail" disableRipple sx={{ fontSize: 17 }} />
               <Tab value="tune" component={Link} to="tune" label="Tune Database" disableRipple sx={{ fontSize: 17 }} />
               <Tab value="tuning-history" component={Link} to="tuning-history" label="Tuning History" disableRipple sx={{ fontSize: 17 }} />
               <Tab value="workloads" component={Link} to="workloads" label="Workloads" disableRipple sx={{ fontSize: 17 }} />
               <Tab value="states" component={Link} to="states" label="States" disableRipple sx={{ fontSize: 17 }} />
+              <Tab value="details" component={Link} to="details" label="Details" disableRipple sx={{ fontSize: 17 }} />
             </Tabs>
           </Box>
           <Box sx={{ p: 3 }}>
