@@ -21,7 +21,8 @@ function ManageDatabase() {
 
   return (
     <React.Fragment>
-      <Header title={`Database ID: ${id}`} />
+      {/* TODO: uncomment back <Header title={`Database ID: ${id}`} /> */}
+      <Header title={`Database Name: ${id === '62d09efd-3602-483d-8a8d-60445385adec' ? 'Restaurant Ordering Website' : 'Analytic' }`} />
       <Box component="main" sx={{ flex: 1, py: 6, px: 6, bgcolor: '#eaeff1' }}>
         <Paper sx={{ minWidth: 275 }}>
           <Box sx={{ borderBottom: 1, borderColor: 'divider', p: 1 }}>
