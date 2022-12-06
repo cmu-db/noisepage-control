@@ -16,8 +16,17 @@ const formatDate = (date) => {
   });
 };
 
-const labels = ["11/15, 22:30", "11/15, 22:35", "11/15, 22:40", "11/15, 22:45", "11/15, 22:50",
-"11/15, 22:55", "11/15, 23:00", "11/15, 23:05", "11/15, 23:10", "11/15, 23:15"];
+// const labels = ["11/15, 22:30", "11/15, 22:35", "11/15, 22:40", "11/15, 22:45", "11/15, 22:50",
+// "11/15, 22:55", "11/15, 23:00", "11/15, 23:05", "11/15, 23:10", "11/15, 23:15"];
+const labels = ["11/15, 00:00", "11/15, 01:00", "11/15, 02:00", "11/15, 03:00", "11/15, 04:00",
+"11/15, 05:00", "11/15, 06:00", "11/15, 07:00", "11/15, 08:00", "11/15, 09:00", "11/15, 10:00",
+"11/15, 11:00", "11/15, 12:00", "11/15, 13:00", "11/15, 14:00", "11/15, 15:00", "11/15, 16:00",
+"11/15, 17:00", "11/15, 18:00", "11/15, 19:00", "11/15, 20:00", "11/15, 21:00", "11/15, 22:00",
+"11/15, 23:00"];
+
+const queryData = [30, 20, 12, 6, 6, 3, 20, 30, 60, 80, 90, 250, 500, 450, 300, 60, 30, 30, 250, 600, 120, 30, 10, 5];
+
+const p99Data = [10.2, 11.2, 9.1, 8.2, 7.7, 12.5, 20, 20, 12, 15, 22, 200, 230, 120, 20, 10, 20, 30.5, 250, 220, 120, 30, 10, 5];
 
 const WorkloadChart = ({ workloads: workloadsProp, metricType, setSelectedWorkloadRange }) => {
   const [workloads, setWorkloads] = useState([]);
@@ -48,13 +57,13 @@ const WorkloadChart = ({ workloads: workloadsProp, metricType, setSelectedWorklo
       chartData.datasets = [{
         type: "bar",
         // data: queries
-        data: [100, 400, 1000, 800, 900, 20, 80, 200, 500, 10]
+        data: queryData
       }, {
         type: "line",
         backgroundColor: "rgb(255, 99, 132)",
         borderColor: "rgb(255, 99, 132)",
         // data: queries
-        data: [100, 400, 1000, 800, 900, 20, 80, 200, 500, 10]
+        data: queryData
       }];
     } else if (metricType === 'p99') {
       chartData.datasets = [{
@@ -62,7 +71,7 @@ const WorkloadChart = ({ workloads: workloadsProp, metricType, setSelectedWorklo
         backgroundColor: "rgb(255, 99, 132)",
         borderColor: "rgb(255, 99, 132)",
         // data: p99s
-        data: [60, 80, 100, 120, 90, 40, 200, 300, 70, 30]
+        data: p99Data
       }];
     }
 
