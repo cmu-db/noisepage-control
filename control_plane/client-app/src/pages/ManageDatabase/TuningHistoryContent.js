@@ -18,6 +18,7 @@ import LibraryAdd from '@mui/icons-material/LibraryAdd';
 import DoneOutlineIcon from '@mui/icons-material/DoneOutline';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import CircularProgress from '@mui/material/CircularProgress';
 import axios from '../../util/axios';
 import parseDateTime from '../../util/parseDateTime';
 
@@ -26,13 +27,13 @@ const TUNING_INSTANCES = [
     "tuning_instance_id": 1,
     "friendly_name": "My Tuning Session",
     "status": "RUNNING",
-    "started_at": "2021-11-29T00:00:00.000Z",
+    "started_at": "2021-12-06T19:23:00.000Z",
   },
   {
     "tuning_instance_id": 2,
-    "friendly_name": "Optimize for 11/11 request spike",
+    "friendly_name": "Optimize for 11/15 evening request spike",
     "status": "FINISHED",
-    "started_at": "2021-11-12T00:00:00.000Z",
+    "started_at": "2021-11-17T06:03:12.000Z",
   }
 ]
 
@@ -107,7 +108,10 @@ function TuningInstanceRow({ databaseId, tuningInstance, parseDateTime }) {
     <React.Fragment>
       <TableRow>
         <TableCell>{tuningInstance.friendly_name}</TableCell>
-        <TableCell>{tuningInstance.status}</TableCell>
+        <TableCell>
+          {tuningInstance.status === 'RUNNING' && <CircularProgress disableShrink size={15} sx={{ mr: 1 }} />}
+          <Typography variant='p'>{tuningInstance.status}</Typography>
+        </TableCell>
         <TableCell>{parseDateTime(tuningInstance.started_at)}</TableCell>
         <TableCell>
           {tuningInstance.status === 'FINISHED' &&

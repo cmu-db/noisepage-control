@@ -30,7 +30,10 @@ export default function DatabaseInfo(props) {
       />
       <Grid container spacing={2} alignItems="center" sx={{ p: 2, px: 3 }} >
         <Grid item xs={12} md={9}>
-          <Typography variant="h4" pt={1}>Database ID: {info.database_id}</Typography>
+          <Typography variant="h4" pt={1}>
+            {/* TODO: uncoment this Database ID: {info.database_id} */}
+            Database Name: {info.database_id === '62d09efd-3602-483d-8a8d-60445385adec' ? 'Restaurant Orders' : 'Analytics'}
+          </Typography>
         </Grid>
         <Grid item xs={12} md={3}>
           <Typography variant="h6" sx={{ display: 'inline-block' }}>State: &nbsp;</Typography>
