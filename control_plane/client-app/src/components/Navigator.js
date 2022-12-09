@@ -1,24 +1,33 @@
 import * as React from 'react';
+import Typography from '@mui/material/Typography';
 import Drawer from '@mui/material/Drawer';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
+import Divider from '@mui/material/Divider';
 import DnsRoundedIcon from '@mui/icons-material/DnsRounded';
+import AddIcon from '@mui/icons-material/AddBox';
 import SettingsIcon from '@mui/icons-material/Settings';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { NavLink } from 'react-router-dom';
 
 const tabs = [
   {
-    name: 'My Databases',
+    name: 'View Databases',
     icon: <DnsRoundedIcon />,
     link: '/databases'
   },
   {
     name: 'Register Database',
-    icon: <SettingsIcon />,
+    icon: <AddIcon />,
     link: '/register',
+  },
+  {
+    name: 'Settings',
+    icon: <SettingsIcon />,
+    link: '/settings',
   }
 ]
 
@@ -44,12 +53,13 @@ export default function Navigator(props) {
 
   return (
     <Drawer variant="permanent" {...other}>
-      <List disablePadding>
+      <List disablePadding sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
         <ListItem sx={{ ...item, ...itemCategory, fontSize: 22, color: '#fff' }}>
+          <img src='/noisepage-logo.svg' style={{ width: '40px', height: '40px', paddingRight: '10px' }} />
           Gym Control Plane
         </ListItem>
         {tabs.map(({ name, icon, link }, tabId) => (
-          <ListItem sx={{display: 'flex'}} disablePadding key={name}>
+          <ListItem sx={{ display: 'flex' }} disablePadding key={name}>
             <NavLink to={link} style={{ textDecoration: 'none', flex: '1' }}>
               <ListItemButton sx={item} selected={activeTabId === tabId} onClick={() => {setActiveTabId(tabId)}}>
                 <ListItemIcon>{icon}</ListItemIcon>
@@ -58,6 +68,27 @@ export default function Navigator(props) {
             </NavLink>
           </ListItem>
         ))}
+        {/* <Divider sx={{ my: 0.5 }} /> */}
+        <ListItem sx={{ display: 'flex', justifyContent: 'center', my: 0.5 }} disablePadding>
+          <Typography variant="caption" color='GrayText' display="block" gutterBottom>
+            Build Version: 66203b6
+          </Typography>
+        </ListItem>
+        <div style={{ flex: '1' }}>
+        </div>
+        <ListItem sx={{ display: 'flex', justifyContent: 'center' }} disablePadding>
+          <Typography sx={{ fontSize: '0.9rem', color: '#4caf50' }} variant="caption" color='success.main' display="block" gutterBottom>
+            &#x2022; Status: Online
+          </Typography>
+        </ListItem>
+        <ListItem sx={{ display: 'flex', marginBottom: '10px' }}>
+          <NavLink to='/' style={{ textDecoration: 'none', flex: '1' }}>
+            <ListItemButton sx={{ ...item, textAlign: 'center', bgcolor: 'rgba(255, 255, 255, 0.05)' }} onClick={() => {setActiveTabId(1)}}>
+              <ListItemIcon sx={{ position: 'absolute' }}><AccountCircleIcon /></ListItemIcon>
+              <ListItemText>User Account</ListItemText>
+            </ListItemButton>
+          </NavLink>
+        </ListItem>
       </List>
     </Drawer>
   );

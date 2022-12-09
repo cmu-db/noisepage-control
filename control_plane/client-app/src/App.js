@@ -7,7 +7,7 @@ import Link from '@mui/material/Link';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Navigator from './components/Navigator';
 import RegisterDatabase from './pages/RegisterDatabases';
-import MyDatabases from './pages/MyDatabases';
+import ViewDatabases from './pages/ViewDatabases';
 import ManageDatabase from './pages/ManageDatabase';
 import DetailContent from './pages/ManageDatabase/DetailContent';
 import WorkloadContent from './pages/ManageDatabase/WorkloadContent';
@@ -28,7 +28,7 @@ function Copyright() {
   );
 }
 
-const drawerWidth = 256;
+const drawerWidth = 275;
 
 export default function App() {
   const [mobileOpen, setMobileOpen] = React.useState(false);
@@ -64,7 +64,7 @@ export default function App() {
             <Routes>
               <Route path="/" exact element={<Navigate to="/databases" />} />
               <Route path="/register" element={<RegisterDatabase />} />
-              <Route path="/databases" element={<MyDatabases />} />
+              <Route path="/databases" element={<ViewDatabases />} />
               <Route path="/databases/:id" element={<ManageDatabase />} >
                 <Route index element={<Navigate to="tune" />} />
                 <Route path="details" element={<DetailContent />} />
