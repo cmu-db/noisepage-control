@@ -18,10 +18,10 @@ import theme from './theme';
 
 function Copyright() {
   return (
-    <Typography variant="body2" color="text.secondary" align="center">
+    <Typography variant="body2" color="white" align="center">
       {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
-        CMUDB
+      <Link color="inherit" href="https://db.cs.cmu.edu/">
+        Carnegie Mellon University Database Group,
       </Link>{' '}
       {new Date().getFullYear()}.
     </Typography>
@@ -60,7 +60,7 @@ export default function App() {
               sx={{ display: { sm: 'block', xs: 'none' } }}
             />
           </Box>
-          <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+          <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', backgroundColor: '#eaeff1', backgroundImage: 'url(/db-skulls.svg)' }}>
             <Routes>
               <Route path="/" exact element={<Navigate to="/databases" />} />
               <Route path="/register" element={<RegisterDatabase />} />
@@ -74,7 +74,7 @@ export default function App() {
                 <Route path="states" element={<StateContent />} />
               </Route>
             </Routes>
-            <Box component="footer" sx={{ p: 2, bgcolor: '#eaeff1' }}>
+            <Box component="footer" sx={{ p: 2, bgcolor: '#565658' }}>
               <Copyright />
             </Box>
           </Box>
