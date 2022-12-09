@@ -5,7 +5,12 @@ import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Header from '../../components/Header';
+import DetailContent from './DetailContent';
+import databaseDetails from '../../fixtures/databaseDetail';
 
 function ManageDatabase() {
   const { id } = useParams()
@@ -22,7 +27,43 @@ function ManageDatabase() {
   return (
     <React.Fragment>
       {/* TODO: uncomment back <Header title={`Database ID: ${id}`} /> */}
-      <Header title={`Database Name: ${id === '62d09efd-3602-483d-8a8d-60445385adec' ? 'Restaurant Ordering Website' : 'Analytic' }`} />
+      <Header title={`${databaseDetails[id].Name}`} />
+
+      <Box sx={{ flex: 1, pt: 6, px: 6 }}>
+        <Paper sx={{ minWidth: 275 }}>
+          <Box sx={{ borderBottom: 1, borderColor: 'divider', p: 3 }}>
+            <Typography variant="h6">
+              Database Summary for {id} ({databaseDetails[id].Name})
+            </Typography>
+          </Box>
+          <Box sx={{ px: 3 }}>
+            <DetailContent id={id} />
+          </Box>
+        </Paper>
+      </Box>
+      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+        <Button
+          disableRipple
+          sx={{
+            transform: 'scale(0.9)',
+            top: '-30px',
+            textDecoration: 'none',
+            borderStyle: 'solid',
+            borderRadius: '50%',
+            borderColor: 'gray',
+            background: 'white',
+            boxShadow: '0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12)',
+            width: 60, height: 60, color: 'inherit',
+            opacity: 0.8,
+            '&:hover': {
+              backgroundColor: 'white',
+            },
+          }}
+        >
+          <ExpandMoreIcon />
+        </Button>
+      </Box>
+
       <Box component="main" sx={{ flex: 1, py: 6, px: 6 }}>
         <Paper sx={{ minWidth: 275 }}>
           <Box sx={{ borderBottom: 1, borderColor: 'divider', p: 1 }}>

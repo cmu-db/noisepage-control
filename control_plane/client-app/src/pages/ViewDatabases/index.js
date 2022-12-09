@@ -20,7 +20,7 @@ function ViewDatabases() {
   const renderSortedDatabaseInfos = () => {
     const infos = [...databaseInfos];
     infos.sort((a, b) => new Date(b.created) - new Date(a.created));
-    return infos.map((info, index) => <DatabaseInfo key={info.database_id} databaseInfo={info} index={index} />);
+    return infos.map(info => <DatabaseInfo key={info.database_id} databaseInfo={info} />);
   }
 
   return (

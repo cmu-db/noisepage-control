@@ -5,28 +5,11 @@ import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import DatabaseRegisterState from '../../util/databaseRegisterState';
 import parseDateTime from '../../util/parseDateTime';
+import databaseDetails from '../../fixtures/databaseDetail';
 import postgresLogo from './postgres.png';
 
-// TODO: make these real
-const databaseDetails = [
-  {
-    Name: 'Restaurant Ordering Website',
-    Version: 'PostgreSQL 14.5',
-    Size: '1.2 GB',
-    CPU: 'Intel(R) Xeon(R) CPU E5-2676 v3 @ 2.40GHz (2 cores)',
-    Memory: '16.0 GB',
-  },
-  {
-    Name: 'Analytic',
-    Version: 'PostgreSQL 14.5',
-    Size: '10.3 GB',
-    CPU: 'Intel(R) Xeon(R) CPU E5-2676 v3 @ 2.40GHz (2 cores)',
-    Memory: '16.0 GB',
-  }
-];
-
 export default function DatabaseInfo(props) {
-  const { databaseInfo: info, index } = props;
+  const { databaseInfo: info } = props;
 
   const getStateColor = (state) => {
     switch (DatabaseRegisterState[state]) {
@@ -51,7 +34,7 @@ export default function DatabaseInfo(props) {
           <Typography variant="h4" pt={1}>
             {/* TODO: uncoment this Database ID: {info.database_id} */}
             <Link to={`/databases/${info.database_id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-              {databaseDetails[index].Name}
+              {databaseDetails[info.database_id].Name}
             </Link>
           </Typography>
         </Grid>
@@ -63,13 +46,13 @@ export default function DatabaseInfo(props) {
           <Grid container alignItems="center">
             <Grid item xs={9}>
               {
-                Object.keys(databaseDetails[index]).map(key => {
+                Object.keys(databaseDetails[info.database_id]).map(key => {
                   if (key === 'Name') {
                     return null;
                   }
                   return (
-                    <Typography variant="caption" color='GrayText' display="block">
-                      {key}: {databaseDetails[index][key]}
+                    <Typography variant="caption" color='GrayText' display="block" key={`${info.database_id}_${key}`}>
+                      {key}: {databaseDetails[info.database_id][key]}
                     </Typography>
                   )
                 })
