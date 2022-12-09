@@ -71,7 +71,7 @@ export default function Navigator(props) {
         {/* <Divider sx={{ my: 0.5 }} /> */}
         <ListItem sx={{ display: 'flex', justifyContent: 'center', my: 0.5 }} disablePadding>
           <Typography variant="caption" color='GrayText' display="block" gutterBottom>
-            Build Version: 66203b6
+            Build Version: 66203b6a1df
           </Typography>
         </ListItem>
         <div style={{ flex: '1' }}>
