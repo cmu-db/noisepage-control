@@ -77,8 +77,15 @@ export default function Navigator(props) {
         <div style={{ flex: '1' }}>
         </div>
         <ListItem sx={{ display: 'flex', justifyContent: 'center' }} disablePadding>
-          <Typography sx={{ fontSize: '0.9rem', color: '#4caf50' }} variant="caption" color='success.main' display="block" gutterBottom>
-            &#x2022; Status: Online
+          <Typography sx={{ fontSize: '0.9rem', color: '#4caf50', display: 'flex', alignItems: 'center' }} variant="caption" color='success.main' display="block" gutterBottom>
+            <span style={{
+              height: '6px',
+              width: '6px',
+              backgroundColor: '#4caf50',
+              borderRadius: '50%',
+              display: 'inline-block',
+              marginRight: '10px'
+            }}></span>Status: Online
           </Typography>
         </ListItem>
         <ListItem sx={{ display: 'flex', marginBottom: '10px' }}>
