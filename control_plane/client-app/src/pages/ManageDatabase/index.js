@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useState } from 'react';
 import { useParams, useLocation } from 'react-router-dom';
 import { Link, Outlet } from "react-router-dom";
 import Box from '@mui/material/Box';
@@ -8,13 +9,15 @@ import Tab from '@mui/material/Tab';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import Header from '../../components/Header';
 import DetailContent from './DetailContent';
 import databaseDetails from '../../fixtures/databaseDetail';
 
 function ManageDatabase() {
-  const { id } = useParams()
+  const { id } = useParams();
   const location = useLocation();
+  const [detailExpanded, setDetailExpanded] = useState(false);
 
   const getPathOrDefault = () => {
     const path = location.pathname.split('/').at(-1);
@@ -37,13 +40,14 @@ function ManageDatabase() {
             </Typography>
           </Box>
           <Box sx={{ px: 3 }}>
-            <DetailContent id={id} />
+            <DetailContent id={id} detailExpanded={detailExpanded} />
           </Box>
         </Paper>
       </Box>
-      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+      <Box sx={{ display: 'flex', justifyContent: 'center', height: 0 }}>
         <Button
           disableRipple
+          onClick={() => setDetailExpanded(!detailExpanded)}
           sx={{
             transform: 'scale(0.9)',
             top: '-30px',
@@ -60,7 +64,7 @@ function ManageDatabase() {
             },
           }}
         >
-          <ExpandMoreIcon />
+          {detailExpanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
         </Button>
       </Box>
 
