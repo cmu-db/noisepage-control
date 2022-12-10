@@ -6,7 +6,6 @@ import Typography from '@mui/material/Typography';
 import DatabaseRegisterState from '../../util/databaseRegisterState';
 import parseDateTime from '../../util/parseDateTime';
 import databaseDetails from '../../fixtures/databaseDetail';
-import postgresLogo from './postgres.png';
 
 export default function DatabaseInfo(props) {
   const { databaseInfo: info } = props;
@@ -25,7 +24,7 @@ export default function DatabaseInfo(props) {
   return (
     <Card sx={{ minWidth: 275, mb: 4, p: 1, display: 'flex', alignItems: 'center' }}>
       <img
-        src={postgresLogo}
+        src={'/postgres.png'}
         alt="pg-logo"
         style={{ width: '100px', height: '100px', paddingLeft: '24px', objectFit: 'contain' }}
       />

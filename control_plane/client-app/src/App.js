@@ -67,7 +67,6 @@ export default function App() {
               <Route path="/databases" element={<ViewDatabases />} />
               <Route path="/databases/:id" element={<ManageDatabase />} >
                 <Route index element={<Navigate to="tune" />} />
-                <Route path="details" element={<DetailContent />} />
                 <Route path="tune" element={<TuneDatabaseContent />} />
                 <Route path="tuning-history" element={<TuningHistoryContent />} />
                 <Route path="workloads" element={<WorkloadContent />} />
