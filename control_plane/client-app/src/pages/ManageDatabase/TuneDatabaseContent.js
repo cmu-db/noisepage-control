@@ -104,11 +104,41 @@ export default function TuneDatabaseContent() {
 
   return workloads && (
     <React.Fragment>
-      <Grid container spacing={2} sx={{ mb: 3 }}>
+      {/* Instructions */}
+      <Box sx={{ px: 3, mb: 5 }}>
+        <Typography variant="h5" fontWeight={500} align='center'>
+          Instructions
+        </Typography>
+        <ol>
+          <li>
+            <Typography variant="p" align='left'>
+              Select a target range of workloads which you want to optimize the database for, based on the past query rates or p99 latencies.
+            </Typography>
+          </li>
+          <li>
+            <Typography variant="p" align='left'>
+              Click the tune button and specify the tuning parameters.
+            </Typography>
+          </li>
+          <li>
+            <Typography variant="p" align='left'>
+              Wait for the tuning process to complete.
+            </Typography>
+          </li>
+          <li>
+            <Typography variant="p" align='left'>
+              Once the tuning process is complete, you can view and apply the recommended actions
+              in the Tuning History tab.
+            </Typography>
+          </li>
+        </ol>
+      </Box>
+
+      <Grid container spacing={2} sx={{ mb: 1 }}>
         <Grid item xs={4}></Grid>
         <Grid item xs={4}>
-          <Typography variant="h6" component="div" align='center'>
-            Select a Target Workload Range:
+          <Typography variant="h5" fontWeight={500} align='center'>
+            Select a Target Workload Range
           </Typography>
         </Grid>
         <Grid item xs={4}>
