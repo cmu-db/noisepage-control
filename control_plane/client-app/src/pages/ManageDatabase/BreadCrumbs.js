@@ -8,12 +8,12 @@ import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 
 export default function MyBreadCrumbs({ databaseId }) {
   const breadcrumbs = [
-    <Link underline="hover" component={RouterLink} to="/databases">
+    <Link key="1" underline="hover" component={RouterLink} to="/databases">
       <Typography fontWeight={500}>
         View Databases
       </Typography>
     </Link>,
-    <Typography key="3" color="gray" fontWeight={500}>
+    <Typography key="2" color="gray" fontWeight={500}>
       {databaseId}
     </Typography>,
   ];
