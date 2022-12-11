@@ -61,7 +61,10 @@ export default function DatabaseInfo(props) {
             </Grid>
             <Grid item xs={3}>
               <Link to={`/databases/${info.database_id}`}>
-                <Button variant="contained" >Manage</Button>
+                <Button
+                  variant="contained"
+                  disabled={DatabaseRegisterState[info.state] !== DatabaseRegisterState.HEALTHY}
+                >Manage</Button>
               </Link>
             </Grid>
           </Grid>
