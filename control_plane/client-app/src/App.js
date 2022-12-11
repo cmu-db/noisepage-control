@@ -7,7 +7,7 @@ import Link from '@mui/material/Link';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Navigator from './components/Navigator';
 import RegisterDatabase from './pages/RegisterDatabases';
-import MyDatabases from './pages/MyDatabases';
+import ViewDatabases from './pages/ViewDatabases';
 import ManageDatabase from './pages/ManageDatabase';
 import DetailContent from './pages/ManageDatabase/DetailContent';
 import WorkloadContent from './pages/ManageDatabase/WorkloadContent';
@@ -18,17 +18,17 @@ import theme from './theme';
 
 function Copyright() {
   return (
-    <Typography variant="body2" color="text.secondary" align="center">
+    <Typography variant="body2" color="white" align="center">
       {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
-        CMUDB
+      <Link color="inherit" href="https://db.cs.cmu.edu/">
+        Carnegie Mellon University Database Group,
       </Link>{' '}
       {new Date().getFullYear()}.
     </Typography>
   );
 }
 
-const drawerWidth = 256;
+const drawerWidth = 275;
 
 export default function App() {
   const [mobileOpen, setMobileOpen] = React.useState(false);
@@ -60,21 +60,20 @@ export default function App() {
               sx={{ display: { sm: 'block', xs: 'none' } }}
             />
           </Box>
-          <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+          <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', backgroundColor: '#eaeff1', backgroundImage: 'url(/db-skulls.svg)' }}>
             <Routes>
               <Route path="/" exact element={<Navigate to="/databases" />} />
               <Route path="/register" element={<RegisterDatabase />} />
-              <Route path="/databases" element={<MyDatabases />} />
+              <Route path="/databases" element={<ViewDatabases />} />
               <Route path="/databases/:id" element={<ManageDatabase />} >
                 <Route index element={<Navigate to="tune" />} />
-                <Route path="details" element={<DetailContent />} />
                 <Route path="tune" element={<TuneDatabaseContent />} />
                 <Route path="tuning-history" element={<TuningHistoryContent />} />
                 <Route path="workloads" element={<WorkloadContent />} />
                 <Route path="states" element={<StateContent />} />
               </Route>
             </Routes>
-            <Box component="footer" sx={{ p: 2, bgcolor: '#eaeff1' }}>
+            <Box component="footer" sx={{ p: 2, bgcolor: '#565658' }}>
               <Copyright />
             </Box>
           </Box>

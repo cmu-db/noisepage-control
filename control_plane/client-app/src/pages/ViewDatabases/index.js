@@ -5,7 +5,7 @@ import Header from '../../components/Header';
 import DatabaseInfo from './DatabaseInfo';
 import axios from '../../util/axios';
 
-function MyDatabases() {
+function ViewDatabases() {
   const [databaseInfos, setDatabaseInfos] = useState();
 
   useEffect(() => {
@@ -25,12 +25,12 @@ function MyDatabases() {
 
   return (
     <React.Fragment>
-      <Header title="My Databases" />
-      <Box component="main" sx={{ flex: 1, py: 6, px: 6, bgcolor: '#eaeff1' }}>
+      <Header title="Active Databases" />
+      <Box component="main" sx={{ flex: 1, py: 6, px: 6 }}>
         {databaseInfos && renderSortedDatabaseInfos()}
       </Box>
     </React.Fragment>
   )
 };
 
-export default MyDatabases;
+export default ViewDatabases;

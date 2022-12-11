@@ -1,64 +1,33 @@
 import * as React from 'react';
-import Divider from '@mui/material/Divider';
+import Typography from '@mui/material/Typography';
 import Drawer from '@mui/material/Drawer';
 import List from '@mui/material/List';
-import Box from '@mui/material/Box';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import HomeIcon from '@mui/icons-material/Home';
-import PeopleIcon from '@mui/icons-material/People';
+import Divider from '@mui/material/Divider';
 import DnsRoundedIcon from '@mui/icons-material/DnsRounded';
-import PermMediaOutlinedIcon from '@mui/icons-material/PhotoSizeSelectActual';
-import PublicIcon from '@mui/icons-material/Public';
-import SettingsEthernetIcon from '@mui/icons-material/SettingsEthernet';
-import SettingsInputComponentIcon from '@mui/icons-material/SettingsInputComponent';
-import TimerIcon from '@mui/icons-material/Timer';
+import AddIcon from '@mui/icons-material/AddBox';
 import SettingsIcon from '@mui/icons-material/Settings';
-import PhonelinkSetupIcon from '@mui/icons-material/PhonelinkSetup';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { NavLink } from 'react-router-dom';
-import theme from '../theme';
-
-// const categories = [
-//   {
-//     id: 'Build',
-//     children: [
-//       {
-//         id: 'Authentication',
-//         icon: <PeopleIcon />,
-//         active: true,
-//       },
-//       { id: 'Database', icon: <DnsRoundedIcon /> },
-//       { id: 'Storage', icon: <PermMediaOutlinedIcon /> },
-//       { id: 'Hosting', icon: <PublicIcon /> },
-//       { id: 'Functions', icon: <SettingsEthernetIcon /> },
-//       {
-//         id: 'Machine learning',
-//         icon: <SettingsInputComponentIcon />,
-//       },
-//     ],
-//   },
-//   {
-//     id: 'Quality',
-//     children: [
-//       { id: 'Analytics', icon: <SettingsIcon /> },
-//       { id: 'Performance', icon: <TimerIcon /> },
-//       { id: 'Test Lab', icon: <PhonelinkSetupIcon /> },
-//     ],
-//   },
-// ];
 
 const tabs = [
   {
-    name: 'My Databases',
+    name: 'View Databases',
     icon: <DnsRoundedIcon />,
     link: '/databases'
   },
   {
     name: 'Register Database',
-    icon: <SettingsIcon />,
+    icon: <AddIcon />,
     link: '/register',
+  },
+  {
+    name: 'Settings',
+    icon: <SettingsIcon />,
+    link: '/settings',
   }
 ]
 
@@ -77,8 +46,6 @@ const itemCategory = {
   px: 3,
 };
 
-const activeClassNameFunc = ({ isActive }) => (isActive ? "Mui-selected" : "");
-
 export default function Navigator(props) {
   const { ...other } = props;
 
@@ -86,35 +53,13 @@ export default function Navigator(props) {
 
   return (
     <Drawer variant="permanent" {...other}>
-      <List disablePadding>
+      <List disablePadding sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
         <ListItem sx={{ ...item, ...itemCategory, fontSize: 22, color: '#fff' }}>
+          <img src='/noisepage-logo.svg' style={{ width: '40px', height: '40px', paddingRight: '10px' }} />
           Gym Control Plane
         </ListItem>
-        {/* <ListItem sx={{ ...item, ...itemCategory }}>
-          <ListItemIcon>
-            <HomeIcon />
-          </ListItemIcon>
-          <ListItemText>Project Overview</ListItemText>
-        </ListItem> */}
-        {/* {categories.map(({ id, children }) => (
-          <Box key={id} sx={{ bgcolor: '#101F33' }}>
-            <ListItem sx={{ py: 2, px: 3 }}>
-              <ListItemText sx={{ color: '#fff' }}>{id}</ListItemText>
-            </ListItem>
-            {children.map(({ id: childId, icon, active }) => (
-              <ListItem disablePadding key={childId}>
-                <ListItemButton selected={active} sx={item}>
-                  <ListItemIcon>{icon}</ListItemIcon>
-                  <ListItemText>{childId}</ListItemText>
-                </ListItemButton>
-              </ListItem>
-            ))}
-
-            <Divider sx={{ mt: 2 }} />
-          </Box>
-        ))} */}
         {tabs.map(({ name, icon, link }, tabId) => (
-          <ListItem sx={{display: 'flex'}} disablePadding key={name}>
+          <ListItem sx={{ display: 'flex' }} disablePadding key={name}>
             <NavLink to={link} style={{ textDecoration: 'none', flex: '1' }}>
               <ListItemButton sx={item} selected={activeTabId === tabId} onClick={() => {setActiveTabId(tabId)}}>
                 <ListItemIcon>{icon}</ListItemIcon>
@@ -123,6 +68,34 @@ export default function Navigator(props) {
             </NavLink>
           </ListItem>
         ))}
+        {/* <Divider sx={{ my: 0.5 }} /> */}
+        <ListItem sx={{ display: 'flex', justifyContent: 'center', my: 0.5 }} disablePadding>
+          <Typography variant="caption" color='GrayText' display="block" gutterBottom>
+            Build Version: 66203b6a1df
+          </Typography>
+        </ListItem>
+        <div style={{ flex: '1' }}>
+        </div>
+        <ListItem sx={{ display: 'flex', justifyContent: 'center' }} disablePadding>
+          <Typography sx={{ fontSize: '0.9rem', color: '#4caf50', display: 'flex', alignItems: 'center' }} variant="caption" color='success.main' display="block" gutterBottom>
+            <span style={{
+              height: '6px',
+              width: '6px',
+              backgroundColor: '#4caf50',
+              borderRadius: '50%',
+              display: 'inline-block',
+              marginRight: '10px'
+            }}></span>Status: Online
+          </Typography>
+        </ListItem>
+        <ListItem sx={{ display: 'flex', marginBottom: '10px' }}>
+          <NavLink to='/' style={{ textDecoration: 'none', flex: '1' }}>
+            <ListItemButton sx={{ ...item, textAlign: 'center', bgcolor: 'rgba(255, 255, 255, 0.05)' }} onClick={() => {setActiveTabId(1)}}>
+              <ListItemIcon sx={{ position: 'absolute' }}><AccountCircleIcon /></ListItemIcon>
+              <ListItemText>User Account</ListItemText>
+            </ListItemButton>
+          </NavLink>
+        </ListItem>
       </List>
     </Drawer>
   );

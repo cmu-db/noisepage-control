@@ -50,7 +50,7 @@ function RegisterDatabase() {
   return (
     <React.Fragment>
       <Header title="Register Database" />
-      <Box component="main" sx={{ flex: 1, py: 6, px: 4, bgcolor: '#eaeff1' }}>
+      <Box component="main" sx={{ flex: 1, py: 6, px: 4 }}>
         <Paper sx={{ maxWidth: 936, margin: 'auto', overflow: 'hidden' }}>
           <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
             <Tabs value={activeTabIdx} onChange={handleChange} aria-label="basic tabs example">
