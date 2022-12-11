@@ -15,7 +15,8 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Input from '@mui/material/Input';
-import LibraryAdd from '@mui/icons-material/LibraryAdd';
+import BuildIcon from '@mui/icons-material/Build';
+import CancelIcon from '@mui/icons-material/Cancel';
 import { styled } from "@mui/material/styles";
 import WorkloadChart from './WorkloadChart';
 import axios from '../../util/axios';
@@ -33,9 +34,9 @@ export default function TuneDatabaseContent() {
   const [chartMetricType, setChartMetricType] = useState('num_queries');
   const [selectedWorkloadRange, setSelectedWorkloadRange] = useState();
   const [modalOpen, setModalOpen] = useState(false);
-  const [allowedActions, setAllowedActions] = useState([]);
-  const [tuningTimeout, setTuningTimeout] = useState(60);
-  const [tuningName, setTuningName] = useState('My Tuning Session');
+  const [allowedActions, setAllowedActions] = useState(['add-index', 'drop-index', 'restart-knob', 'non-restart-knob']);
+  const [maxTuningDuration, setMaxTuningDuration] = useState(3);
+  const [tuningName, setTuningName] = useState('2022-12-06 07:23:00 PM');
   const [tuningSubmitLoading, setTuningSubmitLoading] = useState(false);
 
   useEffect(() => {
@@ -56,7 +57,7 @@ export default function TuneDatabaseContent() {
   };
 
   const handleTuningTimeoutChange = (event) => {
-    setTuningTimeout(Number(event.target.value));
+    setMaxTuningDuration(Number(event.target.value));
   };
 
   const handleTuningNameChange = (event) => {
@@ -166,7 +167,7 @@ export default function TuneDatabaseContent() {
       <Box sx={{ m: 3 }} align="center">
         <Button
           variant="contained"
-          startIcon={<LibraryAdd />}
+          startIcon={<BuildIcon />}
           // sx={{ '&.Mui-disabled': { bgcolor: 'primary.light' } }}
           onClick={handleModalOpen}
           disabled={!selectedWorkloadRange}
@@ -195,10 +196,10 @@ export default function TuneDatabaseContent() {
             sx={{ marginLeft: 'auto', mb: 2, '&.Mui-selected': {bgcolor: 'rgba(0, 155, 229)'} }}
             color='primary'
           >
-            <PrimaryToggleButton value="add_index">
+            <PrimaryToggleButton value="add-index">
               Add indexes
             </PrimaryToggleButton>
-            <PrimaryToggleButton value="drop_index">
+            <PrimaryToggleButton value="drop-index">
               Drop indexes
             </PrimaryToggleButton>
             <PrimaryToggleButton value="non-restart-knob">
@@ -209,15 +210,15 @@ export default function TuneDatabaseContent() {
             </PrimaryToggleButton>
           </ToggleButtonGroup>
           <Typography>
-            Tuning Timeout (Seconds):
+            Max Tuning Duration (Minutes):
           </Typography>
           <Input
-            value={tuningTimeout}
+            value={maxTuningDuration}
             size="small"
             onChange={handleTuningTimeoutChange}
             inputProps={{
-              step: 10,
-              min: 0,
+              step: 1,
+              min: 1,
               type: 'number',
             }}
             sx={{ mb: 2 }}
@@ -235,14 +236,26 @@ export default function TuneDatabaseContent() {
             This name will be used to identify the tuning result.
           </Typography>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={handleModalClose}>Cancel</Button>
+        <DialogActions sx={{ display: 'flex', justifyContent: 'center', mb: 3 }}>
+          <Button
+            color="error"
+            sx={{ width: '100px' }}
+            variant="contained"
+            startIcon={<CancelIcon />}
+            onClick={handleModalClose}
+          >
+            Cancel
+          </Button>
           <LoadingButton
+            color="primary"
+            sx={{ width: '100px' }}
+            variant="contained"
+            startIcon={<BuildIcon />}
             loading={tuningSubmitLoading}
             onClick={handleTuneDatabase}
             disabled={tuningSubmitLoading}
           >
-            Tune
+            Tune!
           </LoadingButton>
         </DialogActions>
       </Dialog>

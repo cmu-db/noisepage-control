@@ -3,6 +3,7 @@ import Card from '@mui/material/Card';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
+import CircularProgress from '@mui/material/CircularProgress';
 import DatabaseRegisterState from '../../util/databaseRegisterState';
 import parseDateTime from '../../util/parseDateTime';
 import databaseDetails from '../../fixtures/databaseDetail';
@@ -37,9 +38,10 @@ export default function DatabaseInfo(props) {
             </Link>
           </Typography>
         </Grid>
-        <Grid item xs={12} md={3}>
-          <Typography variant="h6" sx={{ display: 'inline-block' }}>State: &nbsp;</Typography>
-          <Typography variant="h6" sx={{ display: 'inline-block' }} color={getStateColor(info.state)}>{DatabaseRegisterState[info.state]}</Typography>
+        <Grid item xs={12} md={3} sx={{ display: 'flex', alignItems: 'center' }}>
+          <Typography variant="h6">State: &nbsp;</Typography>
+          <Typography variant="h6" color={getStateColor(info.state)}>{DatabaseRegisterState[info.state]}</Typography>
+          {DatabaseRegisterState[info.state] === DatabaseRegisterState.REGISTERING && <CircularProgress disableShrink size={15} sx={{ ml: 1 }} />}
         </Grid>
         <Grid item xs={12} md={9}>
           <Grid container alignItems="center">

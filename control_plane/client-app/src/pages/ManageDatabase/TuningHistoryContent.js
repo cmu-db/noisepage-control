@@ -25,21 +25,24 @@ import parseDateTime from '../../util/parseDateTime';
 const TUNING_INSTANCES = [
   {
     "tuning_instance_id": 1,
-    "friendly_name": "My Tuning Session",
+    "friendly_name": "2022-12-06 07:23:00 PM",
     "status": "RUNNING",
-    "started_at": "2021-12-06T19:23:00.000Z",
+    "started_at": "2022-12-06T19:23:00.000Z",
+    "duration": "-"
   },
   {
     "tuning_instance_id": 2,
     "friendly_name": "Optimize for 11/15 evening request spike",
     "status": "FINISHED",
-    "started_at": "2021-11-17T06:03:12.000Z",
+    "started_at": "2022-11-17T06:03:12.000Z",
+    "duration": "3",
   }
 ]
 
 const ACTIONS = [
   {
     "tuning_action_id": 1,
+    "type": "Add Index",
     "command": "CREATE INDEX idx_review_rating_uid ON review_rating (u_id);",
     "status": "NOT_APPLIED",
     "benefit": 100,
@@ -47,6 +50,7 @@ const ACTIONS = [
   },
   {
     "tuning_action_id": 2,
+    "type": "Add Index",
     "command": "CREATE INDEX idx_trust_sid ON trust (source_u_id);",
     "status": "NOT_APPLIED",
     "benefit": 200,
@@ -54,6 +58,7 @@ const ACTIONS = [
   },
   {
     "tuning_action_id": 3,
+    "type": "Non-restart Knob",
     "command": "ALTER SYSTEM SET shared_buffers TO '400MB';",
     "status": "NOT_APPLIED",
     "benefit": 500,
@@ -104,15 +109,25 @@ function TuningInstanceRow({ databaseId, tuningInstance, parseDateTime }) {
 
   const notApplied = (action) => action.status === 'NOT_APPLIED';
 
+  const getStatusColor = (status) => {
+    switch (status) {
+      case "RUNNING":
+        return 'warning.light';
+      case "FINISHED":
+        return 'success.main';
+    }
+  }
+
   return (
     <React.Fragment>
       <TableRow>
         <TableCell>{tuningInstance.friendly_name}</TableCell>
         <TableCell>
           {tuningInstance.status === 'RUNNING' && <CircularProgress disableShrink size={15} sx={{ mr: 1 }} />}
-          <Typography variant='p'>{tuningInstance.status}</Typography>
+          <Typography variant='p' color={getStatusColor(tuningInstance.status)}>{tuningInstance.status}</Typography>
         </TableCell>
         <TableCell>{parseDateTime(tuningInstance.started_at)}</TableCell>
+        <TableCell>{tuningInstance.duration}</TableCell>
         <TableCell>
           {tuningInstance.status === 'FINISHED' &&
             <IconButton
@@ -135,18 +150,18 @@ function TuningInstanceRow({ databaseId, tuningInstance, parseDateTime }) {
               <Table size="small" aria-label="actions">
                 <TableHead>
                   <TableRow>
-                    <TableCell>SQL statement</TableCell>
-                    <TableCell align="center">Expected benefit</TableCell>
-                    <TableCell align="center">Reboot required</TableCell>
+                    <TableCell>Action Type</TableCell>
+                    <TableCell>SQL Statement</TableCell>
+                    <TableCell align="center">Expected Benefit</TableCell>
+                    <TableCell align="center">Reboot Required</TableCell>
                     <TableCell align="center">Apply</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {ACTIONS && ACTIONS.map((action) => (
                     <TableRow key={action.tuning_action_id} sx={{ '&:last-child td': {borderBottom: 'unset'}}}>
-                      <TableCell>
-                        {action.command}
-                      </TableCell>
+                      <TableCell>{action.type}</TableCell>
+                      <TableCell>{action.command}</TableCell>
                       <TableCell align="center">{action.benefit}</TableCell>
                       <TableCell align="center">{String(action.reboot_required)}</TableCell>
                       <TableCell align="center">
@@ -202,6 +217,7 @@ export default function TuningHistoryContent() {
               <TableCell>Name</TableCell>
               <TableCell>Status</TableCell>
               <TableCell>Started At</TableCell>
+              <TableCell>Duration (minute)</TableCell>
               <TableCell></TableCell>
             </TableRow>
           </TableHead>
