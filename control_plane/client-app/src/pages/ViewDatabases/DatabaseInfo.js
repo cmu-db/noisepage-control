@@ -41,7 +41,12 @@ export default function DatabaseInfo(props) {
         <Grid item xs={12} md={3} sx={{ display: 'flex', alignItems: 'center' }}>
           <Typography variant="h6">State: &nbsp;</Typography>
           <Typography variant="h6" color={getStateColor(info.state)}>{DatabaseRegisterState[info.state]}</Typography>
-          {DatabaseRegisterState[info.state] === DatabaseRegisterState.REGISTERING && <CircularProgress disableShrink size={15} sx={{ ml: 1 }} />}
+          {DatabaseRegisterState[info.state] === DatabaseRegisterState.REGISTERING &&
+            <CircularProgress disableShrink size={15} sx={{
+                ml: 1, opacity: 0.5, color: '#2e7d32'
+              }}
+            />
+          }
         </Grid>
         <Grid item xs={12} md={9}>
           <Grid container alignItems="center">

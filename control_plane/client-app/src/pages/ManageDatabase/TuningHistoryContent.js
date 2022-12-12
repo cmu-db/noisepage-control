@@ -115,9 +115,10 @@ function ActionRow({ action }) {
         <TableCell align="center">{String(action.reboot_required)}</TableCell>
         <TableCell align="center">
           <Button
+            color="success"
             variant="contained"
             // TODO: remove the actionSent hack
-            startIcon={actionSent ? <CircularProgress disableShrink size={15} sx={{ opacity: 0.5 }} />
+            startIcon={actionSent ? <CircularProgress disableShrink size={15} sx={{ opacity: 0.5, color: '#2e7d32' }} />
               : notApplied(action) ? <PlayCircleIcon />
               : <TaskAltIcon />
             }
@@ -156,14 +157,14 @@ function ActionRow({ action }) {
           <Button
             color="error"
             sx={{ width: '100px' }}
-            variant="contained"
+            variant="outlined"
             startIcon={<CancelIcon />}
             onClick={handleModalClose}
           >
             Cancel
           </Button>
           <LoadingButton
-            color="primary"
+            color="success"
             sx={{ width: '100px' }}
             variant="contained"
             startIcon={<PlayCircleIcon />}
@@ -217,7 +218,7 @@ function TuningInstanceRow({ databaseId, tuningInstance, parseDateTime }) {
       <TableRow>
         <TableCell>{tuningInstance.friendly_name}</TableCell>
         <TableCell>
-          {tuningInstance.status === 'RUNNING' && <CircularProgress disableShrink size={15} sx={{ mr: 1 }} />}
+          {tuningInstance.status === 'RUNNING' && <CircularProgress disableShrink size={15} sx={{ mr: 1, opacity: 0.5, color: '#2e7d32' }} />}
           <Typography variant='p' color={getStatusColor(tuningInstance.status)}>{tuningInstance.status}</Typography>
         </TableCell>
         <TableCell>{parseDateTime(tuningInstance.started_at)}</TableCell>

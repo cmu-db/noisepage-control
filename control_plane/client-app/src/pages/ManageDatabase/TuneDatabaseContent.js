@@ -23,7 +23,8 @@ import axios from '../../util/axios';
 
 const PrimaryToggleButton = styled(ToggleButton)({
   "&.Mui-selected, &.Mui-selected:hover": {
-    backgroundColor: 'rgba(0, 155, 229, 0.25)'
+    backgroundColor: 'rgba(76, 175, 80, 0.5)'
+    // backgroundColor: '#4caf50'
   }
 });
 
@@ -167,6 +168,7 @@ export default function TuneDatabaseContent() {
       <Box sx={{ m: 3 }} align="center">
         <Button
           variant="contained"
+          color="success"
           startIcon={<BuildIcon />}
           // sx={{ '&.Mui-disabled': { bgcolor: 'primary.light' } }}
           onClick={handleModalOpen}
@@ -193,8 +195,8 @@ export default function TuneDatabaseContent() {
             value={allowedActions}
             onChange={handleAllowedActionChange}
             size={'small'}
-            sx={{ marginLeft: 'auto', mb: 2, '&.Mui-selected': {bgcolor: 'rgba(0, 155, 229)'} }}
-            color='primary'
+            sx={{ marginLeft: 'auto', mb: 2 }}
+            // color='primary'
           >
             <PrimaryToggleButton value="add-index">
               Add indexes
@@ -240,14 +242,14 @@ export default function TuneDatabaseContent() {
           <Button
             color="error"
             sx={{ width: '100px' }}
-            variant="contained"
+            variant="outlined"
             startIcon={<CancelIcon />}
             onClick={handleModalClose}
           >
             Cancel
           </Button>
           <LoadingButton
-            color="primary"
+            color="success"
             sx={{ width: '100px' }}
             variant="contained"
             startIcon={<BuildIcon />}

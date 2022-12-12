@@ -208,14 +208,14 @@ function RegisterForm({ environment }) {
         <Grid item xs={12} sx={{ p: 1, py: 3 }}>
           <LoadingButton
             variant="contained"
-            color="secondary"
+            // color="secondary"
+            color="success"
             startIcon={registerSuccess ? <Done /> : <Send />}
             type="submit"
             size="large"
             loading={registerLoading}
             loadingPosition="start"
             disabled={registerSuccess}
-            sx={{ '&.Mui-disabled': { bgcolor: '#a5d6a7' } }}
           >
             Register
           </LoadingButton>

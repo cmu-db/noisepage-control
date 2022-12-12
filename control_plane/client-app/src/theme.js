@@ -5,7 +5,8 @@ let theme = createTheme({
   palette: {
     primary: {
       light: '#63ccff',
-      main: '#009be5',
+      // main: '#009be5',
+      main: '#C4122E',
       dark: '#006db3',
     },
   },
@@ -45,7 +46,8 @@ theme = {
     MuiDrawer: {
       styleOverrides: {
         paper: {
-          backgroundColor: '#081627',
+          // backgroundColor: '#081627',
+          backgroundColor: '#210407',
         },
       },
     },
@@ -114,7 +116,8 @@ theme = {
       styleOverrides: {
         root: {
           '&.Mui-selected': {
-            color: '#4fc3f7',
+            // color: '#4fc3f7',
+            color: '#dc3545;',
           },
         },
       },
