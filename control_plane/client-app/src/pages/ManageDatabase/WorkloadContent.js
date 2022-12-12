@@ -20,6 +20,10 @@ import Done from '@mui/icons-material/Done';
 import axios from '../../util/axios';
 import parseDateTime from '../../util/parseDateTime';
 
+function addMinutes(date, minutes) {
+  return new Date(date.getTime() + minutes*60000);
+}
+
 export default function WorkloadContent() {
   const { id: databaseId } = useParams();
   const [workloads, setWorkloads] = useState();
@@ -79,7 +83,8 @@ export default function WorkloadContent() {
             <TableRow>
               <TableCell>Name</TableCell>
               <TableCell>Status</TableCell>
-              <TableCell>Collected At</TableCell>
+              <TableCell>Start</TableCell>
+              <TableCell>End</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -99,6 +104,7 @@ export default function WorkloadContent() {
                   }
                 </TableCell>
                 <TableCell>{parseDateTime(workload.collected_at)}</TableCell>
+                <TableCell>{parseDateTime(addMinutes(new Date(workload.collected_at), 5))}</TableCell>
               </TableRow>
             ))}
           </TableBody>
