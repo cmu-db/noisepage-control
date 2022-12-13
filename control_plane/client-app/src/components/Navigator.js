@@ -54,9 +54,10 @@ export default function Navigator(props) {
   return (
     <Drawer variant="permanent" {...other}>
       <List disablePadding sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-        <ListItem sx={{ ...item, ...itemCategory, fontSize: 22, color: '#fff' }}>
-          <img src='/noisepage-logo.svg' style={{ width: '40px', height: '40px', paddingRight: '10px' }} />
-          Gym Control Plane
+        <ListItem sx={{ ...item, ...itemCategory, fontSize: 22, color: '#fff', flexDirection: 'column' }}>
+          <img src='/noisepage-horizontal.svg' style={{ width: '200px', height: '80px' }} />
+          {"\n"}
+          <Typography variant="h5" sx={{ my: 1 }}>Gym Control Plane</Typography>
         </ListItem>
         {tabs.map(({ name, icon, link }, tabId) => (
           <ListItem sx={{ display: 'flex' }} disablePadding key={name}>
