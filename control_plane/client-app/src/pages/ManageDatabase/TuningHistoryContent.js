@@ -32,9 +32,9 @@ import parseDateTime from '../../util/parseDateTime';
 const TUNING_INSTANCES = [
   {
     "tuning_instance_id": 1,
-    "friendly_name": "2022-12-06 07:23:00 PM",
+    "friendly_name": "Recurring 6PM spike",
     "status": "RUNNING",
-    "started_at": "2022-12-06T19:23:00.000Z",
+    "started_at": "2022-12-18T02:23:00.000Z",
     "duration": "-"
   },
   {
