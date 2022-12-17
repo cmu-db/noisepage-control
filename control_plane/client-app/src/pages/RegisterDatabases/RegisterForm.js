@@ -47,8 +47,9 @@ function RegisterForm({ environment }) {
     });
     
     try {
-      const res = await axios.post('/database_manager/register/', formData)
-      console.log(res);
+      // TODO: add this line back
+      // const res = await axios.post('/database_manager/register/', formData)
+      // console.log(res);
       setRegisterSuccess(true);
       setFormSubmitted(true);
     } catch (error) {
