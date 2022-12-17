@@ -110,7 +110,7 @@ export default function WorkloadContent() {
           </TableBody>
         </Table>
       </TableContainer>
-      <Grid container sx={{ m: 1, mt: 4 }}>
+      {/* <Grid container sx={{ m: 1, mt: 4 }}>
         <Grid item xs={12} sm={6} lg={4}>
           <Typography variant="h6" sx={{ mb: 3 }}>Collect a New Workload</Typography>
           <Box sx={{ display: 'flex' }}>
@@ -153,7 +153,7 @@ export default function WorkloadContent() {
             Collect!
           </LoadingButton>
         </Grid>
-      </Grid>
+      </Grid> */}
     </React.Fragment>
   )
 }

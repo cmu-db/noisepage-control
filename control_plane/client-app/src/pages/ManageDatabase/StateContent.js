@@ -93,7 +93,7 @@ export default function StateContent() {
           </TableBody>
         </Table>
       </TableContainer>
-      <Box sx={{ m: 1, mt: 4 }}>
+      {/* <Box sx={{ m: 1, mt: 4 }}>
         <Typography variant="h6">Collect a New State</Typography>
         <Box sx={{ display: 'flex', mt: 3 }}>
           <Typography sx={{ mr: 1, mt: 0.4 }}>
@@ -117,7 +117,7 @@ export default function StateContent() {
         >
           Collect!
         </LoadingButton>
-      </Box>
+      </Box> */}
     </React.Fragment>
   )
 }

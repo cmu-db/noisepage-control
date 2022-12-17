@@ -5,6 +5,7 @@ const databaseDetails = {
     Size: '1.2 GB',
     CPU: 'Intel(R) Xeon(R) CPU E5-2676 v3 @ 2.40GHz * 2',
     Memory: '16.0 GB',
+    Registered: 'Nov 20, 8:32 AM'
   },
   '2d59f8a4-6ff5-11ed-a1eb-0242ac120002': {
     Name: 'CMUDB',
@@ -12,6 +13,7 @@ const databaseDetails = {
     Size: '10.3 GB',
     CPU: 'Intel(R) Xeon(R) CPU E5-2676 v3 @ 2.40GHz * 2',
     Memory: '16.0 GB',
+    Registered: 'Dec 17, 9:15 AM'
   }
 };
 

@@ -52,6 +52,10 @@ function RegisterForm({ environment }) {
       // console.log(res);
       setRegisterSuccess(true);
       setFormSubmitted(true);
+
+      // TODO: remove this line 
+      // This is the worst hack to workaround with the navigator focusing issue
+      window.location.replace("/databases");
     } catch (error) {
       console.error(error);
     } finally {

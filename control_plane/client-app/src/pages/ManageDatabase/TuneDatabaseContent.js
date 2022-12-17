@@ -37,7 +37,7 @@ export default function TuneDatabaseContent() {
   const [modalOpen, setModalOpen] = useState(false);
   const [allowedActions, setAllowedActions] = useState(['add-index', 'drop-index', 'restart-knob', 'non-restart-knob']);
   const [maxTuningDuration, setMaxTuningDuration] = useState(3);
-  const [tuningName, setTuningName] = useState('2022-12-06 07:23:00 PM');
+  const [tuningName, setTuningName] = useState('');
   const [tuningSubmitLoading, setTuningSubmitLoading] = useState(false);
 
   useEffect(() => {

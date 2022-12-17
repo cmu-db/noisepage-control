@@ -93,7 +93,7 @@ export default function Navigator(props) {
           <NavLink to='/' style={{ textDecoration: 'none', flex: '1' }}>
             <ListItemButton sx={{ ...item, textAlign: 'center', bgcolor: 'rgba(255, 255, 255, 0.05)' }} onClick={() => {setActiveTabId(1)}}>
               <ListItemIcon sx={{ position: 'absolute' }}><AccountCircleIcon /></ListItemIcon>
-              <ListItemText>User Account</ListItemText>
+              <ListItemText>Dany Alpov</ListItemText>
             </ListItemButton>
           </NavLink>
         </ListItem>

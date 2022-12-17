@@ -75,7 +75,9 @@ export default function DatabaseInfo(props) {
           </Grid>
         </Grid>
         <Grid item xs={12} md={3}>
-          <Typography sx={{ fontSize: '0.9rem', pt: 0 }}>Created At: {parseDateTime(info.created)}</Typography>
+          {/* TODO: add this line back */}
+          {/* <Typography sx={{ fontSize: '0.9rem', pt: 0 }}>Registered On: {parseDateTime(info.created)}</Typography> */}
+          <Typography sx={{ fontSize: '0.9rem', pt: 0 }}>Registered On: {databaseDetails[info.database_id]['Registered']}</Typography>
         </Grid>
       </Grid>
     </Card>
